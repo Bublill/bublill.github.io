@@ -11,7 +11,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: #2a2a2a;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
@@ -21,24 +21,28 @@
         }
 
         .container {
-            background: #0f0f23;
-            border: 2px solid #ffcc00;
-            border-radius: 15px;
+            background: #3d3d3d;
+            border: 3px solid #5a5a5a;
+            border-radius: 8px;
             padding: 30px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);
+            box-shadow: 
+                inset 0 1px 0 #4a4a4a,
+                inset 0 -1px 0 #2a2a2a,
+                0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
-            color: #ffcc00;
+            color: #c0c0c0;
             text-align: center;
             margin-bottom: 10px;
             font-size: 1.8em;
+            text-shadow: 1px 1px 2px #1a1a1a;
         }
 
         .subtitle {
-            color: #888;
+            color: #808080;
             text-align: center;
             margin-bottom: 25px;
             font-size: 0.9em;
@@ -49,7 +53,7 @@
         }
 
         label {
-            color: #ffcc00;
+            color: #b0b0b0;
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
@@ -58,47 +62,51 @@
         input[type="number"] {
             width: 100%;
             padding: 12px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: #1a1a2e;
-            color: #fff;
+            border: 2px solid #555;
+            border-radius: 4px;
+            background: #4a4a4a;
+            color: #e0e0e0;
             font-size: 16px;
             transition: border-color 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         input[type="number"]:focus {
             outline: none;
-            border-color: #ffcc00;
+            border-color: #888;
         }
 
         select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: #1a1a2e;
-            color: #fff;
+            border: 2px solid #555;
+            border-radius: 4px;
+            background: #4a4a4a;
+            color: #e0e0e0;
             font-size: 16px;
             cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         select:focus {
             outline: none;
-            border-color: #ffcc00;
+            border-color: #888;
         }
 
         .results {
-            background: #1a1a2e;
-            border-radius: 10px;
+            background: #333;
+            border: 2px solid #4a4a4a;
+            border-radius: 6px;
             padding: 20px;
             margin-top: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .result-item {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #4a4a4a;
         }
 
         .result-item:last-child {
@@ -106,63 +114,58 @@
         }
 
         .result-label {
-            color: #888;
+            color: #909090;
         }
 
         .result-value {
-            color: #00ff88;
+            color: #a0d0a0;
             font-weight: bold;
             font-family: 'Courier New', monospace;
         }
 
         .result-item.highlight {
-            background: rgba(255, 204, 0, 0.1);
+            background: #444;
             margin: 0 -20px;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 4px;
+            border: 1px solid #5a5a5a;
         }
 
         .result-item.highlight .result-label {
-            color: #ffcc00;
+            color: #d0d0d0;
         }
 
         .result-item.highlight .result-value {
-            color: #ffcc00;
+            color: #e0e0e0;
             font-size: 1.2em;
         }
 
         .formula-info {
             margin-top: 25px;
             padding: 15px;
-            background: rgba(255, 204, 0, 0.05);
-            border-left: 3px solid #ffcc00;
-            border-radius: 0 8px 8px 0;
+            background: #383838;
+            border-left: 4px solid #6a6a6a;
+            border-radius: 0 6px 6px 0;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .formula-info h3 {
-            color: #ffcc00;
+            color: #b0b0b0;
             margin: 0 0 10px 0;
             font-size: 1em;
         }
 
         .formula-info code {
             display: block;
-            color: #00ff88;
+            color: #a0d0a0;
             font-family: 'Courier New', monospace;
             font-size: 0.85em;
             margin: 5px 0;
-        }
-
-        .dwarf-icon {
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="dwarf-icon">⛏️🔥</div>
         <h1>DF Temperature Converter</h1>
         <p class="subtitle">Конвертер температур для Dwarf Fortress</p>
 
@@ -178,13 +181,13 @@
                 <option value="F">Фаренгейт (°F)</option>
                 <option value="K">Кельвин (K)</option>
                 <option value="Ra">Ранкин (°Ra)</option>
-                <option value="U">Dwarf Fortress (°U)</option>
+                <option value="U">Урист(°U)</option>
             </select>
         </div>
 
         <div class="results">
             <div class="result-item highlight">
-                <span class="result-label">Dwarf Fortress (°U):</span>
+                <span class="result-label">Урист (°U):</span>
                 <span class="result-value" id="result-U">10000.00</span>
             </div>
             <div class="result-item">
@@ -206,7 +209,7 @@
         </div>
 
         <div class="formula-info">
-            <h3>📐 Формулы конвертации в °U:</h3>
+            <h3>Формулы конвертации в °U:</h3>
             <code>°U = °C × 9/5 + 10000</code>
             <code>°U = °F + 9968</code>
             <code>°U = K × 9/5 + 9508.33</code>
@@ -218,7 +221,6 @@
         const tempInput = document.getElementById('temperature');
         const scaleSelect = document.getElementById('scale');
 
-        // Конвертация в градусы Цельсия (как базовую единицу)
         function toCelsius(value, fromScale) {
             switch(fromScale) {
                 case 'C': return value;
@@ -230,7 +232,6 @@
             }
         }
 
-        // Конвертация из Цельсия в другие шкалы
         function fromCelsius(celsius, toScale) {
             switch(toScale) {
                 case 'C': return celsius;
@@ -246,10 +247,8 @@
             const value = parseFloat(tempInput.value) || 0;
             const fromScale = scaleSelect.value;
 
-            // Сначала конвертируем в Цельсий
             const celsius = toCelsius(value, fromScale);
 
-            // Затем из Цельсия во все остальные
             const results = {
                 'C': fromCelsius(celsius, 'C'),
                 'F': fromCelsius(celsius, 'F'),
@@ -258,17 +257,14 @@
                 'U': fromCelsius(celsius, 'U')
             };
 
-            // Обновляем отображение
             for (const [scale, result] of Object.entries(results)) {
                 document.getElementById(`result-${scale}`).textContent = result.toFixed(2);
             }
         }
 
-        // Слушатели событий
         tempInput.addEventListener('input', convert);
         scaleSelect.addEventListener('change', convert);
 
-        // Начальный расчёт
         convert();
     </script>
 </body>
