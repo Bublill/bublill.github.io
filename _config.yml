@@ -1,3 +1,94 @@
+# Конфигурация GitHub Pages
+name: Bublill
+title: Bublill - Dwarf Fortress Tools
+description: Полезные инструменты и конвертеры для игры Dwarf Fortress
+url: https://bublill.github.io
+baseurl: ""
+
+# Настройки Jekyll
 theme: jekyll-theme-minimal
-title: Сайт Дварфолоха
-description: Bookmark this to keep an eye on my project updates!
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Настройки Markdown
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# Исключения
+exclude:
+  - README.md
+  - CNAME
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Настройки для русского языка
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      language: "ru"
+      locale: "ru_RU"
+
+# Настройки навигации
+header_pages:
+  - index.html
+
+# Google Analytics (опционально)
+# google_analytics: YOUR_TRACKING_ID
+
+# SEO настройки
+author:
+  name: Bublill
+  email: your-email@example.com
+
+social:
+  name: Bublill
+  links:
+    - https://github.com/bublill
+
+logo: /assets/images/logo.png
+
+# Настройки для отображения в поисковиках
+plugins:
+  - jekyll-sitemap
+  - jekyll-redirect-from
+
+# Настройки времени
+timezone: Europe/Moscow
+
+# Разрешить использование кастомных файлов CSS/JS
+sass:
+  style: compressed
+
+# Настройки для работы с изображениями
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: []
+
+# Параметры для будущих расширений
+future: true
+
+# Показывать черновики (для разработки)
+show_drafts: false
+
+# Лимиты для постов
+paginate: 10
+paginate_path: "/page:num/"
+
+# Разрешить относительные ссылки
+relative_links:
+  enabled: true
