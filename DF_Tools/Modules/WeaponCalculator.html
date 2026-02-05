@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DF Калькулятор Оружия</title>
+    <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="../Resources/Pictures/DFTOOLS.png">
+    <meta name="description"
+        content="Инструмент для расчёта характеристик оружия, брони и боя в Dwarf Fortress.">
+    <meta property="og:title" content="DF Tools: Калькулятор оружия">
+    <meta property="og:description" content="Калькулятор оружия для Dwarf Fortress.">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #2a2a2a;
+            color: #c0c0c0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #3d3d3d;
+            border: 3px solid #5a5a5a;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 
+                inset 0 1px 0 #4a4a4a,
+                inset 0 -1px 0 #2a2a2a,
+                0 4px 8px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header a {
+            background: #4a4a4a;
+            color: #c0c0c0;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #5a5a5a;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 0 #555;
+        }
+
+        header a:hover {
+            background: #555;
+            border-color: #6a6a6a;
+        }
+
+        h1 {
+            color: #d0d0d0;
+            margin: 0;
+            text-shadow: 1px 1px 2px #1a1a1a;
+        }
+
+        h2 {
+            color: #b0b0b0;
+            border-bottom: 2px solid #4a4a4a;
+            padding-bottom: 10px;
+            margin-top: 25px;
+            text-shadow: 1px 1px 2px #1a1a1a;
+        }
+
+        section, main, aside {
+            background: #3d3d3d;
+            border: 3px solid #5a5a5a;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 
+                inset 0 1px 0 #4a4a4a,
+                inset 0 -1px 0 #2a2a2a,
+                0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        p {
+            color: #a0a0a0;
+        }
+
+        a {
+            color: #8ab4d8;
+        }
+
+        a:hover {
+            color: #a0c8e8;
+        }
+
+        ol, ul {
+            color: #a0a0a0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        label {
+            color: #b0b0b0;
+            display: block;
+            margin-bottom: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 12px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            background: #4a4a4a;
+            color: #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #888;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #6a6a6a;
+        }
+
+        select {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 12px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            background: #4a4a4a;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #888;
+        }
+
+        button {
+            background: #4a4a4a;
+            color: #d0d0d0;
+            border: 2px solid #5a5a5a;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            box-shadow: 
+                inset 0 1px 0 #555,
+                0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background: #555;
+            border-color: #6a6a6a;
+        }
+
+        button:active {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        details {
+            background: #333;
+            border: 2px solid #4a4a4a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        summary {
+            color: #b0b0b0;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 5px;
+        }
+
+        summary:hover {
+            color: #d0d0d0;
+        }
+
+        #armor_layers,
+        #body_layers {
+            margin-top: 15px;
+        }
+
+        #results_list {
+            background: #333;
+            border: 2px solid #4a4a4a;
+            border-radius: 6px;
+            padding: 20px;
+            padding-left: 40px;
+            margin-top: 15px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #results_list li {
+            color: #a0d0a0;
+            font-family: 'Courier New', monospace;
+        }
+
+        #momentum_paragraph {
+            color: #a0d0a0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            border-top: 3px solid #4a4a4a;
+            margin: 30px 0;
+        }
+
+        aside {
+            border-left: 4px solid #6a6a6a;
+        }
+
+        aside h2 {
+            margin-top: 0;
+        }
+
+        b, strong {
+            color: #c0c0c0;
+        }
+
+        .note {
+            background: #383838;
+            border-left: 4px solid #6a6a6a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../js/Modules/WeaponCalculator_page.js" type="module"></script>
+
+    <header>
+        <a href="../index.html">Назад</a>
+        <h1>Калькулятор оружия</h1>
+    </header>
+
+    <section>
+        <h2>Для чего?</h2>
+        <p>Для расчёта характеристик оружия, таких как импульс, пробивание и подобное.</p>
+    </section>
+    <section>
+        <h2>Как использовать:</h2>
+        <ol>
+            <li>Укажите характеристики атакующего по своему усмотрению. Есть два способа:
+                <ul>
+                    <li>Загрузить ванильные характеристики через выпадающие списки.</li>
+                    <li>Ввести данные вручную (можно сначала загрузить похожие расы/оружие/материалы).</li>
+                </ul>
+            </li>
+            <li>Добавьте столько слоёв брони, сколько нужно. Первый слой — это внешний слой (тот, который получает удар первым).<br>При 0 слоях брони (по умолчанию) вы получите только импульс оружия.</li>
+            <li>Укажите характеристики каждого слоя (так же, как и раньше).</li>
+            <li>Нажмите кнопку «Рассчитать» и получите результаты.</li>
+        </ol>
+        <p>Все формулы взяты из <a href="https://dwarffortresswiki.org/index.php/Weapon">статьи об оружии</a> на вики DF. Характеристики взяты из игровых raw-файлов (я их просто спарсил).</p>
+
+        <p><b>Примечание:</b> На данный момент есть две вещи, из-за которых результаты этого инструмента будут отличаться от экспериментальных:</p>
+        <ol>
+            <li><b>Площадь контакта:</b> Я завершил Layer Permit Checker, который позволяет рассчитывать размер брони/частей тела гуманоидных рас, но пока этот инструмент его не использует.
+                Это означает, что площадь контакта атак используется так, будто удар наносится по очень большой цели, и поэтому оружие с большей площадью контакта будет работать хуже, чем на самом деле.<br>
+                Если вы хотите получить реалистичные результаты против врагов обычного размера (гоблины, люди и т.д.), просто уменьшите площадь контакта атаки до 2500, например (я изменю это позже).
+            </li>
+            <li><b>Мой враг — формула отскока:</b> Дробящие атаки, нанесённые оружием из материалов с низкой плотностью (читай: спойлерные материалы), должны отскакивать, но формула этого не отражает. В общем, пока я не найду полную форму формулы или Патнэм и Тарн не спустятся с небес, условие отскока не будет работать правильно (для материалов с низкой плотностью).
+            </li>
+        </ol>
+    </section>
+
+    <main>
+        <p>Если вы не используете дробящее оружие из материалов с низкой плотностью или оружие с большой площадью контакта, калькулятор должен работать хорошо.</p>
+        <form onsubmit="return false;" id="offense_characteristics">
+
+            <h2>Характеристики атакующего</h2>
+            <p>Используйте выпадающие списки для загрузки ванильных характеристик. Вы можете редактировать значения для представления модовых материалов.</p>
+            
+            <label for="attacker_skill_lvl">Уровень навыка атакующего (уровни выше 14 не имеют дополнительного эффекта)</label>
+            <input type="number" id="attacker_skill_lvl" name="attacker_skill_lvl" value="1" min="0" max="14"><br>
+            
+            <label for="attacker_race">Раса атакующего</label>
+            <select name="attacker_race" id="attacker_race">
+            </select><br>
+            
+            <details>
+                <summary>Детали расы</summary>
+                <label for="BODY_SIZE">Средний размер расы</label>
+                <input type="number" id="BODY_SIZE" name="BODY_SIZE" value="1" min="0" data-Field="raceBodySize"><br>
+                <label for="attacker_BODY_SIZE">Конкретный размер атакующего</label>
+                <input type="number" id="attacker_BODY_SIZE" name="attacker_BODY_SIZE" value="0" min="0"
+                    data-Field="bodySize"><br>
+                <label for="STRENGTH">Сила атакующего</label>
+                <input type="number" id="STRENGTH" name="STRENGTH" value="0" min="0" data-Field="strength"><br>
+            </details><br>
+
+            <label for="weapon_name">Оружие</label>
+            <select name="weapon_name" id="weapon_name" onchange="">
+            </select><br>
+            
+            <label for="attack_name">Атака</label>
+            <select name="attack_name" id="attack_name" onchange="">
+            </select><br>
+            
+            <label for="weapon_quality">Качество оружия</label>
+            <select name="weapon_quality" id="weapon_quality">
+                <option value="0.5" selected>Обычное</option>
+                <option value="0.6">-Хорошо сделанное-</option>
+                <option value="0.7">+Тонко сделанное+</option>
+                <option value="0.8">*Превосходное*</option>
+                <option value="0.9">≡Исключительное≡</option>
+                <option value="1">☼Мастерское☼</option>
+                <option value="1">Артефакт</option>
+            </select><br>
+            
+            <label for="attack_type">Тип атаки</label>
+            <select name="attack_type" id="attack_type">
+                <option value="1" selected>Обычная</option>
+                <option value="2">Тяжёлая</option>
+                <option value="0.5">Быстрая</option>
+            </select><br>
+            
+            <label for="prone_state">Цель лежит?</label>
+            <input type="checkbox" name="prone_state" id="prone_state" value="true"><br>
+            
+            <label for="material_force_multiplier">Множитель силы материала целевой расы</label>
+            <input type="number" id="material_force_multiplier" name="material_force_multiplier" value="1" min="0"><br>
+            
+            <details>
+                <summary>Детали оружия</summary>
+                <label for="w_SIZE">Размер оружия</label>
+                <input type="number" id="w_SIZE" name="w_SIZE" value="800" data-Field="size"><br>
+                <label for="attack_contact_area">Площадь контакта атаки</label>
+                <input type="number" id="attack_contact_area" name="attack_contact_area" value="40000"
+                    data-Field="contactArea"><br>
+                <label for="attack_velocity_modifier">Модификатор скорости атаки</label>
+                <input type="number" id="attack_velocity_modifier" name="attack_velocity_modifier" value="1250"
+                    data-Field="velocityModifier"><br>
+                <label for="blunt_attack">Дробящая атака</label>
+                <input type="checkbox" id="blunt_attack" name="blunt_attack" value="true"
+                    data-Field="isBlunt"><br>
+            </details><br>
+
+            <label for="weapon_material">Металл оружия</label>
+            <select name="weapon_material" id="weapon_material">
+            </select><br>
+            
+            <details>
+                <summary>Детали материала</summary>
+                <label for="wm_SOLID_DENSITY">Плотность материала оружия</label>
+                <input type="number" id="wm_SOLID_DENSITY" name="wm_SOLID_DENSITY" value="7850"
+                    data-Field="solid_density"><br>
+                <label for="wm_IMPACT_YIELD">Предел текучести при ударе материала оружия</label>
+                <input type="number" id="wm_IMPACT_YIELD" name="wm_IMPACT_YIELD" value="1505000"
+                    data-Field="impact_yield"><br>
+                <label for="wm_SHEAR_YIELD">Предел текучести при сдвиге материала оружия</label>
+                <input type="number" id="wm_SHEAR_YIELD" name="wm_SHEAR_YIELD" value="430000"
+                    data-Field="shear_yield"><br>
+                <label for="wm_SHEAR_FRACTURE">Предел разрушения при сдвиге материала оружия</label>
+                <input type="number" id="wm_SHEAR_FRACTURE" name="wm_SHEAR_FRACTURE" value="720000"
+                    data-Field="shear_fracture"><br>
+                <label for="wm_MAX_EDGE">Макс. острота материала оружия</label>
+                <input type="number" id="wm_MAX_EDGE" name="wm_MAX_EDGE" value="10000" data-Field="max_edge"><br>
+            </details>
+        </form>
+
+        <h2>Характеристики брони</h2>
+        <p>Для указания различных слоёв брони и их характеристик.</p>
+        <p>Первый слой — это внешний слой, и каждый последующий слой считается находящимся под предыдущими слоями.</p>
+        <button name="Add armor layer" id="add_armor_layer_button">Добавить слой брони</button><br>
+        <div id="armor_layers">
+        </div>
+
+        <h2>Характеристики тела</h2>
+        <p>Для указания различных слоёв тела и их характеристик.</p>
+        <p>Первый слой — это внешний слой, и каждый последующий слой считается находящимся под предыдущими слоями.</p>
+        <button name="Add body layer" id="add_body_layer_button">Добавить слой тела</button><br>
+        <div id="body_layers">
+        </div>
+
+        <h2>Результат:</h2>
+        <button name="calculate" id="calculate_button">Рассчитать</button>
+        <p id="momentum_paragraph"></p>
+        <ul id="results_list">
+        </ul>
+
+    </main>
+
+    <hr>
+    <aside>
+        <h2>Прочее:</h2>
+        <p>Вся информация и формулы, использованные для этого сайта, были взяты из вики DF. Все они теоретические, так как у меня нет возможности проверить реальный код игры.</p>
+        <p>Также проверьте readme на github, чтобы узнать о недостающих функциях или вещах, которые я ещё разрабатываю.</p>
+        <p>Тарн, Патнэм, если кто-то из вас это читает... ну давайте же, товарищи, я заслуживаю доверия (дайте мне заглянуть).</p>
+    </aside>
+
+</body>
+
+</html>
