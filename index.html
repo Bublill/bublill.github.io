@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bublill - Главная</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* Специфичные стили для главной страницы */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(26, 26, 46, 0.9) 100%), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero h1 {
+            font-size: 4em;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.8),
+                         0 0 40px rgba(0, 255, 0, 0.6),
+                         0 0 60px rgba(0, 255, 0, 0.4);
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.5),
+                             0 0 20px rgba(0, 255, 0, 0.4),
+                             0 0 30px rgba(0, 255, 0, 0.3);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8),
+                             0 0 40px rgba(0, 255, 0, 0.6),
+                             0 0 60px rgba(0, 255, 0, 0.4);
+            }
+        }
+        
+        .hero p {
+            font-size: 1.5em;
+            color: #a0a0a0;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.8;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .project-card {
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 12px;
+            border: 3px solid #4a4a4a;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .project-card:hover::before {
+            left: 100%;
+        }
+        
+        .project-card:hover {
+            border-color: #00ff00;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 255, 0, 0.3);
+        }
+        
+        .project-card h3 {
+            color: #00ff00;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .project-card h3::before {
+            content: '▶';
+            color: #ff6b6b;
+            font-size: 1.2em;
+        }
+        
+        .project-card p {
+            color: #c0c0c0;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .project-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00ff00;
+        }
+        
+        .features {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 40px 0;
+            border: 2px solid #3a3a3a;
+        }
+        
+        .features h2 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 25px;
+            background: #252525;
+            border-radius: 10px;
+            border: 2px solid #4a4a4a;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            border-color: #00ff00;
+            transform: scale(1.05);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #00ff00;
+        }
+        
+        .feature-item h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item p {
+            color: #a0a0a0;
+            font-size: 0.95em;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #16162e 100%);
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 3px solid #3a3a3a;
+        }
+        
+        .cta-section h2 {
+            color: #00ff00;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            color: #c0c0c0;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+        
+        .btn-large {
+            padding: 18px 45px;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4);
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 255, 0, 0.6);
+            background: linear-gradient(135deg, #00cc00 0%, #00aa00 100%);
+        }
+        
+        .btn-large:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            border-top: 2px solid #3a3a3a;
+            color: #808080;
+            font-size: 0.95em;
+        }
+        
+        /* Анимация для кнопок */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Стиль для иконок */
+        .icon {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #00ff00;
+            border-radius: 50%;
+            line-height: 50px;
+            text-align: center;
+            margin: 10px auto;
+            color: #000000;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <h1>WELCOME, COMMANDER</h1>
+            <p>Это твой цифровой форт. Здесь ты строишь, управляешь и доминируешь. Готов к вызову?</p>
+            <a href="#projects" class="btn btn-large btn-pulse">НАЧАТЬ МИССИЮ</a>
+        </header>
+        
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#features">Возможности</a></li>
+                <li><a href="DF_Tools/index.html">DF Tools</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+        
+        <section id="projects" class="content">
+            <h2>МОИ ПРОЕКТЫ</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon">🎮</div>
+                    <h3>DF Tools</h3>
+                    <p>Набор мощных инструментов для игроков в Dwarf Fortress. Конвертеры, калькуляторы и утилиты для полного контроля над твоим фортом.</p>
+                    <a href="DF_Tools/index.html" class="btn">ДОСТУП К ИНСТРУМЕНТАМ</a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-icon">⚙️</div>
+                    <h3>Температурный конвертер</h3>
+                    <p>Конвертируй температуру между всеми известными шкалами и уникальной шкалой Dwarf Fortress. Точность на максимуме.</p>
+                    <a href="DF_Tools/Modules/TemperatureConverter.html" class="btn">КОНВЕРТИРОВАТЬ СЕЙЧАС</a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-icon">🚀</div>
+                    <h3>Будущие проекты</h3>
+                    <p>Готовлю новые инструменты и утилиты. Следи за обновлениями, чтобы быть на шаг впереди.</p>
+                    <span class="btn" style="background: #555; cursor: not-allowed;">СКОРО ДОСТУПНО</span>
+                </div>
+            </div>
+        </section>
+        
+        <section id="features" class="features">
+            <h2>ЧТО Я ПРЕДЛАГАЮ</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="icon">🔧</div>
+                    <h3>Инструменты</h3>
+                    <p>Практические утилиты для решения реальных задач</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🎮</div>
+                    <h3>Игровые помощники</h3>
+                    <p>Специализированные инструменты для геймеров</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">⚡</div>
+                    <h3>Быстродействие</h3>
+                    <p>Мгновенные вычисления без задержек</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📱</div>
+                    <h3>Адаптивность</h3>
+                    <p>Работает на всех устройствах</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="cta-section">
+            <h2>ГОТОВ К ВЫЗОВУ?</h2>
+            <p>Исследуй инструменты, строй свой форт и покоряй новые вершины. Начни прямо сейчас!</p>
+            <a href="DF_Tools/index.html" class="btn btn-large">К ИНСТРУМЕНТАМ</a>
+        </section>
+        
+        <footer>
+            <p>&copy; 2026 bublill. Все права защищены. Это твоя территория.</p>
+            <p>Построено с помощью технологии и решимости.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Плавная прокрутка для якорных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Эффект появления элементов при прокрутке
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Наблюдение за карточками проектов
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Наблюдение за элементами фич
+        document.querySelectorAll('.feature-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
