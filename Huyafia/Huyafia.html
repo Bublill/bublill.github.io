@@ -15,29 +15,30 @@
 :root {
     --bg-dark: #1a1a1a;
     --bg-card: #2a2a2a;
-    --bg-lighter: #333;
-    --bg-hover: #3a3a3a;
-    --text-primary: #e0e0e0;
-    --text-secondary: #999;
+    --bg-input: #333;
+    --text: #e0e0e0;
+    --text-dim: #888;
     --red: #E53935;
     --red-dark: #b71c1c;
     --blue: #1E88E5;
     --yellow: #FDD835;
     --green: #43A047;
     --border: #444;
+    --accent: #c62828;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-dark);
-    color: var(--text-primary);
-    min-height: 100vh;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 .screen {
     display: none;
-    padding: 12px;
+    padding: 10px;
     padding-bottom: 80px;
 }
 
@@ -47,70 +48,22 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 22px;
-    padding: 12px 0;
     color: var(--red);
+    font-size: 20px;
+    margin: 10px 0;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 h2 {
+    color: var(--text);
     font-size: 16px;
-    padding: 8px 0;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    margin: 10px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
 }
 
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: #fff;
-}
-
-.btn:active {
-    transform: scale(0.96);
-}
-
-.btn-red {
-    background: var(--red);
-}
-
-.btn-red:hover {
-    background: var(--red-dark);
-}
-
-.btn-dark {
-    background: var(--bg-lighter);
-    color: var(--text-primary);
-}
-
-.btn-green {
-    background: var(--green);
-}
-
-.btn-full {
-    width: 100%;
-    padding: 14px;
-    font-size: 17px;
-    margin-top: 10px;
-}
-
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 13px;
-}
-
-/* Player selection grid */
+/* Player Selection Grid */
 .player-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -121,14 +74,12 @@ h2 {
 .player-check {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
     background: var(--bg-card);
     border-radius: 8px;
+    padding: 10px 8px;
     cursor: pointer;
     border: 2px solid transparent;
     transition: all 0.15s;
-    user-select: none;
 }
 
 .player-check.checked {
@@ -136,50 +87,131 @@ h2 {
     background: #3a2020;
 }
 
-.player-check .checkbox {
+.player-check input {
+    display: none;
+}
+
+.player-check .checkmark {
     width: 22px;
     height: 22px;
     border: 2px solid var(--border);
-    border-radius: 5px;
+    border-radius: 4px;
+    margin-right: 8px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
     font-size: 14px;
     transition: all 0.15s;
 }
 
-.player-check.checked .checkbox {
+.player-check.checked .checkmark {
     background: var(--red);
     border-color: var(--red);
 }
 
-.player-check .name {
+.player-check .pname {
     font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Select all bar */
-.select-bar {
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: white;
+}
+
+.btn-red {
+    background: var(--red);
+}
+
+.btn-red:active {
+    background: var(--red-dark);
+}
+
+.btn-dark {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.btn-dark:active {
+    background: #383838;
+}
+
+.btn-green {
+    background: var(--green);
+}
+
+.btn-full {
+    width: 100%;
+    margin: 6px 0;
+}
+
+.btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+    border-top: 1px solid var(--border);
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    z-index: 100;
+}
+
+.bottom-nav.active {
+    display: grid;
+}
+
+.nav-btn {
     display: flex;
-    gap: 8px;
-    margin: 8px 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    color: var(--text-dim);
+    font-size: 10px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: color 0.15s;
 }
 
-.select-bar .btn {
-    flex: 1;
+.nav-btn .nav-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
 }
 
-/* Game screen */
+.nav-btn.active {
+    color: var(--red);
+}
+
+/* Turn Order Bar */
 .turn-order-bar {
     display: flex;
     gap: 4px;
     padding: 8px;
     overflow-x: auto;
-    background: var(--bg-card);
-    border-radius: 10px;
+    background: #111;
+    border-radius: 8px;
     margin-bottom: 10px;
     -webkit-overflow-scrolling: touch;
 }
@@ -190,108 +222,105 @@ h2 {
 
 .turn-order-bar::-webkit-scrollbar-thumb {
     background: var(--border);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .turn-chip {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 4px 8px;
-    border-radius: 8px;
-    background: var(--bg-lighter);
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: var(--bg-card);
     flex-shrink: 0;
-    font-size: 11px;
     min-width: 52px;
+    font-size: 9px;
     text-align: center;
     border: 1px solid var(--border);
 }
 
-.turn-chip .emoji {
-    font-size: 18px;
+.turn-chip .turn-emoji {
+    font-size: 16px;
 }
 
-.turn-chip .tname {
-    font-size: 9px;
-    margin-top: 2px;
-    white-space: nowrap;
-}
-
-.turn-chip .pname {
-    font-size: 9px;
-    color: var(--text-secondary);
-    white-space: nowrap;
+.turn-chip .turn-name {
+    font-size: 8px;
+    margin-top: 1px;
+    color: var(--text-dim);
     max-width: 56px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.turn-chip.dead {
-    opacity: 0.3;
+.turn-chip .turn-role {
+    font-size: 8px;
+    font-weight: 600;
 }
 
-/* Player list in game */
+/* Game Player List */
 .game-player-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.game-player {
+.game-player-item {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
     background: var(--bg-card);
     border-radius: 8px;
+    padding: 8px 10px;
     position: relative;
-    gap: 6px;
     transition: all 0.2s;
-    border-left: 3px solid var(--border);
+    min-height: 48px;
 }
 
-.game-player.role-town {
-    border-left-color: var(--blue);
+.game-player-item.eliminated {
+    opacity: 0.5;
 }
 
-.game-player.role-crime {
-    border-left-color: var(--red);
+.game-player-item.eliminated::after {
+    content: '✕';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    color: rgba(229, 57, 53, 0.6);
+    pointer-events: none;
+    font-weight: bold;
 }
 
-.game-player.role-rogue {
-    border-left-color: var(--yellow);
+.gp-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
 }
 
-.game-player .info {
+.gp-name {
     flex: 1;
-    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
 }
 
-.game-player .p-name {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.game-player .p-role {
+.gp-role {
     font-size: 11px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin-right: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.game-player .p-role.town { color: var(--blue); }
-.game-player .p-role.crime { color: var(--red); }
-.game-player .p-role.rogue { color: var(--yellow); }
-
-.game-player .p-name.town { color: var(--blue); }
-.game-player .p-name.crime { color: var(--red); }
-.game-player .p-name.rogue { color: var(--yellow); }
-
-.kill-btn {
+.gp-elim-btn {
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -307,216 +336,281 @@ h2 {
     transition: all 0.15s;
 }
 
-.kill-btn:active {
+.gp-elim-btn:active {
     background: var(--red);
-    color: #fff;
+    color: white;
 }
 
-.game-player.dead {
-    opacity: 0.5;
-    order: 999;
-}
-
-.game-player.dead::after {
-    content: '✕';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 36px;
-    color: rgba(229, 57, 53, 0.5);
-    pointer-events: none;
-    font-weight: bold;
-}
-
-.game-player.dead .kill-btn {
-    border-color: var(--green);
+.gp-restore-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--green);
+    background: transparent;
     color: var(--green);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 4px;
+    transition: all 0.15s;
 }
 
-/* Role picker modal */
+.gp-restore-btn:active {
+    background: var(--green);
+    color: white;
+}
+
+/* Role Modal */
 .modal-overlay {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background: rgba(0,0,0,0.85);
-    z-index: 1000;
+    z-index: 200;
+    align-items: center;
     justify-content: center;
-    align-items: flex-end;
+    padding: 10px;
 }
 
-.modal-overlay.active {
+.modal-overlay.show {
     display: flex;
 }
 
-.modal {
+.modal-content {
     background: var(--bg-dark);
+    border-radius: 12px;
     width: 100%;
+    max-width: 500px;
     max-height: 85vh;
-    border-radius: 16px 16px 0 0;
-    padding: 16px;
     overflow-y: auto;
+    padding: 12px;
+    border: 1px solid var(--border);
 }
 
-.modal-title {
-    text-align: center;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-header h3 {
     font-size: 16px;
-    margin-bottom: 12px;
-    color: var(--text-primary);
+    color: var(--red);
 }
 
-.modal-section-title {
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.role-section-title {
     font-size: 12px;
+    font-weight: 700;
+    margin: 8px 0 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 6px 0;
-    margin-top: 4px;
 }
 
-.modal-section-title.town { color: var(--blue); }
-.modal-section-title.crime { color: var(--red); }
-.modal-section-title.rogue { color: var(--yellow); }
+.role-section-title.citizen {
+    background: rgba(30, 136, 229, 0.15);
+    color: var(--blue);
+}
+
+.role-section-title.criminal {
+    background: rgba(229, 57, 53, 0.15);
+    color: var(--red);
+}
+
+.role-section-title.renegade {
+    background: rgba(253, 216, 53, 0.15);
+    color: var(--yellow);
+}
 
 .role-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 5px;
-    margin-bottom: 6px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
 }
 
 .role-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px 4px;
-    background: var(--bg-card);
-    border: 2px solid transparent;
+    justify-content: center;
+    padding: 8px 2px;
     border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
     cursor: pointer;
-    font-size: 11px;
     text-align: center;
-    transition: all 0.1s;
-    color: var(--text-primary);
-}
-
-.role-btn .remoji {
-    font-size: 22px;
-    margin-bottom: 2px;
+    transition: all 0.15s;
+    min-height: 60px;
 }
 
 .role-btn:active {
     transform: scale(0.95);
 }
 
-.role-btn.town { border-color: rgba(30,136,229,0.3); }
-.role-btn.crime { border-color: rgba(229,57,53,0.3); }
-.role-btn.rogue { border-color: rgba(253,216,53,0.3); }
-
-.role-btn.town:active { background: rgba(30,136,229,0.2); }
-.role-btn.crime:active { background: rgba(229,57,53,0.2); }
-.role-btn.rogue:active { background: rgba(253,216,53,0.2); }
-
-.clear-role-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    background: var(--bg-lighter);
-    border: none;
-    border-radius: 8px;
-    color: var(--text-secondary);
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.modal-close {
-    width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    background: var(--red-dark);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Bottom nav */
-.bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    background: var(--bg-card);
-    border-top: 1px solid var(--border);
-    z-index: 100;
-}
-
-.bottom-bar .tab {
-    flex: 1;
-    padding: 10px 0;
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: color 0.15s;
-    border: none;
-    background: transparent;
-}
-
-.bottom-bar .tab.active {
-    color: var(--red);
-}
-
-.bottom-bar .tab .tab-icon {
+.role-btn .role-emoji {
     font-size: 20px;
-    display: block;
-    margin-bottom: 2px;
 }
 
-/* End game overlay */
-.end-bar {
+.role-btn .role-name {
+    font-size: 9px;
+    font-weight: 600;
+    margin-top: 2px;
+    line-height: 1.1;
+}
+
+.role-btn.citizen {
+    border-color: rgba(30, 136, 229, 0.3);
+}
+
+.role-btn.citizen:active {
+    background: rgba(30, 136, 229, 0.2);
+}
+
+.role-btn.criminal {
+    border-color: rgba(229, 57, 53, 0.3);
+}
+
+.role-btn.criminal:active {
+    background: rgba(229, 57, 53, 0.2);
+}
+
+.role-btn.renegade {
+    border-color: rgba(253, 216, 53, 0.3);
+}
+
+.role-btn.renegade:active {
+    background: rgba(253, 216, 53, 0.2);
+}
+
+.role-btn-clear {
+    border-color: var(--border);
+    background: #333;
+}
+
+.role-btn-clear .role-emoji {
+    font-size: 18px;
+}
+
+.color-blue { color: var(--blue); }
+.color-red { color: var(--red); }
+.color-yellow { color: var(--yellow); }
+
+/* Notepad */
+.notepad {
+    width: 100%;
+    min-height: 300px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+/* Start Screen */
+.start-logo {
+    text-align: center;
+    padding: 30px 0 15px;
+}
+
+.start-logo .logo-emoji {
+    font-size: 64px;
+}
+
+.start-logo h1 {
+    font-size: 24px;
+    margin: 8px 0 2px;
+}
+
+.start-logo p {
+    color: var(--text-dim);
+    font-size: 13px;
+}
+
+.select-all-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.player-count {
+    color: var(--text-dim);
+    font-size: 13px;
+}
+
+/* Confirm dialog */
+.confirm-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.confirm-overlay.show {
+    display: flex;
+}
+
+.confirm-box {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    max-width: 320px;
+    width: 100%;
+    border: 1px solid var(--border);
+}
+
+.confirm-box p {
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.confirm-btns {
     display: flex;
     gap: 8px;
-    margin: 10px 0;
 }
 
-.end-bar .btn {
+.confirm-btns .btn {
     flex: 1;
 }
 
-.counter-bar {
+/* New Game button in game screen */
+.new-game-bar {
     display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+    justify-content: flex-end;
+    margin-bottom: 8px;
 }
 
-.counter-chip {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.counter-chip.town { background: rgba(30,136,229,0.2); color: var(--blue); }
-.counter-chip.crime { background: rgba(229,57,53,0.2); color: var(--red); }
-.counter-chip.rogue { background: rgba(253,216,53,0.2); color: var(--yellow); }
-.counter-chip.total { background: rgba(255,255,255,0.1); color: var(--text-primary); }
-
-/* No role tag */
-.no-role {
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.turn-label {
+.turn-order-label {
     font-size: 11px;
-    color: var(--text-secondary);
+    color: var(--text-dim);
     margin-bottom: 4px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -525,322 +619,453 @@ h2 {
 </head>
 <body>
 
-<!-- SCREEN 1: Player Selection -->
-<div class="screen active" id="screen-setup">
-    <h1>🔫 Мафия</h1>
-    <h2>Выбери игроков</h2>
-    <div class="select-bar">
-        <button class="btn btn-dark btn-sm" onclick="selectAll()">Выбрать всех</button>
-        <button class="btn btn-dark btn-sm" onclick="deselectAll()">Снять все</button>
+<!-- ======= SCREEN 1: SETUP ======= -->
+<div id="screen-setup" class="screen active">
+    <div class="start-logo">
+        <div class="logo-emoji">🔫</div>
+        <h1>Мафия</h1>
+        <p>Большой Город</p>
     </div>
-    <div class="player-grid" id="player-grid"></div>
-    <button class="btn btn-red btn-full" onclick="startGame()">🎮 Начать игру</button>
-</div>
 
-<!-- SCREEN 2: Game -->
-<div class="screen" id="screen-game">
-    <h1>🌙 Игра</h1>
-
-    <div class="turn-label">Порядок ходов ночью:</div>
-    <div class="turn-order-bar" id="turn-order-bar"></div>
-
-    <div class="counter-bar" id="counter-bar"></div>
-
-    <div class="game-player-list" id="game-player-list"></div>
-
-    <div class="end-bar">
-        <button class="btn btn-dark btn-full" onclick="endGame()">🔄 Новая игра</button>
+    <div class="select-all-row">
+        <h2 style="margin:0;border:none;padding:0;">Игроки</h2>
+        <div>
+            <span class="player-count" id="playerCount">0 выбрано</span>
+            <button class="btn btn-dark btn-sm" onclick="selectAll()" style="margin-left:6px;">Все</button>
+            <button class="btn btn-dark btn-sm" onclick="selectNone()">Сброс</button>
+        </div>
     </div>
-</div>
 
-<!-- Role picker modal -->
-<div class="modal-overlay" id="role-modal">
-    <div class="modal">
-        <div class="modal-title" id="modal-title">Роль для: Игрок</div>
+    <div class="player-grid" id="playerGrid"></div>
 
-        <div class="modal-section-title town">👥 Горожане</div>
-        <div class="role-grid" id="roles-town"></div>
-
-        <div class="modal-section-title crime">🔪 Преступники</div>
-        <div class="role-grid" id="roles-crime"></div>
-
-        <div class="modal-section-title rogue">⚡ Отщепенцы</div>
-        <div class="role-grid" id="roles-rogue"></div>
-
-        <button class="clear-role-btn" onclick="assignRole(null)">❌ Убрать роль</button>
-        <button class="modal-close" onclick="closeModal()">Закрыть</button>
-    </div>
-</div>
-
-<!-- Bottom bar -->
-<div class="bottom-bar" id="bottom-bar" style="display:none;">
-    <button class="tab active" onclick="showScreen('screen-game')">
-        <span class="tab-icon">🎮</span>Игра
+    <button class="btn btn-red btn-full" onclick="startGame()" style="margin-top:12px;font-size:17px;padding:16px;">
+        🎮 НАЧАТЬ ИГРУ
     </button>
-    <button class="tab" onclick="showScreen('screen-setup')">
-        <span class="tab-icon">👥</span>Лобби
+</div>
+
+<!-- ======= SCREEN 2: GAME ======= -->
+<div id="screen-game" class="screen">
+    <div class="new-game-bar">
+        <button class="btn btn-dark btn-sm" onclick="confirmNewGame()">🔄 Новая игра</button>
+    </div>
+
+    <div class="turn-order-label">Очередь ходов ночью:</div>
+    <div class="turn-order-bar" id="turnOrderBar"></div>
+
+    <h2>Игроки</h2>
+    <div class="game-player-list" id="gamePlayerList"></div>
+</div>
+
+<!-- ======= SCREEN 3: NOTEPAD ======= -->
+<div id="screen-notes" class="screen">
+    <h1>📝 Блокнот</h1>
+    <textarea class="notepad" id="notepad" placeholder="Записки ведущего..."></textarea>
+</div>
+
+<!-- ======= SCREEN 4: ROLES INFO ======= -->
+<div id="screen-info" class="screen">
+    <h1>📋 Роли</h1>
+    <div id="rolesInfoList"></div>
+</div>
+
+<!-- ======= BOTTOM NAV ======= -->
+<div class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" onclick="switchTab('game')" id="tab-game">
+        <span class="nav-icon">🎯</span>
+        Игра
     </button>
+    <button class="nav-btn" onclick="switchTab('notes')" id="tab-notes">
+        <span class="nav-icon">📝</span>
+        Заметки
+    </button>
+    <button class="nav-btn" onclick="switchTab('info')" id="tab-info">
+        <span class="nav-icon">📋</span>
+        Роли
+    </button>
+    <button class="nav-btn" onclick="confirmNewGame()" id="tab-new">
+        <span class="nav-icon">🔄</span>
+        Заново
+    </button>
+</div>
+
+<!-- ======= ROLE SELECT MODAL ======= -->
+<div class="modal-overlay" id="roleModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="roleModalTitle">Выбор роли</h3>
+            <button class="modal-close" onclick="closeRoleModal()">✕</button>
+        </div>
+
+        <div class="role-section-title citizen">🟦 Горожане</div>
+        <div class="role-grid" id="citizenRoles"></div>
+
+        <div class="role-section-title criminal">🟥 Преступники</div>
+        <div class="role-grid" id="criminalRoles"></div>
+
+        <div class="role-section-title renegade">🟨 Отщепенцы</div>
+        <div class="role-grid" id="renegadeRoles"></div>
+
+        <button class="btn btn-dark btn-full" onclick="assignRole(null)" style="margin-top:8px;">
+            ❌ Убрать роль
+        </button>
+    </div>
+</div>
+
+<!-- ======= CONFIRM DIALOG ======= -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <p>Начать новую игру?<br><small style="color:var(--text-dim)">Текущая игра будет сброшена</small></p>
+        <div class="confirm-btns">
+            <button class="btn btn-dark" onclick="closeConfirm()">Отмена</button>
+            <button class="btn btn-red" onclick="newGame()">Да</button>
+        </div>
+    </div>
 </div>
 
 <script>
 // ============================================================
-// 📋 СПИСОК ИГРОКОВ — МЕНЯЙ ЗДЕСЬ!
+// PLAYER LIST — EDIT HERE
 // ============================================================
 const ALL_PLAYERS = [
     "Димон", "Вова", "Вадим", "Катя", "Влад", "Рома", "Маша", "Инна", "Рябчун", "Виталик", "Стас", "Мотвей", "Надя", "Полина", "Соня", "Оля", "Лена", "Тёма"
 ];
 // ============================================================
 
-// Roles data: [id, name, emoji, faction, turnOrder (null=no night action)]
-// Turn order: Адвокат(1) → Доктор(2) → Телохранитель(3) → Мафия(4) → Картель(5)
-// → Отщепенцы(6) → Любовница(7) → Детектив/Патрульный(8) → Журналист(9)
-// → Экстрасенс(10) → Ищейка(11) → Сыщик(12) → Судья(13) → Поклонница(14)
-const ROLES = [
-    // Горожане
-    { id: "civil",       name: "Мирный",       emoji: "🏠", faction: "town",  order: null },
-    { id: "agent",       name: "Агент",        emoji: "🕵️", faction: "town",  order: 4 },
-    { id: "judge",       name: "Судья",        emoji: "⚖️", faction: "town",  order: 13 },
-    { id: "detective",   name: "Детектив",     emoji: "🔍", faction: "town",  order: 8 },
-    { id: "journalist",  name: "Журналист",    emoji: "📰", faction: "town",  order: 9 },
-    { id: "doctor",      name: "Доктор",       emoji: "💉", faction: "town",  order: 2 },
-    { id: "bodyguard",   name: "Телохранитель",emoji: "🛡️", faction: "town",  order: 3 },
-    { id: "patrol",      name: "Патрульный",   emoji: "🚔", faction: "town",  order: 8 },
-    { id: "psychic",     name: "Экстрасенс",  emoji: "🔮", faction: "town",  order: 10 },
-    { id: "fangirl",     name: "Поклонница",   emoji: "💋", faction: "town",  order: 14 },
-    { id: "sleuth",      name: "Сыщик",        emoji: "🧐", faction: "town",  order: 12 },
-    { id: "lucky",       name: "Везунчик",     emoji: "🍀", faction: "town",  order: null },
-    { id: "avenger",     name: "Мститель",     emoji: "💀", faction: "town",  order: null },
+// Roles data
+const ROLES = {
+    citizens: [
+        { id: 'peaceful', name: 'Мирный житель', emoji: '🏠', order: null },
+        { id: 'agent', name: 'Агент', emoji: '🕵️', order: null },
+        { id: 'judge', name: 'Судья', emoji: '⚖️', order: 13 },
+        { id: 'detective', name: 'Детектив', emoji: '🔍', order: 8 },
+        { id: 'journalist', name: 'Журналист', emoji: '📰', order: 9 },
+        { id: 'doctor', name: 'Доктор', emoji: '💊', order: 2 },
+        { id: 'bodyguard', name: 'Телохранитель', emoji: '🛡️', order: 3 },
+        { id: 'patrol', name: 'Патрульный', emoji: '🚔', order: 8 },
+        { id: 'psychic', name: 'Экстрасенс', emoji: '🔮', order: 10 },
+        { id: 'fangirl', name: 'Поклонница', emoji: '💋', order: 14 },
+        { id: 'sleuth', name: 'Сыщик', emoji: '🧐', order: 12 },
+        { id: 'lucky', name: 'Везунчик', emoji: '🍀', order: null },
+        { id: 'avenger', name: 'Мститель', emoji: '⚔️', order: null },
+    ],
+    criminals: [
+        { id: 'mafia', name: 'Мафия', emoji: '🔫', order: 4 },
+        { id: 'cartel', name: 'Картель', emoji: '💀', order: 5 },
+        { id: 'lawyer', name: 'Адвокат', emoji: '📜', order: 1 },
+        { id: 'mistress', name: 'Любовница', emoji: '💃', order: 7 },
+        { id: 'hound', name: 'Ищейка', emoji: '🐕', order: 11 },
+        { id: 'werewolf', name: 'Оборотень', emoji: '🐺', order: null },
+        { id: 'boss', name: 'Босс', emoji: '👔', order: null },
+        { id: 'ringleader', name: 'Главарь', emoji: '🎩', order: null },
+    ],
+    renegades: [
+        { id: 'maniac', name: 'Маньяк', emoji: '🪓', order: 6 },
+        { id: 'poisoner', name: 'Отравитель', emoji: '☠️', order: 6 },
+        { id: 'cultist', name: 'Сектант', emoji: '🕯️', order: 6 },
+        { id: 'revolutionary', name: 'Революционер', emoji: '✊', order: 6 },
+    ]
+};
 
-    // Преступники
-    { id: "mafia",       name: "Мафия",        emoji: "🔫", faction: "crime", order: 4 },
-    { id: "cartel",      name: "Картель",      emoji: "💣", faction: "crime", order: 5 },
-    { id: "lawyer",      name: "Адвокат",      emoji: "📜", faction: "crime", order: 1 },
-    { id: "mistress",    name: "Любовница",    emoji: "❤️‍🔥",faction: "crime", order: 7 },
-    { id: "tracker",     name: "Ищейка",       emoji: "🐕", faction: "crime", order: 11 },
-    { id: "werewolf",    name: "Оборотень",    emoji: "🐺", faction: "crime", order: 4 },
-    { id: "boss",        name: "Босс",         emoji: "👔", faction: "crime", order: 4 },
-    { id: "kingpin",     name: "Главарь",      emoji: "🎩", faction: "crime", order: 5 },
-
-    // Отщепенцы
-    { id: "maniac",      name: "Маньяк",       emoji: "🪓", faction: "rogue", order: 6 },
-    { id: "poisoner",    name: "Отравитель",   emoji: "☠️", faction: "rogue", order: 6 },
-    { id: "sectant",     name: "Сектант",      emoji: "🕯️", faction: "rogue", order: 6 },
-    { id: "revolutionary",name: "Революционер",emoji: "✊", faction: "rogue", order: 6 },
-];
-
-let selectedPlayers = new Set();
-let gamePlayers = []; // [{name, role: null|roleObj, dead: false}]
-let currentModalPlayer = null;
-
-// Init
-function init() {
-    renderPlayerGrid();
+function getRoleById(id) {
+    if (!id) return null;
+    const all = [...ROLES.citizens, ...ROLES.criminals, ...ROLES.renegades];
+    return all.find(r => r.id === id) || null;
 }
 
-function renderPlayerGrid() {
-    const grid = document.getElementById('player-grid');
-    grid.innerHTML = ALL_PLAYERS.map(name => `
-        <div class="player-check ${selectedPlayers.has(name)?'checked':''}" onclick="togglePlayer('${name}', this)">
-            <div class="checkbox">${selectedPlayers.has(name)?'✓':''}</div>
-            <div class="name">${name}</div>
-        </div>
-    `).join('');
+function getRoleFaction(id) {
+    if (!id) return null;
+    if (ROLES.citizens.find(r => r.id === id)) return 'citizen';
+    if (ROLES.criminals.find(r => r.id === id)) return 'criminal';
+    if (ROLES.renegades.find(r => r.id === id)) return 'renegade';
+    return null;
 }
 
-function togglePlayer(name, el) {
-    if (selectedPlayers.has(name)) {
-        selectedPlayers.delete(name);
-    } else {
-        selectedPlayers.add(name);
-    }
-    renderPlayerGrid();
+function getFactionColor(faction) {
+    if (faction === 'citizen') return 'var(--blue)';
+    if (faction === 'criminal') return 'var(--red)';
+    if (faction === 'renegade') return 'var(--yellow)';
+    return 'var(--text)';
+}
+
+// Game state
+let gameState = {
+    players: [], // { name, role (id), eliminated }
+    active: false
+};
+
+let selectedRolePlayerIndex = null;
+
+// ============ SETUP SCREEN ============
+function renderSetup() {
+    const grid = document.getElementById('playerGrid');
+    grid.innerHTML = '';
+    ALL_PLAYERS.forEach((name, i) => {
+        const div = document.createElement('div');
+        div.className = 'player-check';
+        div.id = `pcheck-${i}`;
+        div.onclick = () => togglePlayer(i);
+        div.innerHTML = `
+            <input type="checkbox" id="cb-${i}">
+            <div class="checkmark">✓</div>
+            <span class="pname">${name}</span>
+        `;
+        grid.appendChild(div);
+    });
+    updateCount();
+}
+
+function togglePlayer(i) {
+    const el = document.getElementById(`pcheck-${i}`);
+    const cb = document.getElementById(`cb-${i}`);
+    cb.checked = !cb.checked;
+    el.classList.toggle('checked', cb.checked);
+    updateCount();
 }
 
 function selectAll() {
-    ALL_PLAYERS.forEach(n => selectedPlayers.add(n));
-    renderPlayerGrid();
+    ALL_PLAYERS.forEach((_, i) => {
+        document.getElementById(`cb-${i}`).checked = true;
+        document.getElementById(`pcheck-${i}`).classList.add('checked');
+    });
+    updateCount();
 }
 
-function deselectAll() {
-    selectedPlayers.clear();
-    renderPlayerGrid();
+function selectNone() {
+    ALL_PLAYERS.forEach((_, i) => {
+        document.getElementById(`cb-${i}`).checked = false;
+        document.getElementById(`pcheck-${i}`).classList.remove('checked');
+    });
+    updateCount();
+}
+
+function updateCount() {
+    const count = ALL_PLAYERS.filter((_, i) => document.getElementById(`cb-${i}`).checked).length;
+    document.getElementById('playerCount').textContent = `${count} выбрано`;
 }
 
 function startGame() {
-    if (selectedPlayers.size < 2) {
-        alert("Выбери хотя бы 2 игроков!");
+    const selected = ALL_PLAYERS.filter((_, i) => document.getElementById(`cb-${i}`).checked);
+    if (selected.length < 3) {
+        alert('Выберите хотя бы 3 игроков');
         return;
     }
-    gamePlayers = Array.from(selectedPlayers).map(name => ({
-        name,
-        role: null,
-        dead: false
-    }));
-    document.getElementById('bottom-bar').style.display = 'flex';
-    showScreen('screen-game');
+    gameState.players = selected.map(name => ({ name, role: null, eliminated: false }));
+    gameState.active = true;
+    document.getElementById('screen-setup').classList.remove('active');
+    document.getElementById('screen-game').classList.add('active');
+    document.getElementById('bottomNav').classList.add('active');
     renderGame();
 }
 
-function endGame() {
-    if (!confirm("Завершить игру и начать новую?")) return;
-    gamePlayers = [];
-    document.getElementById('bottom-bar').style.display = 'none';
-    showScreen('screen-setup');
-}
-
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.bottom-bar .tab').forEach((t, i) => {
-        t.classList.toggle('active', (i === 0 && id === 'screen-game') || (i === 1 && id === 'screen-setup'));
-    });
-    if (id === 'screen-game') renderGame();
-}
-
+// ============ GAME SCREEN ============
 function renderGame() {
     renderTurnOrder();
-    renderCounters();
-    renderGamePlayers();
+    renderPlayerList();
 }
 
 function renderTurnOrder() {
-    const bar = document.getElementById('turn-order-bar');
-    // Collect players that have a role with a turn order
-    let entries = [];
-    gamePlayers.forEach(gp => {
-        if (gp.role && gp.role.order !== null) {
-            entries.push({
-                order: gp.role.order,
-                emoji: gp.role.emoji,
-                roleName: gp.role.name,
-                playerName: gp.name,
-                dead: gp.dead,
-                faction: gp.role.faction
-            });
-        }
-    });
-    entries.sort((a, b) => a.order - b.order);
+    const bar = document.getElementById('turnOrderBar');
+    bar.innerHTML = '';
 
-    if (entries.length === 0) {
-        bar.innerHTML = '<div style="padding:8px;color:var(--text-secondary);font-size:12px;">Назначь роли, чтобы увидеть порядок ходов</div>';
+    // Collect living players with roles that have order
+    const ordered = [];
+    gameState.players.forEach(p => {
+        if (p.eliminated) return;
+        if (!p.role) return;
+        const role = getRoleById(p.role);
+        if (!role || role.order === null) return;
+        ordered.push({ player: p, role, order: role.order });
+    });
+
+    ordered.sort((a, b) => a.order - b.order);
+
+    if (ordered.length === 0) {
+        bar.innerHTML = '<div style="color:var(--text-dim);font-size:11px;padding:8px;">Назначьте роли игрокам</div>';
         return;
     }
 
-    bar.innerHTML = entries.map(e => {
-        const colorClass = e.faction;
-        const nameColor = e.faction === 'town' ? 'var(--blue)' : e.faction === 'crime' ? 'var(--red)' : 'var(--yellow)';
-        return `
-        <div class="turn-chip ${e.dead?'dead':''}" style="border-color:${nameColor}40;">
-            <span class="emoji">${e.emoji}</span>
-            <span class="tname" style="color:${nameColor}">${e.roleName}</span>
-            <span class="pname">${e.playerName}</span>
-        </div>`;
-    }).join('');
+    ordered.forEach(o => {
+        const faction = getRoleFaction(o.player.role);
+        const color = getFactionColor(faction);
+        const chip = document.createElement('div');
+        chip.className = 'turn-chip';
+        chip.innerHTML = `
+            <span class="turn-emoji">${o.role.emoji}</span>
+            <span class="turn-role" style="color:${color}">${o.role.name}</span>
+            <span class="turn-name">${o.player.name}</span>
+        `;
+        bar.appendChild(chip);
+    });
 }
 
-function renderCounters() {
-    const bar = document.getElementById('counter-bar');
-    let alive = gamePlayers.filter(p => !p.dead);
-    let town = alive.filter(p => p.role && p.role.faction === 'town').length;
-    let crime = alive.filter(p => p.role && p.role.faction === 'crime').length;
-    let rogue = alive.filter(p => p.role && p.role.faction === 'rogue').length;
-    let noRole = alive.filter(p => !p.role).length;
-    let total = alive.length;
+function renderPlayerList() {
+    const list = document.getElementById('gamePlayerList');
+    list.innerHTML = '';
 
-    bar.innerHTML = `
-        <span class="counter-chip total">Живых: ${total}</span>
-        <span class="counter-chip town">🔵 ${town}</span>
-        <span class="counter-chip crime">🔴 ${crime}</span>
-        <span class="counter-chip rogue">🟡 ${rogue}</span>
-        ${noRole > 0 ? `<span class="counter-chip total">❓ ${noRole}</span>` : ''}
-    `;
-}
-
-function renderGamePlayers() {
-    const list = document.getElementById('game-player-list');
-    // Sort: alive first, dead last
-    let sorted = [...gamePlayers].sort((a, b) => {
-        if (a.dead && !b.dead) return 1;
-        if (!a.dead && b.dead) return -1;
+    // Sort: alive first, then eliminated
+    const sorted = [...gameState.players].sort((a, b) => {
+        if (a.eliminated && !b.eliminated) return 1;
+        if (!a.eliminated && b.eliminated) return -1;
         return 0;
     });
 
-    list.innerHTML = sorted.map((gp, _) => {
-        let idx = gamePlayers.indexOf(gp);
-        let factionClass = gp.role ? `role-${gp.role.faction}` : '';
-        let nameClass = gp.role ? gp.role.faction : '';
-        let roleClass = gp.role ? gp.role.faction : '';
-        let roleText = gp.role ? `${gp.role.emoji} ${gp.role.name}` : '—';
-        let deadClass = gp.dead ? 'dead' : '';
+    sorted.forEach(p => {
+        const idx = gameState.players.indexOf(p);
+        const role = getRoleById(p.role);
+        const faction = getRoleFaction(p.role);
+        const color = faction ? getFactionColor(faction) : 'var(--text)';
 
-        return `
-        <div class="game-player ${factionClass} ${deadClass}">
-            <div class="info" onclick="openRoleModal(${idx})">
-                <div class="p-name ${nameClass}">${gp.name}</div>
-                <div class="p-role ${roleClass} ${!gp.role?'no-role':''}">${roleText}</div>
-            </div>
-            <button class="kill-btn" onclick="toggleDead(${idx})" title="${gp.dead?'Восстановить':'Убить'}">
-                ${gp.dead ? '↩' : '✕'}
-            </button>
-        </div>`;
-    }).join('');
+        const div = document.createElement('div');
+        div.className = `game-player-item${p.eliminated ? ' eliminated' : ''}`;
+
+        const roleText = role ? `${role.emoji} ${role.name}` : '—';
+        const num = gameState.players.indexOf(p) + 1;
+
+        div.innerHTML = `
+            <div class="gp-number">${num}</div>
+            <span class="gp-name" style="color:${color}" onclick="openRoleModal(${idx})">${p.name}</span>
+            <span class="gp-role" style="color:${color}" onclick="openRoleModal(${idx})">${roleText}</span>
+            ${!p.eliminated ?
+                `<button class="gp-elim-btn" onclick="eliminatePlayer(${idx})" title="Выбыл">✕</button>` :
+                `<button class="gp-restore-btn" onclick="restorePlayer(${idx})" title="Восстановить">↩</button>`
+            }
+        `;
+        list.appendChild(div);
+    });
 }
 
-function toggleDead(idx) {
-    gamePlayers[idx].dead = !gamePlayers[idx].dead;
+function eliminatePlayer(idx) {
+    gameState.players[idx].eliminated = true;
     renderGame();
 }
 
-// Role modal
-function openRoleModal(idx) {
-    currentModalPlayer = idx;
-    const gp = gamePlayers[idx];
-    document.getElementById('modal-title').textContent = `Роль: ${gp.name}`;
-
-    const townRoles = ROLES.filter(r => r.faction === 'town');
-    const crimeRoles = ROLES.filter(r => r.faction === 'crime');
-    const rogueRoles = ROLES.filter(r => r.faction === 'rogue');
-
-    document.getElementById('roles-town').innerHTML = townRoles.map(r => roleBtn(r)).join('');
-    document.getElementById('roles-crime').innerHTML = crimeRoles.map(r => roleBtn(r)).join('');
-    document.getElementById('roles-rogue').innerHTML = rogueRoles.map(r => roleBtn(r)).join('');
-
-    document.getElementById('role-modal').classList.add('active');
+function restorePlayer(idx) {
+    gameState.players[idx].eliminated = false;
+    renderGame();
 }
 
-function roleBtn(r) {
-    const orderLabel = r.order !== null ? `#${r.order}` : '';
-    return `
-    <div class="role-btn ${r.faction}" onclick="assignRole('${r.id}')">
-        <span class="remoji">${r.emoji}</span>
-        <span>${r.name}</span>
-        ${orderLabel ? `<span style="font-size:9px;color:var(--text-secondary)">${orderLabel}</span>` : ''}
-    </div>`;
+// ============ ROLE MODAL ============
+function openRoleModal(idx) {
+    selectedRolePlayerIndex = idx;
+    const p = gameState.players[idx];
+    document.getElementById('roleModalTitle').textContent = `Роль: ${p.name}`;
+    document.getElementById('roleModal').classList.add('show');
+    renderRoleButtons();
+}
+
+function closeRoleModal() {
+    document.getElementById('roleModal').classList.remove('show');
+    selectedRolePlayerIndex = null;
+}
+
+function renderRoleButtons() {
+    renderRoleSection('citizenRoles', ROLES.citizens, 'citizen');
+    renderRoleSection('criminalRoles', ROLES.criminals, 'criminal');
+    renderRoleSection('renegadeRoles', ROLES.renegades, 'renegade');
+}
+
+function renderRoleSection(containerId, roles, faction) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    roles.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = `role-btn ${faction}`;
+        btn.onclick = () => assignRole(r.id);
+        const orderStr = r.order !== null ? `#${r.order}` : '';
+        btn.innerHTML = `
+            <span class="role-emoji">${r.emoji}</span>
+            <span class="role-name">${r.name}</span>
+            ${orderStr ? `<span style="font-size:8px;color:var(--text-dim)">${orderStr}</span>` : ''}
+        `;
+        container.appendChild(btn);
+    });
 }
 
 function assignRole(roleId) {
-    if (currentModalPlayer === null) return;
-    if (roleId === null) {
-        gamePlayers[currentModalPlayer].role = null;
-    } else {
-        const role = ROLES.find(r => r.id === roleId);
-        gamePlayers[currentModalPlayer].role = { ...role };
+    if (selectedRolePlayerIndex !== null) {
+        gameState.players[selectedRolePlayerIndex].role = roleId;
+        closeRoleModal();
+        renderGame();
     }
-    closeModal();
-    renderGame();
 }
 
-function closeModal() {
-    document.getElementById('role-modal').classList.remove('active');
-    currentModalPlayer = null;
+// ============ TABS ============
+function switchTab(tab) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById('screen-game').classList.remove('active');
+    document.getElementById('screen-notes').classList.remove('active');
+    document.getElementById('screen-info').classList.remove('active');
+
+    if (tab === 'game') {
+        document.getElementById('screen-game').classList.add('active');
+        document.getElementById('tab-game').classList.add('active');
+    } else if (tab === 'notes') {
+        document.getElementById('screen-notes').classList.add('active');
+        document.getElementById('tab-notes').classList.add('active');
+    } else if (tab === 'info') {
+        document.getElementById('screen-info').classList.add('active');
+        document.getElementById('tab-info').classList.add('active');
+        renderRolesInfo();
+    }
 }
 
-// Close modal on overlay click
-document.getElementById('role-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-});
+// ============ ROLES INFO ============
+function renderRolesInfo() {
+    const container = document.getElementById('rolesInfoList');
+    container.innerHTML = '';
 
-init();
+    const sections = [
+        { title: '🟦 Горожане', roles: ROLES.citizens, faction: 'citizen', color: 'var(--blue)' },
+        { title: '🟥 Преступники', roles: ROLES.criminals, faction: 'criminal', color: 'var(--red)' },
+        { title: '🟨 Отщепенцы', roles: ROLES.renegades, faction: 'renegade', color: 'var(--yellow)' },
+    ];
+
+    sections.forEach(sec => {
+        const h = document.createElement('div');
+        h.className = `role-section-title ${sec.faction}`;
+        h.textContent = sec.title;
+        container.appendChild(h);
+
+        const grid = document.createElement('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;';
+
+        sec.roles.forEach(r => {
+            const item = document.createElement('div');
+            item.style.cssText = `background:var(--bg-card);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:6px;`;
+            const orderStr = r.order !== null ? ` <span style="color:var(--text-dim);font-size:10px;">#${r.order}</span>` : '';
+            item.innerHTML = `
+                <span style="font-size:22px;">${r.emoji}</span>
+                <span style="color:${sec.color};font-size:13px;font-weight:600;">${r.name}${orderStr}</span>
+            `;
+            grid.appendChild(item);
+        });
+
+        container.appendChild(grid);
+    });
+}
+
+// ============ NEW GAME ============
+function confirmNewGame() {
+    document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('show');
+}
+
+function newGame() {
+    closeConfirm();
+    gameState = { players: [], active: false };
+    document.getElementById('notepad').value = '';
+    document.getElementById('bottomNav').classList.remove('active');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-setup').classList.add('active');
+    renderSetup();
+}
+
+// ============ INIT ============
+renderSetup();
 </script>
 </body>
 </html>
