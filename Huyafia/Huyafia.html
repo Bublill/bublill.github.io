@@ -640,7 +640,7 @@ const ALL_PLAYERS = [
 const ROLES = [
     // Горожане (citizen)
     { id: 'peaceful',     name: 'Мирный',       emoji: '🧑',  team: 'citizen',  turnOrder: null },
-    { id: 'agent',        name: 'Агент',         emoji: '🕵️',  team: 'citizen',  turnOrder: null },
+    { id: 'agent',        name: 'Агент',         emoji: '🕵️',  team: 'citizen',  turnOrder: 4 },
     { id: 'judge',        name: 'Судья',         emoji: '⚖️',  team: 'citizen',  turnOrder: 13 },
     { id: 'detective',    name: 'Детектив',      emoji: '🔍',  team: 'citizen',  turnOrder: 8 },
     { id: 'journalist',   name: 'Журналист',     emoji: '📰',  team: 'citizen',  turnOrder: 9 },
@@ -658,9 +658,9 @@ const ROLES = [
     { id: 'lawyer',       name: 'Адвокат',       emoji: '📜',  team: 'criminal', turnOrder: 1 },
     { id: 'mistress',     name: 'Любовница',     emoji: '❤️‍🔥', team: 'criminal', turnOrder: 7 },
     { id: 'tracker',      name: 'Ищейка',        emoji: '🐕',  team: 'criminal', turnOrder: 11 },
-    { id: 'werewolf',     name: 'Оборотень',     emoji: '🐺',  team: 'criminal', turnOrder: null },
-    { id: 'boss',         name: 'Босс',          emoji: '👔',  team: 'criminal', turnOrder: null },
-    { id: 'leader',       name: 'Главарь',       emoji: '🎩',  team: 'criminal', turnOrder: null },
+    { id: 'werewolf',     name: 'Оборотень',     emoji: '🐺',  team: 'criminal', turnOrder: 4 },
+    { id: 'boss',         name: 'Босс',          emoji: '👔',  team: 'criminal', turnOrder: 4 },
+    { id: 'leader',       name: 'Главарь',       emoji: '🎩',  team: 'criminal', turnOrder: 5 },
     // Отщепенцы (outcast)
     { id: 'maniac',       name: 'Маньяк',        emoji: '🪓',  team: 'outcast',  turnOrder: 6 },
     { id: 'poisoner',     name: 'Отравитель',    emoji: '☠️',  team: 'outcast',  turnOrder: 6 },
@@ -745,7 +745,6 @@ function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
     
-    // Get alive players with roles that have turnOrder
     const ordered = gamePlayers
         .filter(p => !p.eliminated && p.role && p.role.turnOrder !== null)
         .sort((a, b) => a.role.turnOrder - b.role.turnOrder);
@@ -759,7 +758,14 @@ function renderTurnOrder() {
         const chip = document.createElement('div');
         const teamClass = 'team-' + p.role.team;
         chip.className = 'turn-chip ' + teamClass;
-        chip.innerHTML = `${p.role.emoji} ${p.name} <span class="turn-num">${p.role.turnOrder}</span>`;
+        chip.style.flexDirection = 'column';
+        chip.style.textAlign = 'center';
+        chip.style.padding = '6px 10px';
+        chip.innerHTML = `
+            <span style="font-size:14px;">${p.role.emoji}</span>
+            <span style="font-size:11px;font-weight:700;">${p.role.name}</span>
+            <span style="font-size:9px;opacity:0.7;">${p.name}</span>
+        `;
         bar.appendChild(chip);
     });
 }
