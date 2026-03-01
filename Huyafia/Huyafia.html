@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Мафия - Помощник ведущего</title>
+    <style>
+        :root {
+            --blue: #1E88E5;
+            --red: #E53935;
+            --yellow: #FDD835;
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --text: #eee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Экран выбора игроков */
+        .player-select-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-checkbox {
+            background: var(--bg-card);
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .player-checkbox:active {
+            transform: scale(0.98);
+        }
+
+        .player-checkbox.checked {
+            border-color: var(--blue);
+            background: rgba(30, 136, 229, 0.15);
+        }
+
+        .player-checkbox input {
+            display: none;
+        }
+
+        .custom-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #555;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .player-checkbox.checked .custom-check {
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .custom-check::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .player-checkbox.checked .custom-check::after {
+            opacity: 1;
+        }
+
+        .player-name {
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), #1565C0);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--red), #C62828);
+            color: white;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, var(--bg-dark) 80%, transparent);
+        }
+
+        .selected-count {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Экран игры */
+        .game-player {
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .game-player.eliminated::before {
+            content: '✕';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: rgba(229, 57, 53, 0.6);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .game-player.eliminated {
+            opacity: 0.6;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            gap: 12px;
+        }
+
+        .player-number {
+            width: 32px;
+            height: 32px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-info .name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .player-info .role {
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+
+        .role-blue { color: var(--blue); }
+        .role-red { color: var(--red); }
+        .role-yellow { color: var(--yellow); }
+
+        .player-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-role {
+            background: #333;
+            color: white;
+        }
+
+        .btn-eliminate {
+            background: rgba(229, 57, 53, 0.3);
+            color: var(--red);
+            font-size: 1.2rem;
+            padding: 8px 10px;
+        }
+
+        .btn-revive {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+
+        /* Модальное окно выбора роли */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            width: 100%;
+            max-height: 80vh;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .role-category {
+            margin-bottom: 16px;
+        }
+
+        .role-category-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .role-btn {
+            padding: 12px 8px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .role-btn:active {
+            transform: scale(0.95);
+        }
+
+        .role-btn.blue {
+            background: rgba(30, 136, 229, 0.2);
+            color: var(--blue);
+            border: 1px solid var(--blue);
+        }
+
+        .role-btn.red {
+            background: rgba(229, 57, 53, 0.2);
+            color: var(--red);
+            border: 1px solid var(--red);
+        }
+
+        .role-btn.yellow {
+            background: rgba(253, 216, 53, 0.2);
+            color: var(--yellow);
+            border: 1px solid var(--yellow);
+        }
+
+        .modal-close {
+            margin-top: 16px;
+            width: 100%;
+            padding: 14px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Статистика */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--blue);
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ЭКРАН 1: Выбор игроков -->
+<div id="screen-select" class="screen active">
+    <h1>🎭 Мафия. Большой Город</h1>
+    
+    <div id="player-select-list" class="player-select-list">
+        <!-- Генерируется JS -->
+    </div>
+
+    <div class="fixed-bottom">
+        <div class="selected-count">Выбрано: <span id="selected-count">0</span> игроков</div>
+        <button id="btn-start" class="btn btn-primary" disabled>Начать игру</button>
+    </div>
+</div>
+
+<!-- ЭКРАН 2: Игра -->
+<div id="screen-game" class="screen">
+    <button class="back-btn" onclick="goBack()">← Новая игра</button>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-value" id="stat-alive">0</div>
+            <div class="stat-label">Живых</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value role-blue" id="stat-town">0</div>
+            <div class="stat-label">Город</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value role-red" id="stat-mafia">0</div>
+            <div class="stat-label">Преступники</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value role-yellow" id="stat-neutral">0</div>
+            <div class="stat-label">Отщепенцы</div>
+        </div>
+    </div>
+
+    <div id="game-players">
+        <!-- Генерируется JS -->
+    </div>
+</div>
+
+<!-- МОДАЛКА ВЫБОРА РОЛИ -->
+<div id="role-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-title">Выберите роль для: <span id="modal-player-name"></span></div>
+        
+        <div class="role-category">
+            <div class="role-category-title role-blue">🏠 ГОРОЖАНЕ</div>
+            <div class="role-grid" id="roles-town"></div>
+        </div>
+
+        <div class="role-category">
+            <div class="role-category-title role-red">🔫 ПРЕСТУПНИКИ</div>
+            <div class="role-grid" id="roles-mafia"></div>
+        </div>
+
+        <div class="role-category">
+            <div class="role-category-title role-yellow">🐺 ОТЩЕПЕНЦЫ</div>
+            <div class="role-grid" id="roles-neutral"></div>
+        </div>
+
+        <button class="modal-close" onclick="closeModal()">Отмена</button>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 📋 СПИСОК ИГРОКОВ - РЕДАКТИРУЙ ЗДЕСЬ!
+// ==========================================
+const PLAYERS = [
+    "Димон",
+    "Вова", 
+    "Вадим",
+    "Катя",
+    "Влад",
+    "Рома",
+    "Маша",
+    "Инна",
+    "Рябчун",
+    "Виталик",
+    "Стас",
+    "Мотвей",
+    "Надя",
+    "Полина",
+    "Соня",
+    "Оля",
+    "Лена",
+    "Тёма"
+];
+// ==========================================
+
+// Роли
+const ROLES = {
+    town: [
+        "Мирный житель", "Агент", "Судья", "Детектив", 
+        "Журналист", "Доктор", "Телохранитель", "Патрульный",
+        "Экстрасенс", "Поклонница", "Сыщик", "Везунчик", "Мститель"
+    ],
+    mafia: [
+        "Мафия", "Картель", "Адвокат", "Любовница", 
+        "Ищейка", "Оборотень", "Босс", "Главарь"
+    ],
+    neutral: [
+        "Маньяк", "Отравитель", "Сектант", "Революционер"
+    ]
+};
+
+// Состояние игры
+let selectedPlayers = [];
+let gamePlayers = [];
+let currentPlayerIndex = null;
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+    renderPlayerSelectList();
+    renderRoleButtons();
+});
+
+// Рендер списка выбора игроков
+function renderPlayerSelectList() {
+    const container = document.getElementById('player-select-list');
+    container.innerHTML = PLAYERS.map((name, i) => `
+        <label class="player-checkbox" data-index="${i}">
+            <input type="checkbox" value="${name}">
+            <span class="custom-check"></span>
+            <span class="player-name">${name}</span>
+        </label>
+    `).join('');
+
+    // Обработчики
+    container.querySelectorAll('.player-checkbox').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            el.classList.toggle('checked');
+            updateSelectedCount();
+        });
+    });
+}
+
+// Рендер кнопок ролей в модалке
+function renderRoleButtons() {
+    document.getElementById('roles-town').innerHTML = ROLES.town.map(role => 
+        `<button class="role-btn blue" onclick="selectRole('${role}', 'town')">${role}</button>`
+    ).join('');
+    
+    document.getElementById('roles-mafia').innerHTML = ROLES.mafia.map(role => 
+        `<button class="role-btn red" onclick="selectRole('${role}', 'mafia')">${role}</button>`
+    ).join('');
+    
+    document.getElementById('roles-neutral').innerHTML = ROLES.neutral.map(role => 
+        `<button class="role-btn yellow" onclick="selectRole('${role}', 'neutral')">${role}</button>`
+    ).join('');
+}
+
+// Обновление счётчика выбранных
+function updateSelectedCount() {
+    const checked = document.querySelectorAll('.player-checkbox.checked');
+    const count = checked.length;
+    document.getElementById('selected-count').textContent = count;
+    document.getElementById('btn-start').disabled = count < 2;
+}
+
+// Начать игру
+document.getElementById('btn-start').addEventListener('click', () => {
+    const checked = document.querySelectorAll('.player-checkbox.checked');
+    gamePlayers = Array.from(checked).map((el, index) => ({
+        id: index,
+        name: el.querySelector('.player-name').textContent,
+        role: null,
+        roleType: null,
+        eliminated: false
+    }));
+    
+    renderGameScreen();
+    showScreen('screen-game');
+});
+
+// Рендер экрана игры
+function renderGameScreen() {
+    const container = document.getElementById('game-players');
+    container.innerHTML = gamePlayers.map((player, i) => `
+        <div class="game-player ${player.eliminated ? 'eliminated' : ''}" data-id="${player.id}">
+            <div class="player-header">
+                <div class="player-number">${i + 1}</div>
+                <div class="player-info">
+                    <div class="name">${player.name}</div>
+                    <div class="role ${player.roleType ? 'role-' + getRoleColor(player.roleType) : ''}">
+                        ${player.role || 'Роль не назначена'}
+                    </div>
+                </div>
+                <div class="player-actions">
+                    <button class="btn-small btn-role" onclick="openRoleModal(${player.id})">👤</button>
+                    ${player.eliminated 
+                        ? `<button class="btn-small btn-revive" onclick="toggleEliminate(${player.id})">↩</button>`
+                        : `<button class="btn-small btn-eliminate" onclick="toggleEliminate(${player.id})">☠</button>`
+                    }
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    updateStats();
+}
+
+// Получить цвет роли
+function getRoleColor(type) {
+    return { town: 'blue', mafia: 'red', neutral: 'yellow' }[type] || '';
+}
+
+// Открыть модалку выбора роли
+function openRoleModal(playerId) {
+    currentPlayerIndex = playerId;
+    const player = gamePlayers.find(p => p.id === playerId);
+    document.getElementById('modal-player-name').textContent = player.name;
+    document.getElementById('role-modal').classList.add('active');
+}
+
+// Закрыть модалку
+function closeModal() {
+    document.getElementById('role-modal').classList.remove('active');
+    currentPlayerIndex = null;
+}
+
+// Выбрать роль
+function selectRole(role, type) {
+    if (currentPlayerIndex === null) return;
+    
+    const player = gamePlayers.find(p => p.id === currentPlayerIndex);
+    player.role = role;
+    player.roleType = type;
+    
+    closeModal();
+    renderGameScreen();
+}
+
+// Убить/воскресить игрока
+function toggleEliminate(playerId) {
+    const player = gamePlayers.find(p => p.id === playerId);
+    player.eliminated = !player.eliminated;
+    renderGameScreen();
+}
+
+// Обновить статистику
+function updateStats() {
+    const alive = gamePlayers.filter(p => !p.eliminated);
+    const town = alive.filter(p => p.roleType === 'town').length;
+    const mafia = alive.filter(p => p.roleType === 'mafia').length;
+    const neutral = alive.filter(p => p.roleType === 'neutral').length;
+    
+    document.getElementById('stat-alive').textContent = alive.length;
+    document.getElementById('stat-town').textContent = town;
+    document.getElementById('stat-mafia').textContent = mafia;
+    document.getElementById('stat-neutral').textContent = neutral;
+}
+
+// Навигация
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function goBack() {
+    if (confirm('Начать новую игру? Текущий прогресс будет потерян.')) {
+        gamePlayers = [];
+        showScreen('screen-select');
+    }
+}
+
+// Закрытие модалки по клику на оверлей
+document.getElementById('role-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'role-modal') closeModal();
+});
+</script>
+
+</body>
+</html>
