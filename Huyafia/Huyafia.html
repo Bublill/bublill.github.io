@@ -264,6 +264,14 @@ h2 {
     line-height: 1;
     flex-shrink: 0;
 }
+    
+.turn-dead-bar.team-citizen { background: var(--blue); }
+.turn-dead-bar.team-criminal { background: var(--red); }
+.turn-dead-bar.team-outcast { background: var(--yellow); }
+
+.turn-dead-letter.team-citizen { color: var(--blue); }
+.turn-dead-letter.team-criminal { color: var(--red); }
+.turn-dead-letter.team-outcast { color: var(--yellow); }
 
 .turn-chip.jailed { filter: brightness(0.5); }
 .turn-chip.jailed .jail-bars-mini { display: block; }
@@ -828,7 +836,8 @@ function renderTurnOrder() {
         if (p.eliminated) {
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
-            marker.innerHTML = `<div class="turn-dead-bar"></div><span class="turn-dead-letter">${p.role.name.charAt(0).toUpperCase()}</span>`;
+            const teamClass = 'team-' + p.role.team;
+            marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><span class="turn-dead-letter ${teamClass}">${p.role.name.charAt(0).toUpperCase()}</span>`;
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
             bar.appendChild(marker);
         } else {
