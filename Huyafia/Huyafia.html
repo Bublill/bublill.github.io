@@ -495,52 +495,6 @@ h2 {
 
 .modal-body { padding: 8px; }
 
-/* === НОВЫЕ СТИЛИ ДЛЯ ВКЛАДОК === */
-.role-tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-}
-
-.role-tab-btn {
-    flex: 1;
-    padding: 8px 4px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-card);
-    color: var(--text-dim);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.role-tab-btn:active { transform: scale(0.97); }
-
-.role-tab-btn.active {
-    background: var(--bg-input);
-    color: var(--text-main);
-    border-color: var(--red);
-    font-weight: 700;
-}
-
-.role-tab-btn[data-team="citizen"].active { border-color: var(--blue); color: var(--blue); }
-.role-tab-btn[data-team="criminal"].active { border-color: var(--red); color: var(--red); }
-.role-tab-btn[data-team="outcast"].active { border-color: var(--yellow); color: var(--yellow); }
-
-.role-tab-content {
-    display: none;
-}
-
-.role-tab-content.active {
-    display: block;
-}
-/* === КОНЕЦ НОВЫХ СТИЛЕЙ === */
-
 .role-section-title {
     font-size: 12px;
     font-weight: 700;
@@ -739,25 +693,12 @@ h2 {
         </div>
         <div class="modal-body">
             <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
-            
-            <!-- === ВКЛАДКИ ВЫБОРА РОЛИ === -->
-            <div class="role-tabs">
-                <button class="role-tab-btn active" data-team="citizen" onclick="switchRoleTab('citizen')">🔵 Горожане</button>
-                <button class="role-tab-btn" data-team="criminal" onclick="switchRoleTab('criminal')">🔴 Преступники</button>
-                <button class="role-tab-btn" data-team="outcast" onclick="switchRoleTab('outcast')">🟡 Отщепенцы</button>
-            </div>
-            
-            <div class="role-tab-content active" id="tab-citizen">
-                <div id="roles-citizen" class="role-grid"></div>
-            </div>
-            <div class="role-tab-content" id="tab-criminal">
-                <div id="roles-criminal" class="role-grid"></div>
-            </div>
-            <div class="role-tab-content" id="tab-outcast">
-                <div id="roles-outcast" class="role-grid"></div>
-            </div>
-            <!-- === КОНЕЦ ВКЛАДОК === -->
-            
+            <div class="role-section-title team-citizen">🔵 Горожане</div>
+            <div id="roles-citizen" class="role-grid"></div>
+            <div class="role-section-title team-criminal">🔴 Преступники</div>
+            <div id="roles-criminal" class="role-grid"></div>
+            <div class="role-section-title team-outcast">🟡 Отщепенцы</div>
+            <div id="roles-outcast" class="role-grid"></div>
         </div>
         <button class="modal-close-btn" onclick="closeModal()">Закрыть</button>
     </div>
@@ -962,8 +903,6 @@ function openRolePicker(idx) {
     document.getElementById('modal-title').textContent = `Роль для: ${gamePlayers[idx].name}`;
     document.getElementById('role-modal').classList.add('active');
     renderRoleButtons();
-    // Сброс на первую вкладку при открытии
-    switchRoleTab('citizen');
 }
 
 function renderRoleButtons() {
@@ -981,19 +920,6 @@ function renderRoleButtons() {
 function pickRole(role) { if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role; closeModal(); renderGame(); }
 function closeModal() { document.getElementById('role-modal').classList.remove('active'); currentPickerPlayer = null; }
 function closeModalOutside(e) { if (e.target === document.getElementById('role-modal')) closeModal(); }
-
-// === ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ===
-function switchRoleTab(team) {
-    // Обновляем кнопки вкладок
-    document.querySelectorAll('.role-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.team === team);
-    });
-    // Обновляем контент вкладок
-    document.querySelectorAll('.role-tab-content').forEach(content => {
-        content.classList.toggle('active', content.id === 'tab-' + team);
-    });
-}
-// === КОНЕЦ ФУНКЦИИ ===
 
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
