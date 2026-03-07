@@ -232,6 +232,7 @@ h2 {
     margin-bottom: 10px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    align-items: stretch;
 }
 
 .turn-order-bar::-webkit-scrollbar {
@@ -240,17 +241,19 @@ h2 {
 
 .turn-chip {
     flex-shrink: 0;
-    padding: 4px 8px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 11px;
     font-weight: 600;
     background: #333;
     white-space: nowrap;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
     position: relative;
     overflow: hidden;
+    padding: 0;
+    padding-bottom: 4px;
 }
 
 .turn-chip.team-citizen { color: var(--blue); border: 1px solid var(--blue); }
@@ -259,11 +262,12 @@ h2 {
 
 /* Turn chip role image */
 .turn-chip-role-img {
-    width: 16px;
-    height: 24px;
+    width: 40px;
+    height: 56px;
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: 6px 6px 0 0;
     flex-shrink: 0;
+    display: block;
 }
 
 /* Dead marker in turn order */
@@ -272,26 +276,29 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px;
-    padding: 4px 6px;
-    position: relative;
+    justify-content: stretch;
+    gap: 0;
+    padding: 0 4px;
+    align-self: stretch;
 }
 
 .turn-dead-bar {
-    width: 4px;
-    height: 28px;
+    width: 6px;
+    flex: 1;
+    min-height: 100%;
     background: var(--red);
-    border-radius: 2px;
-    opacity: 0.7;
+    border-radius: 3px;
+    opacity: 0.85;
 }
 
 .turn-dead-letter {
     font-size: 8px;
     font-weight: 700;
     color: var(--red);
-    opacity: 0.7;
+    opacity: 0.85;
     text-transform: uppercase;
     line-height: 1;
+    padding: 2px 0;
 }
 
 /* Jailed turn chip */
@@ -399,8 +406,8 @@ h2 {
 }
 
 .gp-role-img {
-    width: 20px;
-    height: 30px;
+    width: 28px;
+    height: 80px;
     object-fit: cover;
     border-radius: 2px;
     flex-shrink: 0;
@@ -499,15 +506,17 @@ h2 {
 .gp-role {
     font-size: 12px;
     cursor: pointer;
-    padding: 4px 6px;
+    padding: 0;
     background: var(--bg-input);
     border-radius: 4px;
     text-align: center;
     border: 1px solid var(--border);
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    gap: 4px;
+    gap: 0;
+    overflow: hidden;
+    min-height: 32px;
 }
 
 .gp-role:active {
@@ -515,11 +524,20 @@ h2 {
 }
 
 .gp-role-mini-img {
-    width: 14px;
-    height: 21px;
+    width: auto;
+    height: auto;
+    align-self: stretch;
+    aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 1px;
+    border-radius: 0;
     flex-shrink: 0;
+    display: block;
+}
+
+.gp-role-text {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
 }
 
 .team-citizen { color: var(--blue) !important; }
@@ -584,10 +602,11 @@ h2 {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 4px;
     margin-bottom: 8px;
+    align-items: stretch;
 }
 
 .role-btn {
-    padding: 8px 4px;
+    padding: 4px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-card);
@@ -599,7 +618,10 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 4px;
+    height: 100%;
+    min-height: 90px;
 }
 
 .role-btn:active {
@@ -607,10 +629,12 @@ h2 {
 }
 
 .role-btn-img {
-    width: 36px;
-    height: 54px;
+    width: 100%;
+    flex: 1;
+    min-height: 90px;
     object-fit: cover;
     border-radius: 3px;
+    display: block;
 }
 
 .role-btn .role-label {
@@ -1053,20 +1077,17 @@ function renderTurnOrder() {
             const chip = document.createElement('div');
             const teamClass = 'team-' + p.role.team;
             chip.className = 'turn-chip ' + teamClass + (p.jailed ? ' jailed' : '');
-            chip.style.flexDirection = 'column';
-            chip.style.textAlign = 'center';
-            chip.style.padding = '6px 10px';
-            
-            const imgPath = getRoleImgPath(p.role.id);
-            
-            chip.innerHTML = `
-                <img src="${imgPath}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
-                <span style="font-size:11px;font-weight:700;">${p.role.name}</span>
-                <span style="font-size:9px;opacity:0.7;">${p.name}</span>
-                <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>
-            `;
-            bar.appendChild(chip);
-        }
+
+			const imgPath = getRoleImgPath(p.role.id);
+			
+			chip.innerHTML = `
+				<img src="${imgPath}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
+				<span style="font-size:11px;font-weight:700;padding:0 6px;">${p.role.name}</span>
+				<span style="font-size:9px;opacity:0.7;padding:0 6px 2px;">${p.name}</span>
+				<div class="jail-bars-mini">${jailBarsMiniSVG()}</div>
+			`;
+			appendChild(chip);
+					}
     });
 }
 
@@ -1094,11 +1115,11 @@ function renderGamePlayers() {
         // Role display
         let roleContent;
         if (p.role) {
-            const imgPath = getRoleImgPath(p.role.id);
-            roleContent = `<img src="${imgPath}" class="gp-role-mini-img" alt="" onerror="this.style.display='none'"> ${p.role.name}`;
-        } else {
-            roleContent = '❓ Назначить роль';
-        }
+		const imgPath = getRoleImgPath(p.role.id);
+		roleContent = `<img src="${imgPath}" class="gp-role-mini-img" alt="" onerror="this.style.display='none'"><span class="gp-role-text">${p.role.name}</span>`;
+	} else {
+		roleContent = `<span class="gp-role-text">❓ Назначить роль</span>`;
+	}
         
         // Role image next to name
         let nameRowImg = '';
