@@ -214,84 +214,78 @@ h2 {
     color: var(--red);
 }
 
-.player-name-label {
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Game screen */
+/* =============================================
+   TURN ORDER BAR
+   ============================================= */
 .turn-order-bar {
     display: flex;
     gap: 4px;
     overflow-x: auto;
-    padding: 8px 4px;
+    padding: 4px;
     background: var(--bg-card);
     border-radius: 8px;
     margin-bottom: 10px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    align-items: stretch; /* все чипы одной высоты */
+    min-height: 52px;
 }
 
 .turn-order-bar::-webkit-scrollbar {
     display: none;
 }
 
+/* Живой чип в очереди — горизонтальный, изображение слева */
 .turn-chip {
     flex-shrink: 0;
-    padding: 4px 8px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 11px;
     font-weight: 600;
     background: #333;
     white-space: nowrap;
     display: flex;
-    align-items: center;
-    gap: 3px;
+    flex-direction: row;
+    align-items: stretch;
     position: relative;
     overflow: hidden;
+    padding: 0;
 }
 
-.turn-chip.team-citizen { color: var(--blue); border: 1px solid var(--blue); }
-.turn-chip.team-criminal { color: var(--red); border: 1px solid var(--red); }
-.turn-chip.team-outcast { color: var(--yellow); border: 1px solid var(--yellow); }
+.turn-chip.team-citizen  { color: var(--blue);   border: 1px solid var(--blue); }
+.turn-chip.team-criminal { color: var(--red);    border: 1px solid var(--red); }
+.turn-chip.team-outcast  { color: var(--yellow); border: 1px solid var(--yellow); }
 
-/* Turn chip role image */
+/* Картинка роли — занимает всю высоту чипа */
 .turn-chip-role-img {
-    width: 16px;
-    height: 24px;
+    width: auto;
+    height: 100%;
+    min-height: 44px;
+    aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: 6px 0 0 6px;
     flex-shrink: 0;
+    display: block;
 }
 
-/* Dead marker in turn order */
-.turn-dead-marker {
-    flex-shrink: 0;
+/* Текстовая часть чипа */
+.turn-chip-text {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    padding: 4px 8px 4px 5px;
     gap: 1px;
-    padding: 4px 6px;
-    position: relative;
 }
 
-.turn-dead-bar {
-    width: 4px;
-    height: 28px;
-    background: var(--red);
-    border-radius: 2px;
-    opacity: 0.7;
-}
-
-.turn-dead-letter {
-    font-size: 8px;
+.turn-chip-role-name {
+    font-size: 11px;
     font-weight: 700;
-    color: var(--red);
+    line-height: 1.2;
+}
+
+.turn-chip-player-name {
+    font-size: 9px;
     opacity: 0.7;
-    text-transform: uppercase;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 /* Jailed turn chip */
@@ -316,7 +310,31 @@ h2 {
     height: 100%;
 }
 
-/* Game player list */
+/* Мёртвый маркер — красная палка на всю высоту бара */
+.turn-dead-marker {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0 4px;
+    align-self: stretch; /* растягивается на всю высоту flex-контейнера */
+}
+
+.turn-dead-bar {
+    width: 5px;
+    height: 100%;
+    min-height: 44px;
+    background: var(--red);
+    border-radius: 3px;
+    opacity: 0.85;
+    flex: 1;
+}
+
+/* =============================================
+   GAME PLAYER GRID
+   ============================================= */
 .game-player-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -393,14 +411,16 @@ h2 {
 .gp-name-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     flex: 1;
     min-width: 0;
 }
 
+/* Картинка роли рядом с именем — крупнее */
 .gp-role-img {
-    width: 20px;
-    height: 30px;
+    width: auto;
+    height: 32px;
+    aspect-ratio: 2/3;
     object-fit: cover;
     border-radius: 2px;
     flex-shrink: 0;
@@ -496,37 +516,55 @@ h2 {
     display: none;
 }
 
+/* Строка с ролью внизу карточки — изображение слева */
 .gp-role {
     font-size: 12px;
     cursor: pointer;
-    padding: 4px 6px;
-    background: var(--bg-input);
     border-radius: 4px;
-    text-align: center;
     border: 1px solid var(--border);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
+    flex-direction: row;
+    align-items: stretch;
+    overflow: hidden;
+    min-height: 32px;
 }
 
 .gp-role:active {
-    background: #444;
+    filter: brightness(1.2);
 }
 
+/* Картинка внутри строки роли — на всю высоту строки */
 .gp-role-mini-img {
-    width: 14px;
-    height: 21px;
+    width: auto;
+    height: 100%;
+    min-height: 30px;
+    aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 1px;
     flex-shrink: 0;
+    display: block;
+    border-radius: 0;
 }
 
-.team-citizen { color: var(--blue) !important; }
-.team-criminal { color: var(--red) !important; }
-.team-outcast { color: var(--yellow) !important; }
+/* Текст роли в строке */
+.gp-role-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 4px 6px;
+    background: var(--bg-input);
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+}
 
-/* Role picker modal */
+.team-citizen  { color: var(--blue)   !important; }
+.team-criminal { color: var(--red)    !important; }
+.team-outcast  { color: var(--yellow) !important; }
+
+/* =============================================
+   ROLE PICKER MODAL
+   ============================================= */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -586,44 +624,58 @@ h2 {
     margin-bottom: 8px;
 }
 
+/* Кнопка роли — горизонтальная, изображение слева */
 .role-btn {
-    padding: 8px 4px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-card);
     cursor: pointer;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 600;
-    transition: all 0.1s;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+    flex-direction: row;
+    align-items: stretch;
+    overflow: hidden;
+    min-height: 48px;
+    padding: 0;
+    transition: all 0.1s;
 }
 
 .role-btn:active {
     transform: scale(0.93);
 }
 
+/* Картинка роли на всю высоту кнопки */
 .role-btn-img {
-    width: 36px;
-    height: 54px;
+    width: auto;
+    height: 100%;
+    min-height: 48px;
+    aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 3px;
+    flex-shrink: 0;
+    display: block;
+}
+
+/* Текст роли справа от картинки */
+.role-btn-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 4px 4px 4px 5px;
 }
 
 .role-btn .role-label {
     font-size: 10px;
-    line-height: 1.1;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
 }
 
-.role-btn.team-citizen-bg { border-color: var(--blue); }
-.role-btn.team-citizen-bg:active { background: rgba(30,136,229,0.2); }
+.role-btn.team-citizen-bg  { border-color: var(--blue); }
+.role-btn.team-citizen-bg:active  { background: rgba(30,136,229,0.2); }
 .role-btn.team-criminal-bg { border-color: var(--red); }
 .role-btn.team-criminal-bg:active { background: rgba(229,57,53,0.2); }
-.role-btn.team-outcast-bg { border-color: var(--yellow); }
-.role-btn.team-outcast-bg:active { background: rgba(253,216,53,0.2); }
+.role-btn.team-outcast-bg  { border-color: var(--yellow); }
+.role-btn.team-outcast-bg:active  { background: rgba(253,216,53,0.2); }
 
 .modal-close-btn {
     width: 100%;
@@ -822,79 +874,67 @@ const DEFAULT_PLAYERS = [
     "Оля", "Лена", "Тёма"
 ];
 
-// Загружаем список из sessionStorage или дефолт
 let ALL_PLAYERS = JSON.parse(sessionStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
 
 function savePlayers() {
     sessionStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
 }
 
-// Роли: используем .png картинки из Assets/RoleCards/
-// Файл должен называться как role.id + '.png', например: detective.png
 const ROLES = [
-    // Горожане (citizen)
-    { id: 'peaceful',     name: 'Мирный',       team: 'citizen',  turnOrder: null },
-    { id: 'agent',        name: 'Агент',         team: 'citizen',  turnOrder: 4 },
-    { id: 'judge',        name: 'Судья',         team: 'citizen',  turnOrder: 13 },
-    { id: 'detective',    name: 'Детектив',      team: 'citizen',  turnOrder: 8 },
-    { id: 'journalist',   name: 'Журналист',     team: 'citizen',  turnOrder: 9 },
-    { id: 'doctor',       name: 'Доктор',        team: 'citizen',  turnOrder: 2 },
-    { id: 'bodyguard',    name: 'Телохранитель', team: 'citizen',  turnOrder: 3 },
-    { id: 'patrol',       name: 'Патрульный',    team: 'citizen',  turnOrder: 8 },
-    { id: 'psychic',      name: 'Экстрасенс',   team: 'citizen',  turnOrder: 10 },
-    { id: 'fangirl',      name: 'Поклонница',    team: 'citizen',  turnOrder: 14 },
-    { id: 'sleuth',       name: 'Сыщик',         team: 'citizen',  turnOrder: 12 },
-    { id: 'lucky',        name: 'Везунчик',      team: 'citizen',  turnOrder: null },
-    { id: 'avenger',      name: 'Мститель',      team: 'citizen',  turnOrder: null },
-    // Преступники (criminal)
-    { id: 'mafia',        name: 'Мафия',         team: 'criminal', turnOrder: 4 },
-    { id: 'cartel',       name: 'Картель',       team: 'criminal', turnOrder: 5 },
-    { id: 'lawyer',       name: 'Адвокат',       team: 'criminal', turnOrder: 1 },
-    { id: 'mistress',     name: 'Любовница',     team: 'criminal', turnOrder: 7 },
-    { id: 'tracker',      name: 'Ищейка',        team: 'criminal', turnOrder: 11 },
-    { id: 'werewolf',     name: 'Оборотень',     team: 'criminal', turnOrder: 4 },
-    { id: 'boss',         name: 'Босс',          team: 'criminal', turnOrder: 4 },
-    { id: 'leader',       name: 'Главарь',       team: 'criminal', turnOrder: 5 },
-    // Отщепенцы (outcast)
-    { id: 'maniac',       name: 'Маньяк',        team: 'outcast',  turnOrder: 6 },
-    { id: 'poisoner',     name: 'Отравитель',    team: 'outcast',  turnOrder: 6 },
-    { id: 'sectant',      name: 'Сектант',       team: 'outcast',  turnOrder: 6 },
-    { id: 'revolutionary',name: 'Революционер',  team: 'outcast',  turnOrder: 6 },
+    { id: 'peaceful',      name: 'Мирный',        team: 'citizen',  turnOrder: null },
+    { id: 'agent',         name: 'Агент',          team: 'citizen',  turnOrder: 4 },
+    { id: 'judge',         name: 'Судья',          team: 'citizen',  turnOrder: 13 },
+    { id: 'detective',     name: 'Детектив',       team: 'citizen',  turnOrder: 8 },
+    { id: 'journalist',    name: 'Журналист',      team: 'citizen',  turnOrder: 9 },
+    { id: 'doctor',        name: 'Доктор',         team: 'citizen',  turnOrder: 2 },
+    { id: 'bodyguard',     name: 'Телохранитель',  team: 'citizen',  turnOrder: 3 },
+    { id: 'patrol',        name: 'Патрульный',     team: 'citizen',  turnOrder: 8 },
+    { id: 'psychic',       name: 'Экстрасенс',    team: 'citizen',  turnOrder: 10 },
+    { id: 'fangirl',       name: 'Поклонница',     team: 'citizen',  turnOrder: 14 },
+    { id: 'sleuth',        name: 'Сыщик',          team: 'citizen',  turnOrder: 12 },
+    { id: 'lucky',         name: 'Везунчик',       team: 'citizen',  turnOrder: null },
+    { id: 'avenger',       name: 'Мститель',       team: 'citizen',  turnOrder: null },
+    { id: 'mafia',         name: 'Мафия',          team: 'criminal', turnOrder: 4 },
+    { id: 'cartel',        name: 'Картель',        team: 'criminal', turnOrder: 5 },
+    { id: 'lawyer',        name: 'Адвокат',        team: 'criminal', turnOrder: 1 },
+    { id: 'mistress',      name: 'Любовница',      team: 'criminal', turnOrder: 7 },
+    { id: 'tracker',       name: 'Ищейка',         team: 'criminal', turnOrder: 11 },
+    { id: 'werewolf',      name: 'Оборотень',      team: 'criminal', turnOrder: 4 },
+    { id: 'boss',          name: 'Босс',           team: 'criminal', turnOrder: 4 },
+    { id: 'leader',        name: 'Главарь',        team: 'criminal', turnOrder: 5 },
+    { id: 'maniac',        name: 'Маньяк',         team: 'outcast',  turnOrder: 6 },
+    { id: 'poisoner',      name: 'Отравитель',     team: 'outcast',  turnOrder: 6 },
+    { id: 'sectant',       name: 'Сектант',        team: 'outcast',  turnOrder: 6 },
+    { id: 'revolutionary', name: 'Революционер',   team: 'outcast',  turnOrder: 6 },
 ];
 
 function getRoleImgPath(roleId) {
     return `Assets/RoleCards/${roleId}.png`;
 }
 
-// State
 let selectedPlayers = new Set();
-let gamePlayers = []; // [{name, role: null|roleObj, eliminated: false, jailed: false}]
+let gamePlayers = [];
 let currentPickerPlayer = null;
 
-// ===== ADD PLAYER =====
+// ===================================================================
+// LOBBY
+// ===================================================================
 function addNewPlayer() {
     const input = document.getElementById('new-player-input');
     const name = input.value.trim();
     if (!name) return;
-    if (ALL_PLAYERS.includes(name)) {
-        alert('Игрок с таким именем уже есть!');
-        return;
-    }
+    if (ALL_PLAYERS.includes(name)) { alert('Игрок с таким именем уже есть!'); return; }
     ALL_PLAYERS.push(name);
     savePlayers();
     input.value = '';
     renderLobby();
 }
 
-// Enter to add
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('new-player-input');
     if (input) {
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addNewPlayer();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); addNewPlayer(); }
         });
     }
 });
@@ -909,54 +949,40 @@ function removePlayerFromList(name) {
     }
 }
 
-// ===== LOBBY =====
 function renderLobby() {
     const c = document.getElementById('lobby-players');
     c.innerHTML = '';
     ALL_PLAYERS.forEach(name => {
         const div = document.createElement('div');
         div.className = 'player-check' + (selectedPlayers.has(name) ? ' checked' : '');
-        
         const isCustom = !DEFAULT_PLAYERS.includes(name);
-        
         div.innerHTML = `
             <div class="check-box"></div>
             <span class="player-name-label">${name}</span>
             ${isCustom ? `<button class="player-remove-btn" title="Удалить">✕</button>` : ''}
         `;
-        
-        // Toggle select on click (but not on remove button)
         div.onclick = (e) => {
             if (e.target.classList.contains('player-remove-btn')) return;
             if (selectedPlayers.has(name)) selectedPlayers.delete(name);
             else selectedPlayers.add(name);
             renderLobby();
         };
-        
-        // Remove button
         if (isCustom) {
-            const removeBtn = div.querySelector('.player-remove-btn');
-            removeBtn.onclick = (e) => {
+            div.querySelector('.player-remove-btn').onclick = (e) => {
                 e.stopPropagation();
                 removePlayerFromList(name);
             };
         }
-        
         c.appendChild(div);
     });
 }
 
-function selectAll() {
-    ALL_PLAYERS.forEach(n => selectedPlayers.add(n));
-    renderLobby();
-}
+function selectAll()   { ALL_PLAYERS.forEach(n => selectedPlayers.add(n)); renderLobby(); }
+function deselectAll() { selectedPlayers.clear(); renderLobby(); }
 
-function deselectAll() {
-    selectedPlayers.clear();
-    renderLobby();
-}
-
-// ===== SVG JAIL BARS =====
+// ===================================================================
+// SVG JAIL BARS
+// ===================================================================
 function jailBarsSVG() {
     return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="20" y1="0" x2="20" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
@@ -978,17 +1004,13 @@ function jailBarsMiniSVG() {
     </svg>`;
 }
 
-// ===== GAME =====
+// ===================================================================
+// GAME
+// ===================================================================
 function startGame() {
-    if (selectedPlayers.size < 2) {
-        alert('Выбери хотя бы 2 игроков!');
-        return;
-    }
+    if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
     gamePlayers = Array.from(selectedPlayers).map(name => ({
-        name,
-        role: null,
-        eliminated: false,
-        jailed: false
+        name, role: null, eliminated: false, jailed: false
     }));
     document.getElementById('screen-lobby').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
@@ -1003,66 +1025,60 @@ function renderGame() {
 }
 
 function renderStats() {
-    const alive = gamePlayers.filter(p => !p.eliminated);
-    const total = gamePlayers.length;
-    const citizens = alive.filter(p => p.role && p.role.team === 'citizen').length;
-    const criminals = alive.filter(p => p.role && p.role.team === 'criminal').length;
-    const outcasts = alive.filter(p => p.role && p.role.team === 'outcast').length;
+    const alive      = gamePlayers.filter(p => !p.eliminated);
+    const total      = gamePlayers.length;
+    const citizens   = alive.filter(p => p.role && p.role.team === 'citizen').length;
+    const criminals  = alive.filter(p => p.role && p.role.team === 'criminal').length;
+    const outcasts   = alive.filter(p => p.role && p.role.team === 'outcast').length;
     const unassigned = alive.filter(p => !p.role).length;
-    const jailed = gamePlayers.filter(p => !p.eliminated && p.jailed).length;
-    
-    const bar = document.getElementById('stats-bar');
-    bar.innerHTML = `
+    const jailed     = gamePlayers.filter(p => !p.eliminated && p.jailed).length;
+
+    document.getElementById('stats-bar').innerHTML = `
         <span class="stat-item">👥 ${alive.length}/${total}</span>
         <span class="stat-item team-citizen">🔵 ${citizens}</span>
         <span class="stat-item team-criminal">🔴 ${criminals}</span>
         <span class="stat-item team-outcast">🟡 ${outcasts}</span>
         ${unassigned ? `<span class="stat-item">❓ ${unassigned}</span>` : ''}
-        ${jailed ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}
+        ${jailed     ? `<span class="stat-item">🔒 ${jailed}</span>`    : ''}
     `;
 }
 
 function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
-    
-    // Get all players with night actions (roles with turnOrder)
+
     const withTurnOrder = gamePlayers
         .filter(p => p.role && p.role.turnOrder !== null)
         .sort((a, b) => a.role.turnOrder - b.role.turnOrder);
-    
+
     if (withTurnOrder.length === 0) {
-        bar.innerHTML = '<span style="color:#666;font-size:12px;padding:4px;">Назначьте роли, чтобы увидеть очередь</span>';
+        bar.innerHTML = '<span style="color:#666;font-size:12px;padding:4px 8px;align-self:center;">Назначьте роли, чтобы увидеть очередь</span>';
         return;
     }
-    
+
     withTurnOrder.forEach(p => {
         if (p.eliminated) {
-            // Dead — show red bar with first letter of role
+            // Мёртвый — красная палка на всю высоту
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
-            const firstLetter = p.role.name.charAt(0).toUpperCase();
-            marker.innerHTML = `
-                <div class="turn-dead-bar"></div>
-                <span class="turn-dead-letter">${firstLetter}</span>
-            `;
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
+            marker.innerHTML = `<div class="turn-dead-bar"></div>`;
             bar.appendChild(marker);
         } else {
-            // Alive chip
+            // Живой — горизонтальный чип, картинка слева
             const chip = document.createElement('div');
             const teamClass = 'team-' + p.role.team;
             chip.className = 'turn-chip ' + teamClass + (p.jailed ? ' jailed' : '');
-            chip.style.flexDirection = 'column';
-            chip.style.textAlign = 'center';
-            chip.style.padding = '6px 10px';
-            
+            chip.title = `${p.name} — ${p.role.name}`;
+
             const imgPath = getRoleImgPath(p.role.id);
-            
             chip.innerHTML = `
-                <img src="${imgPath}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
-                <span style="font-size:11px;font-weight:700;">${p.role.name}</span>
-                <span style="font-size:9px;opacity:0.7;">${p.name}</span>
+                <img src="${imgPath}" class="turn-chip-role-img" alt="${p.role.name}"
+                     onerror="this.style.display='none'">
+                <div class="turn-chip-text">
+                    <span class="turn-chip-role-name">${p.role.name}</span>
+                    <span class="turn-chip-player-name">${p.name}</span>
+                </div>
                 <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>
             `;
             bar.appendChild(chip);
@@ -1073,14 +1089,13 @@ function renderTurnOrder() {
 function renderGamePlayers() {
     const c = document.getElementById('game-players');
     c.innerHTML = '';
-    
-    // Sort: alive first, eliminated last
+
     const sorted = [...gamePlayers].sort((a, b) => {
         if (a.eliminated && !b.eliminated) return 1;
         if (!a.eliminated && b.eliminated) return -1;
         return 0;
     });
-    
+
     sorted.forEach((p) => {
         const idx = gamePlayers.indexOf(p);
         const card = document.createElement('div');
@@ -1088,25 +1103,27 @@ function renderGamePlayers() {
         if (p.eliminated) classes += ' eliminated';
         if (p.jailed && !p.eliminated) classes += ' jailed';
         card.className = classes;
-        
+
         const teamClass = p.role ? 'team-' + p.role.team : '';
-        
-        // Role display
-        let roleContent;
-        if (p.role) {
-            const imgPath = getRoleImgPath(p.role.id);
-            roleContent = `<img src="${imgPath}" class="gp-role-mini-img" alt="" onerror="this.style.display='none'"> ${p.role.name}`;
-        } else {
-            roleContent = '❓ Назначить роль';
-        }
-        
-        // Role image next to name
+
+        // Картинка роли рядом с именем
         let nameRowImg = '';
         if (p.role) {
-            const imgPath = getRoleImgPath(p.role.id);
-            nameRowImg = `<img src="${imgPath}" class="gp-role-img" alt="" onerror="this.style.display='none'">`;
+            nameRowImg = `<img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.style.display='none'">`;
         }
-        
+
+        // Строка роли: картинка слева + текст справа
+        let roleInner = '';
+        if (p.role) {
+            roleInner = `
+                <img src="${getRoleImgPath(p.role.id)}" class="gp-role-mini-img" alt=""
+                     onerror="this.style.display='none'">
+                <span class="gp-role-label ${teamClass}">${p.role.name}</span>
+            `;
+        } else {
+            roleInner = `<span class="gp-role-label">❓ Назначить роль</span>`;
+        }
+
         card.innerHTML = `
             <div class="elim-overlay">✕</div>
             <div class="jail-overlay">${jailBarsSVG()}</div>
@@ -1117,33 +1134,23 @@ function renderGamePlayers() {
                 </div>
                 <div class="gp-actions">
                     <button class="gp-restore-btn" onclick="restorePlayer(${idx})">↩</button>
-                    <button class="gp-jail-btn" onclick="toggleJail(${idx})" title="Тюрьма">🔒</button>
-                    <button class="gp-elim-btn" onclick="eliminatePlayer(${idx})">✕</button>
+                    <button class="gp-jail-btn"    onclick="toggleJail(${idx})"      title="Тюрьма">🔒</button>
+                    <button class="gp-elim-btn"    onclick="eliminatePlayer(${idx})">✕</button>
                 </div>
             </div>
-            <div class="gp-role ${teamClass}" onclick="openRolePicker(${idx})">${roleContent}</div>
+            <div class="gp-role ${teamClass}" onclick="openRolePicker(${idx})">${roleInner}</div>
         `;
         c.appendChild(card);
     });
 }
 
-function eliminatePlayer(idx) {
-    gamePlayers[idx].eliminated = true;
-    gamePlayers[idx].jailed = false;
-    renderGame();
-}
+function eliminatePlayer(idx) { gamePlayers[idx].eliminated = true;  gamePlayers[idx].jailed = false; renderGame(); }
+function restorePlayer(idx)   { gamePlayers[idx].eliminated = false; renderGame(); }
+function toggleJail(idx)      { gamePlayers[idx].jailed = !gamePlayers[idx].jailed; renderGame(); }
 
-function restorePlayer(idx) {
-    gamePlayers[idx].eliminated = false;
-    renderGame();
-}
-
-function toggleJail(idx) {
-    gamePlayers[idx].jailed = !gamePlayers[idx].jailed;
-    renderGame();
-}
-
-// ===== ROLE PICKER =====
+// ===================================================================
+// ROLE PICKER
+// ===================================================================
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
     document.getElementById('modal-title').textContent = `Роль для: ${gamePlayers[idx].name}`;
@@ -1153,24 +1160,24 @@ function openRolePicker(idx) {
 
 function renderRoleButtons() {
     const containers = {
-        citizen: document.getElementById('roles-citizen'),
+        citizen:  document.getElementById('roles-citizen'),
         criminal: document.getElementById('roles-criminal'),
-        outcast: document.getElementById('roles-outcast'),
+        outcast:  document.getElementById('roles-outcast'),
     };
-    
     Object.values(containers).forEach(c => c.innerHTML = '');
-    
+
     ROLES.forEach(role => {
         const btn = document.createElement('button');
-        const bgClass = 'team-' + role.team + '-bg';
+        const bgClass   = 'team-' + role.team + '-bg';
         const textClass = 'team-' + role.team;
         btn.className = `role-btn ${bgClass}`;
-        
-        const imgPath = getRoleImgPath(role.id);
-        
+
         btn.innerHTML = `
-            <img src="${imgPath}" class="role-btn-img" alt="${role.name}" onerror="this.style.display='none'">
-            <span class="role-label ${textClass}">${role.name}</span>
+            <img src="${getRoleImgPath(role.id)}" class="role-btn-img" alt="${role.name}"
+                 onerror="this.style.display='none'">
+            <div class="role-btn-text">
+                <span class="role-label ${textClass}">${role.name}</span>
+            </div>
         `;
         btn.onclick = () => pickRole(role);
         containers[role.team].appendChild(btn);
@@ -1178,9 +1185,7 @@ function renderRoleButtons() {
 }
 
 function pickRole(role) {
-    if (currentPickerPlayer !== null) {
-        gamePlayers[currentPickerPlayer].role = role;
-    }
+    if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role;
     closeModal();
     renderGame();
 }
@@ -1191,17 +1196,17 @@ function closeModal() {
 }
 
 function closeModalOutside(e) {
-    if (e.target === document.getElementById('role-modal')) {
-        closeModal();
-    }
+    if (e.target === document.getElementById('role-modal')) closeModal();
 }
 
-// ===== NAVIGATION =====
+// ===================================================================
+// NAVIGATION
+// ===================================================================
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
     document.querySelectorAll('.nav-btn').forEach((b, i) => {
-        b.classList.toggle('active', 
+        b.classList.toggle('active',
             (name === 'game' && i === 0) || (name === 'notes' && i === 1));
     });
 }
@@ -1215,7 +1220,9 @@ function endGame() {
     document.getElementById('notepad').value = '';
 }
 
-// ===== INIT =====
+// ===================================================================
+// INIT
+// ===================================================================
 renderLobby();
 </script>
 </body>
