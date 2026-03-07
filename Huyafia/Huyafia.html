@@ -63,7 +63,6 @@ h2 {
     letter-spacing: 1px;
 }
 
-/* Buttons */
 .btn {
     padding: 10px 16px;
     border: none;
@@ -79,28 +78,11 @@ h2 {
     transform: scale(0.95);
 }
 
-.btn-red {
-    background: var(--red);
-}
+.btn-red { background: var(--red); }
+.btn-dark { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); }
+.btn-green { background: var(--green); }
+.btn-full { width: 100%; padding: 14px; font-size: 16px; margin-top: 8px; }
 
-.btn-dark {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    color: var(--text-main);
-}
-
-.btn-green {
-    background: var(--green);
-}
-
-.btn-full {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    margin-top: 8px;
-}
-
-/* Add player */
 .add-player-row {
     display: flex;
     gap: 6px;
@@ -119,15 +101,9 @@ h2 {
     outline: none;
 }
 
-.add-player-row input::placeholder {
-    color: var(--text-dim);
-}
+.add-player-row input::placeholder { color: var(--text-dim); }
+.add-player-row input:focus { border-color: var(--red); }
 
-.add-player-row input:focus {
-    border-color: var(--red);
-}
-
-/* Player selection grid */
 .player-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -152,9 +128,7 @@ h2 {
     background: #3a2020;
 }
 
-.player-check input {
-    display: none;
-}
+.player-check input { display: none; }
 
 .check-box {
     width: 22px;
@@ -180,9 +154,7 @@ h2 {
     display: none;
 }
 
-.player-check.checked .check-box::after {
-    display: block;
-}
+.player-check.checked .check-box::after { display: block; }
 
 .player-name-label {
     font-size: 14px;
@@ -214,7 +186,7 @@ h2 {
     color: var(--red);
 }
 
-/* Game screen */
+/* Turn order bar */
 .turn-order-bar {
     display: flex;
     gap: 4px;
@@ -229,9 +201,7 @@ h2 {
     min-height: 70px;
 }
 
-.turn-order-bar::-webkit-scrollbar {
-    display: none;
-}
+.turn-order-bar::-webkit-scrollbar { display: none; }
 
 .turn-chip {
     flex-shrink: 0;
@@ -255,7 +225,6 @@ h2 {
 .turn-chip.team-criminal { color: var(--red); border: 1px solid var(--red); }
 .turn-chip.team-outcast { color: var(--yellow); border: 1px solid var(--yellow); }
 
-/* Turn chip role image */
 .turn-chip-role-img {
     width: 28px;
     height: 38px;
@@ -264,7 +233,7 @@ h2 {
     flex-shrink: 0;
 }
 
-/* Dead marker in turn order — fills full height */
+/* Dead marker — full height */
 .turn-dead-marker {
     flex-shrink: 0;
     display: flex;
@@ -296,14 +265,8 @@ h2 {
     flex-shrink: 0;
 }
 
-/* Jailed turn chip */
-.turn-chip.jailed {
-    filter: brightness(0.5);
-}
-
-.turn-chip.jailed .jail-bars-mini {
-    display: block;
-}
+.turn-chip.jailed { filter: brightness(0.5); }
+.turn-chip.jailed .jail-bars-mini { display: block; }
 
 .jail-bars-mini {
     display: none;
@@ -313,12 +276,9 @@ h2 {
     z-index: 2;
 }
 
-.jail-bars-mini svg {
-    width: 100%;
-    height: 100%;
-}
+.jail-bars-mini svg { width: 100%; height: 100%; }
 
-/* Game player list */
+/* Game player cards */
 .game-player-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -332,8 +292,8 @@ h2 {
     padding: 8px;
     position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 6px;
     transition: all 0.2s;
     border: 1px solid var(--border);
 }
@@ -343,18 +303,9 @@ h2 {
     order: 999;
 }
 
-.game-player-card.eliminated .elim-overlay {
-    display: flex;
-}
-
-/* Jailed card */
-.game-player-card.jailed {
-    filter: brightness(0.6);
-}
-
-.game-player-card.jailed .jail-overlay {
-    display: block;
-}
+.game-player-card.eliminated .elim-overlay { display: flex; }
+.game-player-card.jailed { filter: brightness(0.6); }
+.game-player-card.jailed .jail-overlay { display: block; }
 
 .jail-overlay {
     display: none;
@@ -366,10 +317,7 @@ h2 {
     overflow: hidden;
 }
 
-.jail-overlay svg {
-    width: 100%;
-    height: 100%;
-}
+.jail-overlay svg { width: 100%; height: 100%; }
 
 .elim-overlay {
     display: none;
@@ -385,27 +333,29 @@ h2 {
     z-index: 2;
 }
 
+/* Role image on the left side of the card */
+.gp-role-img {
+    width: 36px;
+    align-self: stretch;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Right content area (name + actions + role button) */
+.gp-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
 .gp-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-}
-
-.gp-name-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-    min-width: 0;
-}
-
-.gp-role-img {
-    width: 28px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 3px;
-    flex-shrink: 0;
 }
 
 .gp-name {
@@ -439,15 +389,8 @@ h2 {
     z-index: 3;
 }
 
-.gp-jail-btn:active {
-    background: var(--yellow);
-    color: #000;
-}
-
-.game-player-card.jailed .gp-jail-btn {
-    background: var(--yellow);
-    color: #000;
-}
+.gp-jail-btn:active { background: var(--yellow); color: #000; }
+.game-player-card.jailed .gp-jail-btn { background: var(--yellow); color: #000; }
 
 .gp-elim-btn {
     width: 26px;
@@ -465,10 +408,7 @@ h2 {
     z-index: 3;
 }
 
-.gp-elim-btn:active {
-    background: var(--red);
-    color: #f0f0f0;
-}
+.gp-elim-btn:active { background: var(--red); color: #f0f0f0; }
 
 .gp-restore-btn {
     display: none;
@@ -486,17 +426,9 @@ h2 {
     z-index: 3;
 }
 
-.game-player-card.eliminated .gp-restore-btn {
-    display: flex;
-}
-
-.game-player-card.eliminated .gp-elim-btn {
-    display: none;
-}
-
-.game-player-card.eliminated .gp-jail-btn {
-    display: none;
-}
+.game-player-card.eliminated .gp-restore-btn { display: flex; }
+.game-player-card.eliminated .gp-elim-btn { display: none; }
+.game-player-card.eliminated .gp-jail-btn { display: none; }
 
 .gp-role {
     font-size: 12px;
@@ -509,20 +441,9 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
 }
 
-.gp-role:active {
-    background: #444;
-}
-
-.gp-role-mini-img {
-    width: 20px;
-    height: 28px;
-    object-fit: cover;
-    border-radius: 2px;
-    flex-shrink: 0;
-}
+.gp-role:active { background: #444; }
 
 .team-citizen { color: var(--blue) !important; }
 .team-criminal { color: var(--red) !important; }
@@ -540,9 +461,7 @@ h2 {
     padding: 16px;
 }
 
-.modal-overlay.active {
-    display: flex;
-}
+.modal-overlay.active { display: flex; }
 
 .modal {
     background: var(--bg-dark);
@@ -564,14 +483,9 @@ h2 {
     z-index: 5;
 }
 
-.modal-header h3 {
-    font-size: 16px;
-    color: var(--text-main);
-}
+.modal-header h3 { font-size: 16px; color: var(--text-main); }
 
-.modal-body {
-    padding: 8px;
-}
+.modal-body { padding: 8px; }
 
 .role-section-title {
     font-size: 12px;
@@ -604,9 +518,7 @@ h2 {
     gap: 4px;
 }
 
-.role-btn:active {
-    transform: scale(0.93);
-}
+.role-btn:active { transform: scale(0.93); }
 
 .role-btn-img {
     width: 100%;
@@ -617,10 +529,7 @@ h2 {
     border-radius: 4px;
 }
 
-.role-btn .role-label {
-    font-size: 10px;
-    line-height: 1.1;
-}
+.role-btn .role-label { font-size: 10px; line-height: 1.1; }
 
 .role-btn.team-citizen-bg { border-color: var(--blue); }
 .role-btn.team-citizen-bg:active { background: rgba(30,136,229,0.2); }
@@ -653,7 +562,6 @@ h2 {
     margin-bottom: 8px;
 }
 
-/* Notepad */
 .notepad-area {
     width: 100%;
     min-height: 120px;
@@ -667,7 +575,6 @@ h2 {
     font-family: inherit;
 }
 
-/* Bottom nav */
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -679,9 +586,7 @@ h2 {
     z-index: 50;
 }
 
-.bottom-nav.active {
-    display: flex;
-}
+.bottom-nav.active { display: flex; }
 
 .nav-btn {
     flex: 1;
@@ -697,15 +602,9 @@ h2 {
     gap: 2px;
 }
 
-.nav-btn.active {
-    color: var(--red);
-}
+.nav-btn.active { color: var(--red); }
+.nav-btn .nav-icon { font-size: 20px; }
 
-.nav-btn .nav-icon {
-    font-size: 20px;
-}
-
-/* Stats bar */
 .stats-bar {
     display: flex;
     gap: 8px;
@@ -737,64 +636,48 @@ h2 {
 </head>
 <body>
 
-<!-- ==================== SCREEN 1: LOBBY ==================== -->
 <div id="screen-lobby" class="screen active">
     <h1>🔫 Мафия: Большой Город</h1>
     <h2>Добавить игрока</h2>
-    
     <div class="add-player-row">
         <input type="text" id="new-player-input" placeholder="Имя нового игрока..." maxlength="20">
         <button class="btn btn-green" onclick="addNewPlayer()">+</button>
     </div>
-    
     <h2>Выбери игроков</h2>
-    
     <div class="select-actions">
         <button class="btn btn-dark" onclick="selectAll()">Выбрать всех</button>
         <button class="btn btn-dark" onclick="deselectAll()">Снять все</button>
     </div>
-    
     <div id="lobby-players" class="player-grid"></div>
-    
     <button class="btn btn-red btn-full" onclick="startGame()">🎮 НАЧАТЬ ИГРУ</button>
 </div>
 
-<!-- ==================== SCREEN 2: GAME ==================== -->
 <div id="screen-game" class="screen">
     <h1>🌙 Игра</h1>
-    
     <h2>Очередь ходов</h2>
     <div id="turn-order" class="turn-order-bar"></div>
-    
     <div id="stats-bar" class="stats-bar"></div>
-    
     <h2>Игроки</h2>
     <div id="game-players" class="game-player-grid"></div>
 </div>
 
-<!-- ==================== SCREEN 3: NOTEPAD ==================== -->
 <div id="screen-notes" class="screen">
     <h1>📝 Блокнот</h1>
     <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
 </div>
 
-<!-- ==================== BOTTOM NAV ==================== -->
 <div id="bottom-nav" class="bottom-nav">
     <button class="nav-btn active" onclick="showScreen('game')">
-        <span class="nav-icon">🎮</span>
-        Игра
+        <span class="nav-icon">🎮</span>Игра
     </button>
     <button class="nav-btn" onclick="showScreen('notes')">
-        <span class="nav-icon">📝</span>
-        Блокнот
+        <span class="nav-icon">📝</span>Блокнот
     </button>
     <button class="nav-btn" onclick="endGame()">
-        <span class="nav-icon">🚪</span>
-        Выход
+        <span class="nav-icon">🚪</span>Выход
     </button>
 </div>
 
-<!-- ==================== ROLE PICKER MODAL ==================== -->
 <div id="role-modal" class="modal-overlay" onclick="closeModalOutside(event)">
     <div class="modal">
         <div class="modal-header">
@@ -802,13 +685,10 @@ h2 {
         </div>
         <div class="modal-body">
             <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
-
             <div class="role-section-title team-citizen">🔵 Горожане</div>
             <div id="roles-citizen" class="role-grid"></div>
-
             <div class="role-section-title team-criminal">🔴 Преступники</div>
             <div id="roles-criminal" class="role-grid"></div>
-
             <div class="role-section-title team-outcast">🟡 Отщепенцы</div>
             <div id="roles-outcast" class="role-grid"></div>
         </div>
@@ -817,13 +697,10 @@ h2 {
 </div>
 
 <script>
-// ===================================================================
-// НАСТРОЙКА ИГРОКОВ
-// ===================================================================
 const DEFAULT_PLAYERS = [
-    "Димон", "Вова", "Вадим", "Катя", "Влад", "Рома", "Маша", "Инна",
-    "Рябчун", "Виталик", "Стас", "Мотвей", "Надя", "Полина", "Соня",
-    "Оля", "Лена", "Тёма"
+    "Димон","Вова","Вадим","Катя","Влад","Рома","Маша","Инна",
+    "Рябчун","Виталик","Стас","Мотвей","Надя","Полина","Соня",
+    "Оля","Лена","Тёма"
 ];
 
 let ALL_PLAYERS = JSON.parse(sessionStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
@@ -833,31 +710,31 @@ function savePlayers() {
 }
 
 const ROLES = [
-    { id: 'peaceful',     name: 'Мирный',       team: 'citizen',  turnOrder: null },
-    { id: 'agent',        name: 'Агент',         team: 'citizen',  turnOrder: 4 },
-    { id: 'judge',        name: 'Судья',         team: 'citizen',  turnOrder: 13 },
-    { id: 'detective',    name: 'Детектив',      team: 'citizen',  turnOrder: 8 },
-    { id: 'journalist',   name: 'Журналист',     team: 'citizen',  turnOrder: 9 },
-    { id: 'doctor',       name: 'Доктор',        team: 'citizen',  turnOrder: 2 },
-    { id: 'bodyguard',    name: 'Телохранитель', team: 'citizen',  turnOrder: 3 },
-    { id: 'patrol',       name: 'Патрульный',    team: 'citizen',  turnOrder: 8 },
-    { id: 'psychic',      name: 'Экстрасенс',   team: 'citizen',  turnOrder: 10 },
-    { id: 'fangirl',      name: 'Поклонница',    team: 'citizen',  turnOrder: 14 },
-    { id: 'sleuth',       name: 'Сыщик',         team: 'citizen',  turnOrder: 12 },
-    { id: 'lucky',        name: 'Везунчик',      team: 'citizen',  turnOrder: null },
-    { id: 'avenger',      name: 'Мститель',      team: 'citizen',  turnOrder: null },
-    { id: 'mafia',        name: 'Мафия',         team: 'criminal', turnOrder: 4 },
-    { id: 'cartel',       name: 'Картель',       team: 'criminal', turnOrder: 5 },
-    { id: 'lawyer',       name: 'Адвокат',       team: 'criminal', turnOrder: 1 },
-    { id: 'mistress',     name: 'Любовница',     team: 'criminal', turnOrder: 7 },
-    { id: 'tracker',      name: 'Ищейка',        team: 'criminal', turnOrder: 11 },
-    { id: 'werewolf',     name: 'Оборотень',     team: 'criminal', turnOrder: 4 },
-    { id: 'boss',         name: 'Босс',          team: 'criminal', turnOrder: 4 },
-    { id: 'leader',       name: 'Главарь',       team: 'criminal', turnOrder: 5 },
-    { id: 'maniac',       name: 'Маньяк',        team: 'outcast',  turnOrder: 6 },
-    { id: 'poisoner',     name: 'Отравитель',    team: 'outcast',  turnOrder: 6 },
-    { id: 'sectant',      name: 'Сектант',       team: 'outcast',  turnOrder: 6 },
-    { id: 'revolutionary',name: 'Революционер',  team: 'outcast',  turnOrder: 6 },
+    {id:'peaceful',name:'Мирный',team:'citizen',turnOrder:null},
+    {id:'agent',name:'Агент',team:'citizen',turnOrder:4},
+    {id:'judge',name:'Судья',team:'citizen',turnOrder:13},
+    {id:'detective',name:'Детектив',team:'citizen',turnOrder:8},
+    {id:'journalist',name:'Журналист',team:'citizen',turnOrder:9},
+    {id:'doctor',name:'Доктор',team:'citizen',turnOrder:2},
+    {id:'bodyguard',name:'Телохранитель',team:'citizen',turnOrder:3},
+    {id:'patrol',name:'Патрульный',team:'citizen',turnOrder:8},
+    {id:'psychic',name:'Экстрасенс',team:'citizen',turnOrder:10},
+    {id:'fangirl',name:'Поклонница',team:'citizen',turnOrder:14},
+    {id:'sleuth',name:'Сыщик',team:'citizen',turnOrder:12},
+    {id:'lucky',name:'Везунчик',team:'citizen',turnOrder:null},
+    {id:'avenger',name:'Мститель',team:'citizen',turnOrder:null},
+    {id:'mafia',name:'Мафия',team:'criminal',turnOrder:4},
+    {id:'cartel',name:'Картель',team:'criminal',turnOrder:5},
+    {id:'lawyer',name:'Адвокат',team:'criminal',turnOrder:1},
+    {id:'mistress',name:'Любовница',team:'criminal',turnOrder:7},
+    {id:'tracker',name:'Ищейка',team:'criminal',turnOrder:11},
+    {id:'werewolf',name:'Оборотень',team:'criminal',turnOrder:4},
+    {id:'boss',name:'Босс',team:'criminal',turnOrder:4},
+    {id:'leader',name:'Главарь',team:'criminal',turnOrder:5},
+    {id:'maniac',name:'Маньяк',team:'outcast',turnOrder:6},
+    {id:'poisoner',name:'Отравитель',team:'outcast',turnOrder:6},
+    {id:'sectant',name:'Сектант',team:'outcast',turnOrder:6},
+    {id:'revolutionary',name:'Революционер',team:'outcast',turnOrder:6},
 ];
 
 function getRoleImgPath(roleId) {
@@ -872,10 +749,7 @@ function addNewPlayer() {
     const input = document.getElementById('new-player-input');
     const name = input.value.trim();
     if (!name) return;
-    if (ALL_PLAYERS.includes(name)) {
-        alert('Игрок с таким именем уже есть!');
-        return;
-    }
+    if (ALL_PLAYERS.includes(name)) { alert('Игрок с таким именем уже есть!'); return; }
     ALL_PLAYERS.push(name);
     savePlayers();
     input.value = '';
@@ -884,24 +758,12 @@ function addNewPlayer() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('new-player-input');
-    if (input) {
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addNewPlayer();
-            }
-        });
-    }
+    if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewPlayer(); } });
 });
 
 function removePlayerFromList(name) {
     const idx = ALL_PLAYERS.indexOf(name);
-    if (idx !== -1) {
-        ALL_PLAYERS.splice(idx, 1);
-        selectedPlayers.delete(name);
-        savePlayers();
-        renderLobby();
-    }
+    if (idx !== -1) { ALL_PLAYERS.splice(idx, 1); selectedPlayers.delete(name); savePlayers(); renderLobby(); }
 }
 
 function renderLobby() {
@@ -911,81 +773,34 @@ function renderLobby() {
         const div = document.createElement('div');
         div.className = 'player-check' + (selectedPlayers.has(name) ? ' checked' : '');
         const isCustom = !DEFAULT_PLAYERS.includes(name);
-        div.innerHTML = `
-            <div class="check-box"></div>
-            <span class="player-name-label">${name}</span>
-            ${isCustom ? `<button class="player-remove-btn" title="Удалить">✕</button>` : ''}
-        `;
-        div.onclick = (e) => {
-            if (e.target.classList.contains('player-remove-btn')) return;
-            if (selectedPlayers.has(name)) selectedPlayers.delete(name);
-            else selectedPlayers.add(name);
-            renderLobby();
-        };
-        if (isCustom) {
-            const removeBtn = div.querySelector('.player-remove-btn');
-            removeBtn.onclick = (e) => {
-                e.stopPropagation();
-                removePlayerFromList(name);
-            };
-        }
+        div.innerHTML = `<div class="check-box"></div><span class="player-name-label">${name}</span>${isCustom ? `<button class="player-remove-btn" title="Удалить">✕</button>` : ''}`;
+        div.onclick = (e) => { if (e.target.classList.contains('player-remove-btn')) return; if (selectedPlayers.has(name)) selectedPlayers.delete(name); else selectedPlayers.add(name); renderLobby(); };
+        if (isCustom) { div.querySelector('.player-remove-btn').onclick = (e) => { e.stopPropagation(); removePlayerFromList(name); }; }
         c.appendChild(div);
     });
 }
 
-function selectAll() {
-    ALL_PLAYERS.forEach(n => selectedPlayers.add(n));
-    renderLobby();
-}
-
-function deselectAll() {
-    selectedPlayers.clear();
-    renderLobby();
-}
+function selectAll() { ALL_PLAYERS.forEach(n => selectedPlayers.add(n)); renderLobby(); }
+function deselectAll() { selectedPlayers.clear(); renderLobby(); }
 
 function jailBarsSVG() {
-    return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="20" y1="0" x2="20" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
-        <line x1="40" y1="0" x2="40" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
-        <line x1="60" y1="0" x2="60" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
-        <line x1="80" y1="0" x2="80" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
-        <line x1="0" y1="30" x2="100" y2="30" stroke="#aaa" stroke-width="2" opacity="0.4"/>
-        <line x1="0" y1="70" x2="100" y2="70" stroke="#aaa" stroke-width="2" opacity="0.4"/>
-    </svg>`;
+    return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="0" x2="20" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/><line x1="40" y1="0" x2="40" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/><line x1="60" y1="0" x2="60" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/><line x1="80" y1="0" x2="80" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/><line x1="0" y1="30" x2="100" y2="30" stroke="#aaa" stroke-width="2" opacity="0.4"/><line x1="0" y1="70" x2="100" y2="70" stroke="#aaa" stroke-width="2" opacity="0.4"/></svg>`;
 }
 
 function jailBarsMiniSVG() {
-    return `<svg viewBox="0 0 60 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="12" y1="0" x2="12" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/>
-        <line x1="24" y1="0" x2="24" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/>
-        <line x1="36" y1="0" x2="36" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/>
-        <line x1="48" y1="0" x2="48" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/>
-        <line x1="0" y1="20" x2="60" y2="20" stroke="#aaa" stroke-width="1.5" opacity="0.4"/>
-    </svg>`;
+    return `<svg viewBox="0 0 60 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="0" x2="12" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/><line x1="24" y1="0" x2="24" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/><line x1="36" y1="0" x2="36" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/><line x1="48" y1="0" x2="48" y2="40" stroke="#aaa" stroke-width="2" opacity="0.6"/><line x1="0" y1="20" x2="60" y2="20" stroke="#aaa" stroke-width="1.5" opacity="0.4"/></svg>`;
 }
 
 function startGame() {
-    if (selectedPlayers.size < 2) {
-        alert('Выбери хотя бы 2 игроков!');
-        return;
-    }
-    gamePlayers = Array.from(selectedPlayers).map(name => ({
-        name,
-        role: null,
-        eliminated: false,
-        jailed: false
-    }));
+    if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
+    gamePlayers = Array.from(selectedPlayers).map(name => ({ name, role: null, eliminated: false, jailed: false }));
     document.getElementById('screen-lobby').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
     document.getElementById('bottom-nav').classList.add('active');
     renderGame();
 }
 
-function renderGame() {
-    renderTurnOrder();
-    renderStats();
-    renderGamePlayers();
-}
+function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
 
 function renderStats() {
     const alive = gamePlayers.filter(p => !p.eliminated);
@@ -995,55 +810,35 @@ function renderStats() {
     const outcasts = alive.filter(p => p.role && p.role.team === 'outcast').length;
     const unassigned = alive.filter(p => !p.role).length;
     const jailed = gamePlayers.filter(p => !p.eliminated && p.jailed).length;
-    
-    const bar = document.getElementById('stats-bar');
-    bar.innerHTML = `
+    document.getElementById('stats-bar').innerHTML = `
         <span class="stat-item">👥 ${alive.length}/${total}</span>
         <span class="stat-item team-citizen">🔵 ${citizens}</span>
         <span class="stat-item team-criminal">🔴 ${criminals}</span>
         <span class="stat-item team-outcast">🟡 ${outcasts}</span>
         ${unassigned ? `<span class="stat-item">❓ ${unassigned}</span>` : ''}
-        ${jailed ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}
-    `;
+        ${jailed ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}`;
 }
 
 function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
-    
-    const withTurnOrder = gamePlayers
-        .filter(p => p.role && p.role.turnOrder !== null)
-        .sort((a, b) => a.role.turnOrder - b.role.turnOrder);
-    
-    if (withTurnOrder.length === 0) {
-        bar.innerHTML = '<span style="color:#666;font-size:12px;padding:4px;">Назначьте роли, чтобы увидеть очередь</span>';
-        return;
-    }
-    
+    const withTurnOrder = gamePlayers.filter(p => p.role && p.role.turnOrder !== null).sort((a, b) => a.role.turnOrder - b.role.turnOrder);
+    if (withTurnOrder.length === 0) { bar.innerHTML = '<span style="color:#666;font-size:12px;padding:4px;">Назначьте роли, чтобы увидеть очередь</span>'; return; }
     withTurnOrder.forEach(p => {
         if (p.eliminated) {
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
-            const firstLetter = p.role.name.charAt(0).toUpperCase();
-            marker.innerHTML = `
-                <div class="turn-dead-bar"></div>
-                <span class="turn-dead-letter">${firstLetter}</span>
-            `;
+            marker.innerHTML = `<div class="turn-dead-bar"></div><span class="turn-dead-letter">${p.role.name.charAt(0).toUpperCase()}</span>`;
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
             bar.appendChild(marker);
         } else {
             const chip = document.createElement('div');
-            const teamClass = 'team-' + p.role.team;
-            chip.className = 'turn-chip ' + teamClass + (p.jailed ? ' jailed' : '');
-            
-            const imgPath = getRoleImgPath(p.role.id);
-            
+            chip.className = 'turn-chip team-' + p.role.team + (p.jailed ? ' jailed' : '');
             chip.innerHTML = `
-                <img src="${imgPath}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
+                <img src="${getRoleImgPath(p.role.id)}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
                 <span style="font-size:11px;font-weight:700;">${p.role.name}</span>
                 <span style="font-size:9px;opacity:0.7;">${p.name}</span>
-                <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>
-            `;
+                <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>`;
             bar.appendChild(chip);
         }
     });
@@ -1052,13 +847,7 @@ function renderTurnOrder() {
 function renderGamePlayers() {
     const c = document.getElementById('game-players');
     c.innerHTML = '';
-    
-    const sorted = [...gamePlayers].sort((a, b) => {
-        if (a.eliminated && !b.eliminated) return 1;
-        if (!a.eliminated && b.eliminated) return -1;
-        return 0;
-    });
-    
+    const sorted = [...gamePlayers].sort((a, b) => { if (a.eliminated && !b.eliminated) return 1; if (!a.eliminated && b.eliminated) return -1; return 0; });
     sorted.forEach((p) => {
         const idx = gamePlayers.indexOf(p);
         const card = document.createElement('div');
@@ -1066,60 +855,39 @@ function renderGamePlayers() {
         if (p.eliminated) classes += ' eliminated';
         if (p.jailed && !p.eliminated) classes += ' jailed';
         card.className = classes;
-        
         const teamClass = p.role ? 'team-' + p.role.team : '';
-        
-        // Role display for the role button
-        let roleContent;
+
+        // Role image on the left spanning full card height
+        let roleImg = '';
         if (p.role) {
-            const imgPath = getRoleImgPath(p.role.id);
-            roleContent = `<img src="${imgPath}" class="gp-role-mini-img" alt="" onerror="this.style.display='none'"> ${p.role.name}`;
-        } else {
-            roleContent = '❓ Назначить роль';
+            roleImg = `<img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.style.display='none'">`;
         }
-        
-        // Role image next to name
-        let nameRowImg = '';
-        if (p.role) {
-            const imgPath = getRoleImgPath(p.role.id);
-            nameRowImg = `<img src="${imgPath}" class="gp-role-img" alt="" onerror="this.style.display='none'">`;
-        }
-        
+
+        // Role button text (no image inside)
+        let roleText = p.role ? p.role.name : '❓ Назначить роль';
+
         card.innerHTML = `
             <div class="elim-overlay">✕</div>
             <div class="jail-overlay">${jailBarsSVG()}</div>
-            <div class="gp-top">
-                <div class="gp-name-row">
-                    ${nameRowImg}
+            ${roleImg}
+            <div class="gp-content">
+                <div class="gp-top">
                     <span class="gp-name ${teamClass}">${p.name}</span>
+                    <div class="gp-actions">
+                        <button class="gp-restore-btn" onclick="restorePlayer(${idx})">↩</button>
+                        <button class="gp-jail-btn" onclick="toggleJail(${idx})" title="Тюрьма">🔒</button>
+                        <button class="gp-elim-btn" onclick="eliminatePlayer(${idx})">✕</button>
+                    </div>
                 </div>
-                <div class="gp-actions">
-                    <button class="gp-restore-btn" onclick="restorePlayer(${idx})">↩</button>
-                    <button class="gp-jail-btn" onclick="toggleJail(${idx})" title="Тюрьма">🔒</button>
-                    <button class="gp-elim-btn" onclick="eliminatePlayer(${idx})">✕</button>
-                </div>
-            </div>
-            <div class="gp-role ${teamClass}" onclick="openRolePicker(${idx})">${roleContent}</div>
-        `;
+                <div class="gp-role ${teamClass}" onclick="openRolePicker(${idx})">${roleText}</div>
+            </div>`;
         c.appendChild(card);
     });
 }
 
-function eliminatePlayer(idx) {
-    gamePlayers[idx].eliminated = true;
-    gamePlayers[idx].jailed = false;
-    renderGame();
-}
-
-function restorePlayer(idx) {
-    gamePlayers[idx].eliminated = false;
-    renderGame();
-}
-
-function toggleJail(idx) {
-    gamePlayers[idx].jailed = !gamePlayers[idx].jailed;
-    renderGame();
-}
+function eliminatePlayer(idx) { gamePlayers[idx].eliminated = true; gamePlayers[idx].jailed = false; renderGame(); }
+function restorePlayer(idx) { gamePlayers[idx].eliminated = false; renderGame(); }
+function toggleJail(idx) { gamePlayers[idx].jailed = !gamePlayers[idx].jailed; renderGame(); }
 
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
@@ -1129,57 +897,25 @@ function openRolePicker(idx) {
 }
 
 function renderRoleButtons() {
-    const containers = {
-        citizen: document.getElementById('roles-citizen'),
-        criminal: document.getElementById('roles-criminal'),
-        outcast: document.getElementById('roles-outcast'),
-    };
-    
+    const containers = { citizen: document.getElementById('roles-citizen'), criminal: document.getElementById('roles-criminal'), outcast: document.getElementById('roles-outcast') };
     Object.values(containers).forEach(c => c.innerHTML = '');
-    
     ROLES.forEach(role => {
         const btn = document.createElement('button');
-        const bgClass = 'team-' + role.team + '-bg';
-        const textClass = 'team-' + role.team;
-        btn.className = `role-btn ${bgClass}`;
-        
-        const imgPath = getRoleImgPath(role.id);
-        
-        btn.innerHTML = `
-            <img src="${imgPath}" class="role-btn-img" alt="${role.name}" onerror="this.style.display='none'">
-            <span class="role-label ${textClass}">${role.name}</span>
-        `;
+        btn.className = `role-btn team-${role.team}-bg`;
+        btn.innerHTML = `<img src="${getRoleImgPath(role.id)}" class="role-btn-img" alt="${role.name}" onerror="this.style.display='none'"><span class="role-label team-${role.team}">${role.name}</span>`;
         btn.onclick = () => pickRole(role);
         containers[role.team].appendChild(btn);
     });
 }
 
-function pickRole(role) {
-    if (currentPickerPlayer !== null) {
-        gamePlayers[currentPickerPlayer].role = role;
-    }
-    closeModal();
-    renderGame();
-}
-
-function closeModal() {
-    document.getElementById('role-modal').classList.remove('active');
-    currentPickerPlayer = null;
-}
-
-function closeModalOutside(e) {
-    if (e.target === document.getElementById('role-modal')) {
-        closeModal();
-    }
-}
+function pickRole(role) { if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role; closeModal(); renderGame(); }
+function closeModal() { document.getElementById('role-modal').classList.remove('active'); currentPickerPlayer = null; }
+function closeModalOutside(e) { if (e.target === document.getElementById('role-modal')) closeModal(); }
 
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach((b, i) => {
-        b.classList.toggle('active', 
-            (name === 'game' && i === 0) || (name === 'notes' && i === 1));
-    });
+    document.querySelectorAll('.nav-btn').forEach((b, i) => { b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'notes' && i === 1)); });
 }
 
 function endGame() {
