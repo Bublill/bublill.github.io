@@ -214,13 +214,6 @@ h2 {
     color: var(--red);
 }
 
-.player-name-label {
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 /* Game screen */
 .turn-order-bar {
     display: flex;
@@ -232,6 +225,8 @@ h2 {
     margin-bottom: 10px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    align-items: stretch;
+    min-height: 70px;
 }
 
 .turn-order-bar::-webkit-scrollbar {
@@ -247,10 +242,13 @@ h2 {
     background: #333;
     white-space: nowrap;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 3px;
     position: relative;
     overflow: hidden;
+    text-align: center;
 }
 
 .turn-chip.team-citizen { color: var(--blue); border: 1px solid var(--blue); }
@@ -259,30 +257,33 @@ h2 {
 
 /* Turn chip role image */
 .turn-chip-role-img {
-    width: 16px;
-    height: 24px;
+    width: 28px;
+    height: 38px;
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: 3px;
     flex-shrink: 0;
 }
 
-/* Dead marker in turn order */
+/* Dead marker in turn order — fills full height */
 .turn-dead-marker {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px;
-    padding: 4px 6px;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 6px;
     position: relative;
+    align-self: stretch;
 }
 
 .turn-dead-bar {
     width: 4px;
-    height: 28px;
+    flex: 1;
     background: var(--red);
     border-radius: 2px;
     opacity: 0.7;
+    min-height: 0;
 }
 
 .turn-dead-letter {
@@ -292,6 +293,7 @@ h2 {
     opacity: 0.7;
     text-transform: uppercase;
     line-height: 1;
+    flex-shrink: 0;
 }
 
 /* Jailed turn chip */
@@ -393,16 +395,16 @@ h2 {
 .gp-name-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex: 1;
     min-width: 0;
 }
 
 .gp-role-img {
-    width: 20px;
-    height: 30px;
+    width: 28px;
+    height: 40px;
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: 3px;
     flex-shrink: 0;
 }
 
@@ -515,10 +517,10 @@ h2 {
 }
 
 .gp-role-mini-img {
-    width: 14px;
-    height: 21px;
+    width: 20px;
+    height: 28px;
     object-fit: cover;
-    border-radius: 1px;
+    border-radius: 2px;
     flex-shrink: 0;
 }
 
@@ -587,7 +589,7 @@ h2 {
 }
 
 .role-btn {
-    padding: 8px 4px;
+    padding: 6px 4px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-card);
@@ -607,10 +609,12 @@ h2 {
 }
 
 .role-btn-img {
-    width: 36px;
-    height: 54px;
+    width: 100%;
+    max-width: 80px;
+    height: auto;
+    aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .role-btn .role-label {
@@ -822,17 +826,13 @@ const DEFAULT_PLAYERS = [
     "Оля", "Лена", "Тёма"
 ];
 
-// Загружаем список из sessionStorage или дефолт
 let ALL_PLAYERS = JSON.parse(sessionStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
 
 function savePlayers() {
     sessionStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
 }
 
-// Роли: используем .png картинки из Assets/RoleCards/
-// Файл должен называться как role.id + '.png', например: detective.png
 const ROLES = [
-    // Горожане (citizen)
     { id: 'peaceful',     name: 'Мирный',       team: 'citizen',  turnOrder: null },
     { id: 'agent',        name: 'Агент',         team: 'citizen',  turnOrder: 4 },
     { id: 'judge',        name: 'Судья',         team: 'citizen',  turnOrder: 13 },
@@ -846,7 +846,6 @@ const ROLES = [
     { id: 'sleuth',       name: 'Сыщик',         team: 'citizen',  turnOrder: 12 },
     { id: 'lucky',        name: 'Везунчик',      team: 'citizen',  turnOrder: null },
     { id: 'avenger',      name: 'Мститель',      team: 'citizen',  turnOrder: null },
-    // Преступники (criminal)
     { id: 'mafia',        name: 'Мафия',         team: 'criminal', turnOrder: 4 },
     { id: 'cartel',       name: 'Картель',       team: 'criminal', turnOrder: 5 },
     { id: 'lawyer',       name: 'Адвокат',       team: 'criminal', turnOrder: 1 },
@@ -855,7 +854,6 @@ const ROLES = [
     { id: 'werewolf',     name: 'Оборотень',     team: 'criminal', turnOrder: 4 },
     { id: 'boss',         name: 'Босс',          team: 'criminal', turnOrder: 4 },
     { id: 'leader',       name: 'Главарь',       team: 'criminal', turnOrder: 5 },
-    // Отщепенцы (outcast)
     { id: 'maniac',       name: 'Маньяк',        team: 'outcast',  turnOrder: 6 },
     { id: 'poisoner',     name: 'Отравитель',    team: 'outcast',  turnOrder: 6 },
     { id: 'sectant',      name: 'Сектант',       team: 'outcast',  turnOrder: 6 },
@@ -866,12 +864,10 @@ function getRoleImgPath(roleId) {
     return `Assets/RoleCards/${roleId}.png`;
 }
 
-// State
 let selectedPlayers = new Set();
-let gamePlayers = []; // [{name, role: null|roleObj, eliminated: false, jailed: false}]
+let gamePlayers = [];
 let currentPickerPlayer = null;
 
-// ===== ADD PLAYER =====
 function addNewPlayer() {
     const input = document.getElementById('new-player-input');
     const name = input.value.trim();
@@ -886,7 +882,6 @@ function addNewPlayer() {
     renderLobby();
 }
 
-// Enter to add
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('new-player-input');
     if (input) {
@@ -909,31 +904,24 @@ function removePlayerFromList(name) {
     }
 }
 
-// ===== LOBBY =====
 function renderLobby() {
     const c = document.getElementById('lobby-players');
     c.innerHTML = '';
     ALL_PLAYERS.forEach(name => {
         const div = document.createElement('div');
         div.className = 'player-check' + (selectedPlayers.has(name) ? ' checked' : '');
-        
         const isCustom = !DEFAULT_PLAYERS.includes(name);
-        
         div.innerHTML = `
             <div class="check-box"></div>
             <span class="player-name-label">${name}</span>
             ${isCustom ? `<button class="player-remove-btn" title="Удалить">✕</button>` : ''}
         `;
-        
-        // Toggle select on click (but not on remove button)
         div.onclick = (e) => {
             if (e.target.classList.contains('player-remove-btn')) return;
             if (selectedPlayers.has(name)) selectedPlayers.delete(name);
             else selectedPlayers.add(name);
             renderLobby();
         };
-        
-        // Remove button
         if (isCustom) {
             const removeBtn = div.querySelector('.player-remove-btn');
             removeBtn.onclick = (e) => {
@@ -941,7 +929,6 @@ function renderLobby() {
                 removePlayerFromList(name);
             };
         }
-        
         c.appendChild(div);
     });
 }
@@ -956,7 +943,6 @@ function deselectAll() {
     renderLobby();
 }
 
-// ===== SVG JAIL BARS =====
 function jailBarsSVG() {
     return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="20" y1="0" x2="20" y2="100" stroke="#aaa" stroke-width="3" opacity="0.6"/>
@@ -978,7 +964,6 @@ function jailBarsMiniSVG() {
     </svg>`;
 }
 
-// ===== GAME =====
 function startGame() {
     if (selectedPlayers.size < 2) {
         alert('Выбери хотя бы 2 игроков!');
@@ -1026,7 +1011,6 @@ function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
     
-    // Get all players with night actions (roles with turnOrder)
     const withTurnOrder = gamePlayers
         .filter(p => p.role && p.role.turnOrder !== null)
         .sort((a, b) => a.role.turnOrder - b.role.turnOrder);
@@ -1038,7 +1022,6 @@ function renderTurnOrder() {
     
     withTurnOrder.forEach(p => {
         if (p.eliminated) {
-            // Dead — show red bar with first letter of role
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
             const firstLetter = p.role.name.charAt(0).toUpperCase();
@@ -1049,13 +1032,9 @@ function renderTurnOrder() {
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
             bar.appendChild(marker);
         } else {
-            // Alive chip
             const chip = document.createElement('div');
             const teamClass = 'team-' + p.role.team;
             chip.className = 'turn-chip ' + teamClass + (p.jailed ? ' jailed' : '');
-            chip.style.flexDirection = 'column';
-            chip.style.textAlign = 'center';
-            chip.style.padding = '6px 10px';
             
             const imgPath = getRoleImgPath(p.role.id);
             
@@ -1074,7 +1053,6 @@ function renderGamePlayers() {
     const c = document.getElementById('game-players');
     c.innerHTML = '';
     
-    // Sort: alive first, eliminated last
     const sorted = [...gamePlayers].sort((a, b) => {
         if (a.eliminated && !b.eliminated) return 1;
         if (!a.eliminated && b.eliminated) return -1;
@@ -1091,7 +1069,7 @@ function renderGamePlayers() {
         
         const teamClass = p.role ? 'team-' + p.role.team : '';
         
-        // Role display
+        // Role display for the role button
         let roleContent;
         if (p.role) {
             const imgPath = getRoleImgPath(p.role.id);
@@ -1143,7 +1121,6 @@ function toggleJail(idx) {
     renderGame();
 }
 
-// ===== ROLE PICKER =====
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
     document.getElementById('modal-title').textContent = `Роль для: ${gamePlayers[idx].name}`;
@@ -1196,7 +1173,6 @@ function closeModalOutside(e) {
     }
 }
 
-// ===== NAVIGATION =====
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
@@ -1215,7 +1191,6 @@ function endGame() {
     document.getElementById('notepad').value = '';
 }
 
-// ===== INIT =====
 renderLobby();
 </script>
 </body>
