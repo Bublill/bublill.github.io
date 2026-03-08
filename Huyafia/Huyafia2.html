@@ -233,7 +233,7 @@ h2 {
     flex-shrink: 0;
 }
 
-/* Dead marker — full height with 3 letters vertical */
+/* Dead marker — full height */
 .turn-dead-marker {
     flex-shrink: 0;
     display: flex;
@@ -255,21 +255,26 @@ h2 {
     min-height: 0;
 }
 
+/* Vertical 3-letter display for dead players */
 .turn-dead-letters {
     display: flex;
     flex-direction: column;
     font-size: 7px;
     font-weight: 800;
     text-transform: uppercase;
-    line-height: 0.9;
+    line-height: 1;
     flex-shrink: 0;
-    gap: 1px;
+    letter-spacing: -0.5px;
 }
 
-.turn-dead-letter {
+.turn-dead-letters span {
     display: block;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
+    
 .turn-dead-bar.team-citizen { background: var(--blue); }
 .turn-dead-bar.team-criminal { background: var(--red); }
 .turn-dead-bar.team-outcast { background: var(--yellow); }
@@ -462,7 +467,7 @@ h2 {
 .team-criminal { color: var(--red) !important; }
 .team-outcast { color: var(--yellow) !important; }
 
-/* Role picker modal with tabs */
+/* Role picker modal */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -498,12 +503,16 @@ h2 {
 
 .modal-header h3 { font-size: 16px; color: var(--text-main); }
 
-/* Role tabs */
+/* Role picker tabs */
 .role-tabs {
     display: flex;
     gap: 4px;
-    padding: 8px 8px 0;
-    margin-bottom: 8px;
+    padding: 8px 12px 4px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-dark);
+    position: sticky;
+    top: 48px;
+    z-index: 4;
 }
 
 .role-tab-btn {
@@ -520,16 +529,15 @@ h2 {
 }
 
 .role-tab-btn.active {
-    background: var(--bg-card);
-    color: var(--text-main);
-    border: 1px solid var(--border);
+    background: var(--accent);
+    color: #fff;
 }
 
-.role-tab-btn.team-citizen-tab.active { color: var(--blue); border-color: var(--blue); }
-.role-tab-btn.team-criminal-tab.active { color: var(--red); border-color: var(--red); }
-.role-tab-btn.team-outcast-tab.active { color: var(--yellow); border-color: var(--yellow); }
+.role-tab-btn.team-citizen-tab.active { background: var(--blue); }
+.role-tab-btn.team-criminal-tab.active { background: var(--red); }
+.role-tab-btn.team-outcast-tab.active { background: var(--yellow); color: #000; }
 
-.modal-body { padding: 0 8px 8px; }
+.modal-body { padding: 8px; }
 
 .role-section-title {
     font-size: 12px;
@@ -537,23 +545,18 @@ h2 {
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 6px 4px 4px;
-    display: none;
+    display: none; /* Hidden when using tabs */
 }
-
-.role-section-title.active { display: block; }
 
 .role-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 cards in a row */
     gap: 4px;
     margin-bottom: 8px;
-    display: none;
 }
 
-.role-grid.active { display: grid; }
-
 .role-btn {
-    padding: 4px 2px;
+    padding: 6px 4px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-card);
@@ -565,21 +568,21 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
 }
 
 .role-btn:active { transform: scale(0.93); }
 
 .role-btn-img {
     width: 100%;
-    max-width: 60px;
+    max-width: 70px;
     height: auto;
     aspect-ratio: 2/3;
     object-fit: cover;
     border-radius: 4px;
 }
 
-.role-btn .role-label { font-size: 9px; line-height: 1; }
+.role-btn .role-label { font-size: 9px; line-height: 1.1; }
 
 .role-btn.team-citizen-bg { border-color: var(--blue); }
 .role-btn.team-citizen-bg:active { background: rgba(30,136,229,0.2); }
@@ -612,7 +615,6 @@ h2 {
     margin-bottom: 8px;
 }
 
-/* Journal / Notepad styles */
 .notepad-area {
     width: 100%;
     min-height: 120px;
@@ -624,174 +626,7 @@ h2 {
     font-size: 14px;
     resize: vertical;
     font-family: inherit;
-    margin-bottom: 12px;
 }
-
-.journal-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-.journal-action-btn {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-    color: var(--text-main);
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-}
-
-.journal-action-btn:active { transform: scale(0.95); }
-.journal-action-btn.active { background: var(--accent); border-color: var(--red); }
-
-.journal-players-select {
-    margin-bottom: 10px;
-}
-
-.journal-player-check {
-    display: flex;
-    align-items: center;
-    background: var(--bg-card);
-    border-radius: 6px;
-    padding: 8px;
-    margin-bottom: 4px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.15s;
-    gap: 8px;
-}
-
-.journal-player-check.checked {
-    border-color: var(--blue);
-    background: #253545;
-}
-
-.journal-player-check input { display: none; }
-
-.journal-check-box {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-}
-
-.journal-player-check.checked .journal-check-box {
-    background: var(--blue);
-    border-color: var(--blue);
-}
-
-.journal-check-box::after {
-    content: '✓';
-    color: #fff;
-    font-size: 13px;
-    display: none;
-}
-
-.journal-player-check.checked .journal-check-box::after { display: block; }
-
-.journal-player-name {
-    font-size: 13px;
-    flex: 1;
-}
-
-.journal-report-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--green);
-    border: none;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 8px;
-    margin-top: 4px;
-}
-
-.journal-report-btn:active { transform: scale(0.98); }
-
-/* Night report modal */
-.report-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 150;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-}
-
-.report-modal-overlay.active { display: flex; }
-
-.report-modal {
-    background: var(--bg-dark);
-    border-radius: 12px;
-    width: 100%;
-    max-width: 450px;
-    max-height: 80vh;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-}
-
-.report-header {
-    padding: 14px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg-card);
-}
-
-.report-header h3 { font-size: 16px; color: var(--text-main); }
-
-.report-body { padding: 12px; }
-
-.report-section {
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-.report-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-.report-section-title {
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.report-item {
-    font-size: 13px;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.report-item .role-badge {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-}
-
-.report-footer {
-    padding: 12px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-}
-
-.report-footer .btn { flex: 1; }
 
 .bottom-nav {
     position: fixed;
@@ -850,28 +685,6 @@ h2 {
     font-size: 12px;
     padding: 8px;
 }
-
-/* Night events display in game tab */
-.night-events-panel {
-    background: var(--bg-card);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
-}
-
-.night-event-item {
-    font-size: 12px;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-bottom: 1px solid var(--border);
-}
-
-.night-event-item:last-child { border-bottom: none; }
-
-.night-event-icon { font-size: 14px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -897,47 +710,21 @@ h2 {
     <h2>Очередь ходов</h2>
     <div id="turn-order" class="turn-order-bar"></div>
     <div id="stats-bar" class="stats-bar"></div>
-    
-    <!-- Night events panel -->
-    <div id="night-events-panel" class="night-events-panel" style="display:none;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:6px;">📋 События ночи</div>
-        <div id="night-events-list"></div>
-    </div>
-    
     <h2>Игроки</h2>
     <div id="game-players" class="game-player-grid"></div>
 </div>
 
-<div id="screen-journal" class="screen">
-    <h1>📓 Журнал</h1>
-    
-    <!-- Notepad area -->
+<div id="screen-notes" class="screen">
+    <h1>📝 Блокнот</h1>
     <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
-    
-    <!-- Quick action buttons -->
-    <h2 style="margin-top:16px;">Действия ночи</h2>
-    <div class="journal-actions">
-        <button class="journal-action-btn" data-action="attack" onclick="selectJournalAction('attack')">⚔️ Попытка убийства</button>
-        <button class="journal-action-btn" data-action="protect" onclick="selectJournalAction('protect')">🛡️ Защита</button>
-        <button class="journal-action-btn" data-action="alibi" onclick="selectJournalAction('alibi')">📜 Алиби</button>
-        <button class="journal-action-btn" data-action="jailed" onclick="selectJournalAction('jailed')">🔒 Тюрьма</button>
-        <button class="journal-action-btn" data-action="investigate" onclick="selectJournalAction('investigate')">🔍 Расследование</button>
-        <button class="journal-action-btn" data-action="poison" onclick="selectJournalAction('poison')">☠️ Отравление</button>
-    </div>
-    
-    <!-- Player selection for actions -->
-    <div class="journal-players-select" id="journal-players-list"></div>
-    
-    <!-- Generate report button -->
-    <button class="journal-report-btn" onclick="generateNightReport()">📊 Сформировать отчёт о ночи</button>
 </div>
 
 <div id="bottom-nav" class="bottom-nav">
     <button class="nav-btn active" onclick="showScreen('game')">
         <span class="nav-icon">🎮</span>Игра
     </button>
-    <button class="nav-btn" onclick="showScreen('journal')">
-        <span class="nav-icon">📓</span>Журнал
+    <button class="nav-btn" onclick="showScreen('notes')">
+        <span class="nav-icon">📝</span>Блокнот
     </button>
     <button class="nav-btn" onclick="endGame()">
         <span class="nav-icon">🚪</span>Выход
@@ -949,50 +736,19 @@ h2 {
         <div class="modal-header">
             <h3 id="modal-title">Выбери роль</h3>
         </div>
-        
-        <!-- Role tabs -->
+        <!-- Tabs for role categories -->
         <div class="role-tabs">
-            <button class="role-tab-btn team-citizen-tab active" onclick="switchRoleTab('citizen')">🔵 Горожане</button>
-            <button class="role-tab-btn team-criminal-tab" onclick="switchRoleTab('criminal')">🔴 Преступники</button>
-            <button class="role-tab-btn team-outcast-tab" onclick="switchRoleTab('outcast')">🟡 Отщепенцы</button>
+            <button class="role-tab-btn team-citizen-tab active" data-team="citizen" onclick="switchRoleTab('citizen')">🔵 Горожане</button>
+            <button class="role-tab-btn team-criminal-tab" data-team="criminal" onclick="switchRoleTab('criminal')">🔴 Преступники</button>
+            <button class="role-tab-btn team-outcast-tab" data-team="outcast" onclick="switchRoleTab('outcast')">🟡 Отщепенцы</button>
         </div>
-        
         <div class="modal-body">
             <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
-            
-            <!-- Citizen roles -->
-            <div id="roles-citizen-container">
-                <div class="role-section-title team-citizen active">🔵 Горожане</div>
-                <div id="roles-citizen" class="role-grid active"></div>
-            </div>
-            
-            <!-- Criminal roles -->
-            <div id="roles-criminal-container">
-                <div class="role-section-title team-criminal">🔴 Преступники</div>
-                <div id="roles-criminal" class="role-grid"></div>
-            </div>
-            
-            <!-- Outcast roles -->
-            <div id="roles-outcast-container">
-                <div class="role-section-title team-outcast">🟡 Отщепенцы</div>
-                <div id="roles-outcast" class="role-grid"></div>
-            </div>
+            <div id="roles-citizen" class="role-grid"></div>
+            <div id="roles-criminal" class="role-grid"></div>
+            <div id="roles-outcast" class="role-grid"></div>
         </div>
         <button class="modal-close-btn" onclick="closeModal()">Закрыть</button>
-    </div>
-</div>
-
-<!-- Night Report Modal -->
-<div id="report-modal" class="report-modal-overlay">
-    <div class="report-modal">
-        <div class="report-header">
-            <h3>🌙 Отчёт о ночи</h3>
-        </div>
-        <div class="report-body" id="report-content"></div>
-        <div class="report-footer">
-            <button class="btn btn-dark" onclick="closeReportModal()">Закрыть</button>
-            <button class="btn btn-green" onclick="confirmNightReport()">✅ Подтвердить</button>
-        </div>
     </div>
 </div>
 
@@ -1044,11 +800,7 @@ function getRoleImgPath(roleId) {
 let selectedPlayers = new Set();
 let gamePlayers = [];
 let currentPickerPlayer = null;
-
-// Journal state
-let currentJournalAction = null;
-let selectedJournalPlayers = new Set();
-let pendingNightEvents = [];
+let activeRoleTab = sessionStorage.getItem('mafia_role_tab') || 'citizen'; // Save selected tab
 
 function addNewPlayer() {
     const input = document.getElementById('new-player-input');
@@ -1105,7 +857,7 @@ function startGame() {
     renderGame();
 }
 
-function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); renderNightEvents(); }
+function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
 
 function renderStats() {
     const alive = gamePlayers.filter(p => !p.eliminated);
@@ -1124,6 +876,11 @@ function renderStats() {
         ${jailed ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}`;
 }
 
+// Helper: get first 3 letters of role name, uppercase
+function getRoleShortName(roleName) {
+    return roleName.slice(0, 3).toUpperCase().split('').map(l => `<span>${l}</span>`).join('');
+}
+
 function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
@@ -1134,10 +891,8 @@ function renderTurnOrder() {
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
             const teamClass = 'team-' + p.role.team;
-            // Show first 3 letters of role name vertically
-            const roleShort = p.role.name.substring(0, 3).toUpperCase();
-            const lettersHtml = roleShort.split('').map(l => `<span class="turn-dead-letter">${l}</span>`).join('');
-            marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${lettersHtml}</div>`;
+            // Show first 3 letters vertically
+            marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${getRoleShortName(p.role.name)}</div>`;
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
             bar.appendChild(marker);
         } else {
@@ -1166,11 +921,13 @@ function renderGamePlayers() {
         card.className = classes;
         const teamClass = p.role ? 'team-' + p.role.team : '';
 
+        // Role image on the left spanning full card height
         let roleImg = '';
         if (p.role) {
             roleImg = `<img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.style.display='none'">`;
         }
 
+        // Role button text (no image inside)
         let roleText = p.role ? p.role.name : '❓ Назначить роль';
 
         card.innerHTML = `
@@ -1196,29 +953,37 @@ function eliminatePlayer(idx) { gamePlayers[idx].eliminated = true; gamePlayers[
 function restorePlayer(idx) { gamePlayers[idx].eliminated = false; renderGame(); }
 function toggleJail(idx) { gamePlayers[idx].jailed = !gamePlayers[idx].jailed; renderGame(); }
 
-// Role picker with tabs
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
     document.getElementById('modal-title').textContent = `Роль для: ${gamePlayers[idx].name}`;
     document.getElementById('role-modal').classList.add('active');
+    // Restore active tab from storage
+    switchRoleTab(activeRoleTab, false);
     renderRoleButtons();
-    switchRoleTab('citizen'); // default tab
 }
 
-function switchRoleTab(team) {
-    // Update tab buttons
-    document.querySelectorAll('.role-tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.team-${team}-tab`).classList.add('active');
+// Switch role tab and save to sessionStorage
+function switchRoleTab(team, save = true) {
+    activeRoleTab = team;
+    if (save) sessionStorage.setItem('mafia_role_tab', team);
     
-    // Show/hide sections
-    document.querySelectorAll('.role-section-title, .role-grid').forEach(el => el.classList.remove('active'));
-    document.querySelector(`#roles-${team}`).classList.add('active');
-    document.querySelector(`#roles-${team}-container .role-section-title`).classList.add('active');
+    // Update tab buttons
+    document.querySelectorAll('.role-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.team === team);
+    });
+    
+    // Show/hide role grids
+    document.getElementById('roles-citizen').style.display = team === 'citizen' ? 'grid' : 'none';
+    document.getElementById('roles-criminal').style.display = team === 'criminal' ? 'grid' : 'none';
+    document.getElementById('roles-outcast').style.display = team === 'outcast' ? 'grid' : 'none';
 }
 
 function renderRoleButtons() {
     const containers = { citizen: document.getElementById('roles-citizen'), criminal: document.getElementById('roles-criminal'), outcast: document.getElementById('roles-outcast') };
+    // Clear all
     Object.values(containers).forEach(c => c.innerHTML = '');
+    
+    // Render only for active tab (others are hidden anyway, but we render all for simplicity)
     ROLES.forEach(role => {
         const btn = document.createElement('button');
         btn.className = `role-btn team-${role.team}-bg`;
@@ -1226,252 +991,19 @@ function renderRoleButtons() {
         btn.onclick = () => pickRole(role);
         containers[role.team].appendChild(btn);
     });
+    
+    // Apply current tab visibility
+    switchRoleTab(activeRoleTab, false);
 }
 
 function pickRole(role) { if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role; closeModal(); renderGame(); }
 function closeModal() { document.getElementById('role-modal').classList.remove('active'); currentPickerPlayer = null; }
 function closeModalOutside(e) { if (e.target === document.getElementById('role-modal')) closeModal(); }
 
-// Journal functions
-function selectJournalAction(action) {
-    currentJournalAction = action;
-    selectedJournalPlayers.clear();
-    
-    // Update button styles
-    document.querySelectorAll('.journal-action-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.action === action);
-    });
-    
-    renderJournalPlayersList();
-}
-
-function renderJournalPlayersList() {
-    const container = document.getElementById('journal-players-list');
-    if (!currentJournalAction) {
-        container.innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:8px;">Выберите действие выше, затем отметьте игроков</div>';
-        return;
-    }
-    
-    const alivePlayers = gamePlayers.filter(p => !p.eliminated);
-    if (alivePlayers.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:8px;">Нет живых игроков</div>';
-        return;
-    }
-    
-    let html = `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Отметьте игроков для: ${getActionLabel(currentJournalAction)}</div>`;
-    alivePlayers.forEach((p, idx) => {
-        const checked = selectedJournalPlayers.has(idx) ? 'checked' : '';
-        const teamClass = p.role ? `team-${p.role.team}` : '';
-        html += `
-            <div class="journal-player-check ${checked}" onclick="toggleJournalPlayer(${idx})">
-                <div class="journal-check-box"></div>
-                <span class="journal-player-name ${teamClass}">${p.name}${p.role ? ` <span style="opacity:0.6">(${p.role.name})</span>` : ''}</span>
-            </div>`;
-    });
-    container.innerHTML = html;
-}
-
-function toggleJournalPlayer(idx) {
-    if (selectedJournalPlayers.has(idx)) {
-        selectedJournalPlayers.delete(idx);
-    } else {
-        selectedJournalPlayers.add(idx);
-    }
-    renderJournalPlayersList();
-}
-
-function getActionLabel(action) {
-    const labels = {
-        attack: 'попытка убийства',
-        protect: 'защита',
-        alibi: 'алиби',
-        jailed: 'тюрьма',
-        investigate: 'расследование',
-        poison: 'отравление'
-    };
-    return labels[action] || action;
-}
-
-function getActionIcon(action) {
-    const icons = {
-        attack: '⚔️',
-        protect: '🛡️',
-        alibi: '📜',
-        jailed: '🔒',
-        investigate: '🔍',
-        poison: '☠️'
-    };
-    return icons[action] || '•';
-}
-
-function generateNightReport() {
-    if (!currentJournalAction || selectedJournalPlayers.size === 0) {
-        alert('Выберите действие и отметьте хотя бы одного игрока');
-        return;
-    }
-    
-    const action = currentJournalAction;
-    const players = Array.from(selectedJournalPlayers).map(idx => {
-        const p = gamePlayers[idx];
-        return { name: p.name, role: p.role ? p.role.name : null, team: p.role ? p.role.team : null };
-    });
-    
-    pendingNightEvents.push({ action, players, timestamp: new Date() });
-    
-    // Generate report content
-    let reportHtml = '';
-    
-    // Protected from attack
-    const protectedPlayers = pendingNightEvents.filter(e => e.action === 'protect').flatMap(e => e.players);
-    const attackedPlayers = pendingNightEvents.filter(e => e.action === 'attack').flatMap(e => e.players);
-    const savedPlayers = protectedPlayers.filter(p => attackedPlayers.some(ap => ap.name === p.name));
-    
-    if (savedPlayers.length > 0) {
-        reportHtml += `
-            <div class="report-section">
-                <div class="report-section-title" style="color:var(--green)">🛡️ Спасены от убийства</div>
-                ${savedPlayers.map(p => `<div class="report-item"><span class="role-badge team-${p.team||'citizen'}">${p.role||'?'}</span> ${p.name}</div>`).join('')}
-            </div>`;
-    }
-    
-    // Died (attacked but not protected)
-    const diedPlayers = attackedPlayers.filter(p => !protectedPlayers.some(pp => pp.name === p.name));
-    if (diedPlayers.length > 0) {
-        reportHtml += `
-            <div class="report-section">
-                <div class="report-section-title" style="color:var(--red)">💀 Погибли</div>
-                ${diedPlayers.map(p => `<div class="report-item"><span class="role-badge team-${p.team||'citizen'}">${p.role||'?'}</span> ${p.name}</div>`).join('')}
-            </div>`;
-    }
-    
-    // Given alibi
-    const alibiEvents = pendingNightEvents.filter(e => e.action === 'alibi');
-    if (alibiEvents.length > 0) {
-        const alibiPlayers = [...new Set(alibiEvents.flatMap(e => e.players.map(p => p.name)))];
-        reportHtml += `
-            <div class="report-section">
-                <div class="report-section-title" style="color:var(--blue)">📜 Получили алиби</div>
-                ${alibiPlayers.map(name => {
-                    const p = gamePlayers.find(gp => gp.name === name);
-                    const role = p?.role?.name || '?';
-                    const team = p?.role?.team || 'citizen';
-                    return `<div class="report-item"><span class="role-badge team-${team}">${role}</span> ${name}</div>`;
-                }).join('')}
-            </div>`;
-    }
-    
-    // Jailed
-    const jailedEvents = pendingNightEvents.filter(e => e.action === 'jailed');
-    if (jailedEvents.length > 0) {
-        const jailedPlayers = [...new Set(jailedEvents.flatMap(e => e.players.map(p => p.name)))];
-        reportHtml += `
-            <div class="report-section">
-                <div class="report-section-title" style="color:var(--yellow)">🔒 Отправлены в тюрьму</div>
-                ${jailedPlayers.map(name => {
-                    const p = gamePlayers.find(gp => gp.name === name);
-                    const role = p?.role?.name || '?';
-                    const team = p?.role?.team || 'citizen';
-                    return `<div class="report-item"><span class="role-badge team-${team}">${role}</span> ${name}</div>`;
-                }).join('')}
-            </div>`;
-    }
-    
-    // Other actions summary
-    const otherActions = ['investigate', 'poison'].filter(a => pendingNightEvents.some(e => e.action === a));
-    if (otherActions.length > 0) {
-        reportHtml += `<div class="report-section"><div class="report-section-title">📋 Другие действия</div>`;
-        otherActions.forEach(act => {
-            const events = pendingNightEvents.filter(e => e.action === act);
-            events.forEach(e => {
-                reportHtml += `<div class="report-item">${getActionIcon(act)} ${getActionLabel(act)}: ${e.players.map(p => p.name).join(', ')}</div>`;
-            });
-        });
-        reportHtml += `</div>`;
-    }
-    
-    if (!reportHtml) {
-        reportHtml = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет событий для отображения</div>';
-    }
-    
-    document.getElementById('report-content').innerHTML = reportHtml;
-    document.getElementById('report-modal').classList.add('active');
-}
-
-function closeReportModal() {
-    document.getElementById('report-modal').classList.remove('active');
-    // Clear pending events if not confirmed
-    pendingNightEvents = [];
-    currentJournalAction = null;
-    selectedJournalPlayers.clear();
-    renderJournalPlayersList();
-    document.querySelectorAll('.journal-action-btn').forEach(btn => btn.classList.remove('active'));
-}
-
-function confirmNightReport() {
-    // Apply deaths from report
-    const attackedPlayers = pendingNightEvents.filter(e => e.action === 'attack').flatMap(e => e.players.map(p => p.name));
-    const protectedPlayers = pendingNightEvents.filter(e => e.action === 'protect').flatMap(e => e.players.map(p => p.name));
-    
-    attackedPlayers.forEach(name => {
-        if (!protectedPlayers.includes(name)) {
-            const player = gamePlayers.find(p => p.name === name);
-            if (player) player.eliminated = true;
-        }
-    });
-    
-    // Apply jail status
-    const jailedPlayers = pendingNightEvents.filter(e => e.action === 'jailed').flatMap(e => e.players.map(p => p.name));
-    jailedPlayers.forEach(name => {
-        const player = gamePlayers.find(p => p.name === name);
-        if (player && !player.eliminated) player.jailed = true;
-    });
-    
-    // Display events in game tab
-    renderNightEvents();
-    
-    // Close modal and reset journal
-    document.getElementById('report-modal').classList.remove('active');
-    pendingNightEvents = [];
-    currentJournalAction = null;
-    selectedJournalPlayers.clear();
-    renderJournalPlayersList();
-    document.querySelectorAll('.journal-action-btn').forEach(btn => btn.classList.remove('active'));
-    
-    renderGame();
-}
-
-function renderNightEvents() {
-    const panel = document.getElementById('night-events-panel');
-    const list = document.getElementById('night-events-list');
-    
-    if (pendingNightEvents.length === 0) {
-        panel.style.display = 'none';
-        return;
-    }
-    
-    panel.style.display = 'block';
-    let html = '';
-    
-    pendingNightEvents.forEach(event => {
-        const icon = getActionIcon(event.action);
-        const label = getActionLabel(event.action);
-        const names = event.players.map(p => p.name).join(', ');
-        html += `<div class="night-event-item"><span class="night-event-icon">${icon}</span> ${label}: ${names}</div>`;
-    });
-    
-    list.innerHTML = html;
-}
-
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach((b, i) => { 
-        b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'journal' && i === 1)); 
-    });
-    
-    if (name === 'journal') {
-        renderJournalPlayersList();
-    }
+    document.querySelectorAll('.nav-btn').forEach((b, i) => { b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'notes' && i === 1)); });
 }
 
 function endGame() {
@@ -1481,9 +1013,6 @@ function endGame() {
     document.getElementById('screen-lobby').classList.add('active');
     gamePlayers = [];
     document.getElementById('notepad').value = '';
-    pendingNightEvents = [];
-    currentJournalAction = null;
-    selectedJournalPlayers.clear();
 }
 
 renderLobby();
