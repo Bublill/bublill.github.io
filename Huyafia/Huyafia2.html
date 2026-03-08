@@ -23,7 +23,6 @@
     --blue: #1E88E5;
     --yellow: #FDD835;
     --green: #43A047;
-    --purple: #8E24AA;
     --border: #444;
     --accent: #c62828;
 }
@@ -82,9 +81,6 @@ h2 {
 .btn-red { background: var(--red); }
 .btn-dark { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); }
 .btn-green { background: var(--green); }
-.btn-blue { background: var(--blue); }
-.btn-yellow { background: var(--yellow); color: #000; }
-.btn-purple { background: var(--purple); }
 .btn-full { width: 100%; padding: 14px; font-size: 16px; margin-top: 8px; }
 
 .add-player-row {
@@ -237,15 +233,15 @@ h2 {
     flex-shrink: 0;
 }
 
-/* Dead marker — full height */
+/* Dead marker — full height with 3 letters vertical */
 .turn-dead-marker {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    padding: 0 6px;
+    gap: 1px;
+    padding: 0 2px;
     position: relative;
     align-self: stretch;
 }
@@ -259,17 +255,30 @@ h2 {
     min-height: 0;
 }
 
-.turn-dead-letter {
-    font-size: 8px;
-    font-weight: 700;
-    color: var(--red);
-    opacity: 0.7;
+.turn-dead-letters {
+    display: flex;
+    flex-direction: column;
+    font-size: 7px;
+    font-weight: 800;
     text-transform: uppercase;
-    line-height: 1;
+    line-height: 0.9;
     flex-shrink: 0;
+    gap: 1px;
 }
 
-.turn-chip.jailed { filter: brightness(0.5); }
+.turn-dead-letter {
+    display: block;
+}
+
+.turn-dead-bar.team-citizen { background: var(--blue); }
+.turn-dead-bar.team-criminal { background: var(--red); }
+.turn-dead-bar.team-outcast { background: var(--yellow); }
+
+.turn-dead-letters.team-citizen { color: var(--blue); }
+.turn-dead-letters.team-criminal { color: var(--red); }
+.turn-dead-letters.team-outcast { color: var(--yellow); }
+
+.turn-chip.jailed { filter: brightness(0.8); }
 .turn-chip.jailed .jail-bars-mini { display: block; }
 
 .jail-bars-mini {
@@ -308,7 +317,7 @@ h2 {
 }
 
 .game-player-card.eliminated .elim-overlay { display: flex; }
-.game-player-card.jailed { filter: brightness(0.6); }
+.game-player-card.jailed { filter: brightness(0.8); }
 .game-player-card.jailed .jail-overlay { display: block; }
 
 .jail-overlay {
@@ -453,7 +462,7 @@ h2 {
 .team-criminal { color: var(--red) !important; }
 .team-outcast { color: var(--yellow) !important; }
 
-/* Role picker modal */
+/* Role picker modal with tabs */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -489,7 +498,38 @@ h2 {
 
 .modal-header h3 { font-size: 16px; color: var(--text-main); }
 
-.modal-body { padding: 8px; }
+/* Role tabs */
+.role-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 8px 0;
+    margin-bottom: 8px;
+}
+
+.role-tab-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border: none;
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.role-tab-btn.active {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.role-tab-btn.team-citizen-tab.active { color: var(--blue); border-color: var(--blue); }
+.role-tab-btn.team-criminal-tab.active { color: var(--red); border-color: var(--red); }
+.role-tab-btn.team-outcast-tab.active { color: var(--yellow); border-color: var(--yellow); }
+
+.modal-body { padding: 0 8px 8px; }
 
 .role-section-title {
     font-size: 12px;
@@ -497,43 +537,49 @@ h2 {
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 6px 4px 4px;
+    display: none;
 }
+
+.role-section-title.active { display: block; }
 
 .role-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 4px;
     margin-bottom: 8px;
+    display: none;
 }
 
+.role-grid.active { display: grid; }
+
 .role-btn {
-    padding: 6px 4px;
+    padding: 4px 2px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-card);
     cursor: pointer;
     text-align: center;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     transition: all 0.1s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .role-btn:active { transform: scale(0.93); }
 
 .role-btn-img {
     width: 100%;
-    max-width: 80px;
+    max-width: 60px;
     height: auto;
     aspect-ratio: 2/3;
     object-fit: cover;
     border-radius: 4px;
 }
 
-.role-btn .role-label { font-size: 10px; line-height: 1.1; }
+.role-btn .role-label { font-size: 9px; line-height: 1; }
 
 .role-btn.team-citizen-bg { border-color: var(--blue); }
 .role-btn.team-citizen-bg:active { background: rgba(30,136,229,0.2); }
@@ -569,7 +615,7 @@ h2 {
 /* Journal / Notepad styles */
 .notepad-area {
     width: 100%;
-    min-height: 100px;
+    min-height: 120px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -578,191 +624,174 @@ h2 {
     font-size: 14px;
     resize: vertical;
     font-family: inherit;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
-/* Night actions panel */
-.night-actions-panel {
-    background: var(--bg-card);
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
-}
-
-.night-actions-title {
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.action-row {
+.journal-actions {
     display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
     flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
 }
 
-.action-row label {
-    font-size: 12px;
-    min-width: 90px;
-    color: var(--text-dim);
-}
-
-.action-row select,
-.action-row input[type="text"] {
-    flex: 1;
-    min-width: 100px;
-    padding: 6px 8px;
+.journal-action-btn {
+    padding: 6px 10px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--bg-input);
     color: var(--text-main);
-    font-size: 13px;
-    font-family: inherit;
-    outline: none;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
 }
 
-.action-row select:focus,
-.action-row input[type="text"]:focus {
+.journal-action-btn:active { transform: scale(0.95); }
+.journal-action-btn.active { background: var(--accent); border-color: var(--red); }
+
+.journal-players-select {
+    margin-bottom: 10px;
+}
+
+.journal-player-check {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+    gap: 8px;
+}
+
+.journal-player-check.checked {
+    border-color: var(--blue);
+    background: #253545;
+}
+
+.journal-player-check input { display: none; }
+
+.journal-check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.journal-player-check.checked .journal-check-box {
+    background: var(--blue);
     border-color: var(--blue);
 }
 
-.action-add-btn {
-    padding: 4px 10px;
-    font-size: 12px;
-    background: var(--blue);
-}
-
-.action-list {
-    margin-top: 8px;
-    max-height: 150px;
-    overflow-y: auto;
-    border-top: 1px solid var(--border);
-    padding-top: 6px;
-}
-
-.action-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4px 6px;
-    background: var(--bg-input);
-    border-radius: 4px;
-    margin-bottom: 4px;
-    font-size: 12px;
-}
-
-.action-item .action-desc {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.action-item .action-remove {
-    background: transparent;
-    border: none;
-    color: var(--red);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 4px;
-}
-
-.action-item .action-remove:hover {
+.journal-check-box::after {
+    content: '✓';
     color: #fff;
+    font-size: 13px;
+    display: none;
 }
 
-.report-generate-btn {
+.journal-player-check.checked .journal-check-box::after { display: block; }
+
+.journal-player-name {
+    font-size: 13px;
+    flex: 1;
+}
+
+.journal-report-btn {
     width: 100%;
     padding: 12px;
-    margin-top: 8px;
-    background: linear-gradient(135deg, var(--purple), var(--blue));
-    font-size: 15px;
-    font-weight: 700;
+    background: var(--green);
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 4px;
 }
 
-.report-generate-btn:active {
-    transform: scale(0.98);
+.journal-report-btn:active { transform: scale(0.98); }
+
+/* Night report modal */
+.report-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 150;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
 }
 
-/* Report modal styles */
-.report-modal .modal-body {
-    padding: 12px;
+.report-modal-overlay.active { display: flex; }
+
+.report-modal {
+    background: var(--bg-dark);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
 }
+
+.report-header {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+}
+
+.report-header h3 { font-size: 16px; color: var(--text-main); }
+
+.report-body { padding: 12px; }
 
 .report-section {
     margin-bottom: 12px;
-    padding-bottom: 10px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
 }
 
-.report-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
+.report-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
 .report-section-title {
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.report-item {
+    font-size: 13px;
+    padding: 4px 0;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.report-section-title.killed { color: var(--red); }
-.report-section-title.saved { color: var(--green); }
-.report-section-title.alibi { color: var(--yellow); }
-.report-section-title.blocked { color: var(--text-dim); }
-.report-section-title.jailed { color: var(--purple); }
-
-.report-item {
-    font-size: 13px;
-    padding: 4px 0;
-    padding-left: 20px;
-    position: relative;
+.report-item .role-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
 }
 
-.report-item::before {
-    content: '•';
-    position: absolute;
-    left: 8px;
-    font-weight: bold;
-}
-
-.report-modal-buttons {
-    display: flex;
-    gap: 8px;
+.report-footer {
     padding: 12px;
     border-top: 1px solid var(--border);
-    position: sticky;
-    bottom: 0;
-    background: var(--bg-dark);
-}
-
-.report-modal-buttons .btn {
-    flex: 1;
-    padding: 10px;
-    font-size: 13px;
-}
-
-.select-actions {
     display: flex;
-    gap: 6px;
-    margin-bottom: 8px;
+    gap: 8px;
 }
 
-.select-actions .btn {
-    flex: 1;
-    font-size: 12px;
-    padding: 8px;
-}
+.report-footer .btn { flex: 1; }
 
 .bottom-nav {
     position: fixed;
@@ -809,6 +838,40 @@ h2 {
     background: var(--bg-card);
     border-radius: 6px;
 }
+
+.select-actions {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.select-actions .btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px;
+}
+
+/* Night events display in game tab */
+.night-events-panel {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+}
+
+.night-event-item {
+    font-size: 12px;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.night-event-item:last-child { border-bottom: none; }
+
+.night-event-icon { font-size: 14px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -834,99 +897,46 @@ h2 {
     <h2>Очередь ходов</h2>
     <div id="turn-order" class="turn-order-bar"></div>
     <div id="stats-bar" class="stats-bar"></div>
+    
+    <!-- Night events panel -->
+    <div id="night-events-panel" class="night-events-panel" style="display:none;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:6px;">📋 События ночи</div>
+        <div id="night-events-list"></div>
+    </div>
+    
     <h2>Игроки</h2>
     <div id="game-players" class="game-player-grid"></div>
 </div>
 
-<div id="screen-notes" class="screen">
+<div id="screen-journal" class="screen">
     <h1>📓 Журнал</h1>
     
-    <!-- Night Actions Panel -->
-    <div class="night-actions-panel">
-        <div class="night-actions-title">⚡ Быстрые действия ночи</div>
-        
-        <!-- Kill Action -->
-        <div class="action-row">
-            <label>🔪 Убийство:</label>
-            <select id="kill-attacker">
-                <option value="">Кто убил</option>
-            </select>
-            <select id="kill-victim">
-                <option value="">Кого убили</option>
-            </select>
-            <button class="btn btn-red action-add-btn" onclick="addAction('kill')">+</button>
-        </div>
-        
-        <!-- Save/Protect Action -->
-        <div class="action-row">
-            <label>🛡️ Защита:</label>
-            <select id="save-protector">
-                <option value="">Кто защитил</option>
-            </select>
-            <select id="save-target">
-                <option value="">Кого защитили</option>
-            </select>
-            <button class="btn btn-green action-add-btn" onclick="addAction('save')">+</button>
-        </div>
-        
-        <!-- Alibi Action -->
-        <div class="action-row">
-            <label>📜 Алиби:</label>
-            <select id="alibi-giver">
-                <option value="">Кто дал</option>
-            </select>
-            <select id="alibi-receiver">
-                <option value="">Кому дали</option>
-            </select>
-            <button class="btn btn-yellow action-add-btn" onclick="addAction('alibi')">+</button>
-        </div>
-        
-        <!-- Jail Action -->
-        <div class="action-row">
-            <label>🔒 Тюрьма:</label>
-            <select id="jail-judge">
-                <option value="">Судья</option>
-            </select>
-            <select id="jail-prisoner">
-                <option value="">Заключённый</option>
-            </select>
-            <button class="btn btn-purple action-add-btn" onclick="addAction('jail')">+</button>
-        </div>
-        
-        <!-- Block Action -->
-        <div class="action-row">
-            <label>⛔ Блок:</label>
-            <select id="block-actor">
-                <option value="">Кто заблокировал</option>
-            </select>
-            <select id="block-target">
-                <option value="">Кого заблокировали</option>
-            </select>
-            <button class="btn btn-dark action-add-btn" onclick="addAction('block')">+</button>
-        </div>
-        
-        <!-- Custom Note -->
-        <div class="action-row">
-            <label>📝 Заметка:</label>
-            <input type="text" id="custom-note" placeholder="Текст заметки...">
-            <button class="btn btn-dark action-add-btn" onclick="addAction('note')">+</button>
-        </div>
-        
-        <!-- Actions List -->
-        <div id="actions-list" class="action-list"></div>
-        
-        <button class="btn report-generate-btn" onclick="generateNightReport()">📋 Создать отчёт о ночи</button>
+    <!-- Notepad area -->
+    <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
+    
+    <!-- Quick action buttons -->
+    <h2 style="margin-top:16px;">Действия ночи</h2>
+    <div class="journal-actions">
+        <button class="journal-action-btn" data-action="attack" onclick="selectJournalAction('attack')">⚔️ Попытка убийства</button>
+        <button class="journal-action-btn" data-action="protect" onclick="selectJournalAction('protect')">🛡️ Защита</button>
+        <button class="journal-action-btn" data-action="alibi" onclick="selectJournalAction('alibi')">📜 Алиби</button>
+        <button class="journal-action-btn" data-action="jailed" onclick="selectJournalAction('jailed')">🔒 Тюрьма</button>
+        <button class="journal-action-btn" data-action="investigate" onclick="selectJournalAction('investigate')">🔍 Расследование</button>
+        <button class="journal-action-btn" data-action="poison" onclick="selectJournalAction('poison')">☠️ Отравление</button>
     </div>
     
-    <!-- Regular Notepad -->
-    <textarea id="notepad" class="notepad-area" placeholder="Свободные заметки ведущего..."></textarea>
+    <!-- Player selection for actions -->
+    <div class="journal-players-select" id="journal-players-list"></div>
+    
+    <!-- Generate report button -->
+    <button class="journal-report-btn" onclick="generateNightReport()">📊 Сформировать отчёт о ночи</button>
 </div>
 
 <div id="bottom-nav" class="bottom-nav">
     <button class="nav-btn active" onclick="showScreen('game')">
         <span class="nav-icon">🎮</span>Игра
     </button>
-    <button class="nav-btn" onclick="showScreen('notes')">
+    <button class="nav-btn" onclick="showScreen('journal')">
         <span class="nav-icon">📓</span>Журнал
     </button>
     <button class="nav-btn" onclick="endGame()">
@@ -939,31 +949,49 @@ h2 {
         <div class="modal-header">
             <h3 id="modal-title">Выбери роль</h3>
         </div>
+        
+        <!-- Role tabs -->
+        <div class="role-tabs">
+            <button class="role-tab-btn team-citizen-tab active" onclick="switchRoleTab('citizen')">🔵 Горожане</button>
+            <button class="role-tab-btn team-criminal-tab" onclick="switchRoleTab('criminal')">🔴 Преступники</button>
+            <button class="role-tab-btn team-outcast-tab" onclick="switchRoleTab('outcast')">🟡 Отщепенцы</button>
+        </div>
+        
         <div class="modal-body">
             <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
-            <div class="role-section-title team-citizen">🔵 Горожане</div>
-            <div id="roles-citizen" class="role-grid"></div>
-            <div class="role-section-title team-criminal">🔴 Преступники</div>
-            <div id="roles-criminal" class="role-grid"></div>
-            <div class="role-section-title team-outcast">🟡 Отщепенцы</div>
-            <div id="roles-outcast" class="role-grid"></div>
+            
+            <!-- Citizen roles -->
+            <div id="roles-citizen-container">
+                <div class="role-section-title team-citizen active">🔵 Горожане</div>
+                <div id="roles-citizen" class="role-grid active"></div>
+            </div>
+            
+            <!-- Criminal roles -->
+            <div id="roles-criminal-container">
+                <div class="role-section-title team-criminal">🔴 Преступники</div>
+                <div id="roles-criminal" class="role-grid"></div>
+            </div>
+            
+            <!-- Outcast roles -->
+            <div id="roles-outcast-container">
+                <div class="role-section-title team-outcast">🟡 Отщепенцы</div>
+                <div id="roles-outcast" class="role-grid"></div>
+            </div>
         </div>
         <button class="modal-close-btn" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
 <!-- Night Report Modal -->
-<div id="report-modal" class="modal-overlay report-modal">
-    <div class="modal">
-        <div class="modal-header">
+<div id="report-modal" class="report-modal-overlay">
+    <div class="report-modal">
+        <div class="report-header">
             <h3>🌙 Отчёт о ночи</h3>
         </div>
-        <div class="modal-body" id="report-content">
-            <!-- Report content will be inserted here -->
-        </div>
-        <div class="report-modal-buttons">
-            <button class="btn btn-dark" onclick="closeReportModal()">✕ Закрыть</button>
-            <button class="btn btn-green" onclick="applyReport()">✅ Применить в игру</button>
+        <div class="report-body" id="report-content"></div>
+        <div class="report-footer">
+            <button class="btn btn-dark" onclick="closeReportModal()">Закрыть</button>
+            <button class="btn btn-green" onclick="confirmNightReport()">✅ Подтвердить</button>
         </div>
     </div>
 </div>
@@ -1016,7 +1044,11 @@ function getRoleImgPath(roleId) {
 let selectedPlayers = new Set();
 let gamePlayers = [];
 let currentPickerPlayer = null;
-let nightActions = []; // Stores night actions for report
+
+// Journal state
+let currentJournalAction = null;
+let selectedJournalPlayers = new Set();
+let pendingNightEvents = [];
 
 function addNewPlayer() {
     const input = document.getElementById('new-player-input');
@@ -1067,15 +1099,13 @@ function jailBarsMiniSVG() {
 function startGame() {
     if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
     gamePlayers = Array.from(selectedPlayers).map(name => ({ name, role: null, eliminated: false, jailed: false }));
-    nightActions = [];
     document.getElementById('screen-lobby').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
     document.getElementById('bottom-nav').classList.add('active');
     renderGame();
-    updateActionSelectors();
 }
 
-function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
+function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); renderNightEvents(); }
 
 function renderStats() {
     const alive = gamePlayers.filter(p => !p.eliminated);
@@ -1103,7 +1133,11 @@ function renderTurnOrder() {
         if (p.eliminated) {
             const marker = document.createElement('div');
             marker.className = 'turn-dead-marker';
-            marker.innerHTML = `<div class="turn-dead-bar"></div><span class="turn-dead-letter">${p.role.name.charAt(0).toUpperCase()}</span>`;
+            const teamClass = 'team-' + p.role.team;
+            // Show first 3 letters of role name vertically
+            const roleShort = p.role.name.substring(0, 3).toUpperCase();
+            const lettersHtml = roleShort.split('').map(l => `<span class="turn-dead-letter">${l}</span>`).join('');
+            marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${lettersHtml}</div>`;
             marker.title = `${p.name} (${p.role.name}) — мёртв`;
             bar.appendChild(marker);
         } else {
@@ -1160,21 +1194,26 @@ function renderGamePlayers() {
 
 function eliminatePlayer(idx) { gamePlayers[idx].eliminated = true; gamePlayers[idx].jailed = false; renderGame(); }
 function restorePlayer(idx) { gamePlayers[idx].eliminated = false; renderGame(); }
-function toggleJail(idx) { 
-    const player = gamePlayers[idx];
-    player.jailed = !player.jailed;
-    // If jailed, add to night actions
-    if (player.jailed) {
-        addAction('jail', 'Судья', player.name);
-    }
-    renderGame(); 
-}
+function toggleJail(idx) { gamePlayers[idx].jailed = !gamePlayers[idx].jailed; renderGame(); }
 
+// Role picker with tabs
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
     document.getElementById('modal-title').textContent = `Роль для: ${gamePlayers[idx].name}`;
     document.getElementById('role-modal').classList.add('active');
     renderRoleButtons();
+    switchRoleTab('citizen'); // default tab
+}
+
+function switchRoleTab(team) {
+    // Update tab buttons
+    document.querySelectorAll('.role-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.team-${team}-tab`).classList.add('active');
+    
+    // Show/hide sections
+    document.querySelectorAll('.role-section-title, .role-grid').forEach(el => el.classList.remove('active'));
+    document.querySelector(`#roles-${team}`).classList.add('active');
+    document.querySelector(`#roles-${team}-container .role-section-title`).classList.add('active');
 }
 
 function renderRoleButtons() {
@@ -1189,17 +1228,249 @@ function renderRoleButtons() {
     });
 }
 
-function pickRole(role) { if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role; closeModal(); renderGame(); updateActionSelectors(); }
+function pickRole(role) { if (currentPickerPlayer !== null) gamePlayers[currentPickerPlayer].role = role; closeModal(); renderGame(); }
 function closeModal() { document.getElementById('role-modal').classList.remove('active'); currentPickerPlayer = null; }
 function closeModalOutside(e) { if (e.target === document.getElementById('role-modal')) closeModal(); }
+
+// Journal functions
+function selectJournalAction(action) {
+    currentJournalAction = action;
+    selectedJournalPlayers.clear();
+    
+    // Update button styles
+    document.querySelectorAll('.journal-action-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.action === action);
+    });
+    
+    renderJournalPlayersList();
+}
+
+function renderJournalPlayersList() {
+    const container = document.getElementById('journal-players-list');
+    if (!currentJournalAction) {
+        container.innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:8px;">Выберите действие выше, затем отметьте игроков</div>';
+        return;
+    }
+    
+    const alivePlayers = gamePlayers.filter(p => !p.eliminated);
+    if (alivePlayers.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:8px;">Нет живых игроков</div>';
+        return;
+    }
+    
+    let html = `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Отметьте игроков для: ${getActionLabel(currentJournalAction)}</div>`;
+    alivePlayers.forEach((p, idx) => {
+        const checked = selectedJournalPlayers.has(idx) ? 'checked' : '';
+        const teamClass = p.role ? `team-${p.role.team}` : '';
+        html += `
+            <div class="journal-player-check ${checked}" onclick="toggleJournalPlayer(${idx})">
+                <div class="journal-check-box"></div>
+                <span class="journal-player-name ${teamClass}">${p.name}${p.role ? ` <span style="opacity:0.6">(${p.role.name})</span>` : ''}</span>
+            </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function toggleJournalPlayer(idx) {
+    if (selectedJournalPlayers.has(idx)) {
+        selectedJournalPlayers.delete(idx);
+    } else {
+        selectedJournalPlayers.add(idx);
+    }
+    renderJournalPlayersList();
+}
+
+function getActionLabel(action) {
+    const labels = {
+        attack: 'попытка убийства',
+        protect: 'защита',
+        alibi: 'алиби',
+        jailed: 'тюрьма',
+        investigate: 'расследование',
+        poison: 'отравление'
+    };
+    return labels[action] || action;
+}
+
+function getActionIcon(action) {
+    const icons = {
+        attack: '⚔️',
+        protect: '🛡️',
+        alibi: '📜',
+        jailed: '🔒',
+        investigate: '🔍',
+        poison: '☠️'
+    };
+    return icons[action] || '•';
+}
+
+function generateNightReport() {
+    if (!currentJournalAction || selectedJournalPlayers.size === 0) {
+        alert('Выберите действие и отметьте хотя бы одного игрока');
+        return;
+    }
+    
+    const action = currentJournalAction;
+    const players = Array.from(selectedJournalPlayers).map(idx => {
+        const p = gamePlayers[idx];
+        return { name: p.name, role: p.role ? p.role.name : null, team: p.role ? p.role.team : null };
+    });
+    
+    pendingNightEvents.push({ action, players, timestamp: new Date() });
+    
+    // Generate report content
+    let reportHtml = '';
+    
+    // Protected from attack
+    const protectedPlayers = pendingNightEvents.filter(e => e.action === 'protect').flatMap(e => e.players);
+    const attackedPlayers = pendingNightEvents.filter(e => e.action === 'attack').flatMap(e => e.players);
+    const savedPlayers = protectedPlayers.filter(p => attackedPlayers.some(ap => ap.name === p.name));
+    
+    if (savedPlayers.length > 0) {
+        reportHtml += `
+            <div class="report-section">
+                <div class="report-section-title" style="color:var(--green)">🛡️ Спасены от убийства</div>
+                ${savedPlayers.map(p => `<div class="report-item"><span class="role-badge team-${p.team||'citizen'}">${p.role||'?'}</span> ${p.name}</div>`).join('')}
+            </div>`;
+    }
+    
+    // Died (attacked but not protected)
+    const diedPlayers = attackedPlayers.filter(p => !protectedPlayers.some(pp => pp.name === p.name));
+    if (diedPlayers.length > 0) {
+        reportHtml += `
+            <div class="report-section">
+                <div class="report-section-title" style="color:var(--red)">💀 Погибли</div>
+                ${diedPlayers.map(p => `<div class="report-item"><span class="role-badge team-${p.team||'citizen'}">${p.role||'?'}</span> ${p.name}</div>`).join('')}
+            </div>`;
+    }
+    
+    // Given alibi
+    const alibiEvents = pendingNightEvents.filter(e => e.action === 'alibi');
+    if (alibiEvents.length > 0) {
+        const alibiPlayers = [...new Set(alibiEvents.flatMap(e => e.players.map(p => p.name)))];
+        reportHtml += `
+            <div class="report-section">
+                <div class="report-section-title" style="color:var(--blue)">📜 Получили алиби</div>
+                ${alibiPlayers.map(name => {
+                    const p = gamePlayers.find(gp => gp.name === name);
+                    const role = p?.role?.name || '?';
+                    const team = p?.role?.team || 'citizen';
+                    return `<div class="report-item"><span class="role-badge team-${team}">${role}</span> ${name}</div>`;
+                }).join('')}
+            </div>`;
+    }
+    
+    // Jailed
+    const jailedEvents = pendingNightEvents.filter(e => e.action === 'jailed');
+    if (jailedEvents.length > 0) {
+        const jailedPlayers = [...new Set(jailedEvents.flatMap(e => e.players.map(p => p.name)))];
+        reportHtml += `
+            <div class="report-section">
+                <div class="report-section-title" style="color:var(--yellow)">🔒 Отправлены в тюрьму</div>
+                ${jailedPlayers.map(name => {
+                    const p = gamePlayers.find(gp => gp.name === name);
+                    const role = p?.role?.name || '?';
+                    const team = p?.role?.team || 'citizen';
+                    return `<div class="report-item"><span class="role-badge team-${team}">${role}</span> ${name}</div>`;
+                }).join('')}
+            </div>`;
+    }
+    
+    // Other actions summary
+    const otherActions = ['investigate', 'poison'].filter(a => pendingNightEvents.some(e => e.action === a));
+    if (otherActions.length > 0) {
+        reportHtml += `<div class="report-section"><div class="report-section-title">📋 Другие действия</div>`;
+        otherActions.forEach(act => {
+            const events = pendingNightEvents.filter(e => e.action === act);
+            events.forEach(e => {
+                reportHtml += `<div class="report-item">${getActionIcon(act)} ${getActionLabel(act)}: ${e.players.map(p => p.name).join(', ')}</div>`;
+            });
+        });
+        reportHtml += `</div>`;
+    }
+    
+    if (!reportHtml) {
+        reportHtml = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет событий для отображения</div>';
+    }
+    
+    document.getElementById('report-content').innerHTML = reportHtml;
+    document.getElementById('report-modal').classList.add('active');
+}
+
+function closeReportModal() {
+    document.getElementById('report-modal').classList.remove('active');
+    // Clear pending events if not confirmed
+    pendingNightEvents = [];
+    currentJournalAction = null;
+    selectedJournalPlayers.clear();
+    renderJournalPlayersList();
+    document.querySelectorAll('.journal-action-btn').forEach(btn => btn.classList.remove('active'));
+}
+
+function confirmNightReport() {
+    // Apply deaths from report
+    const attackedPlayers = pendingNightEvents.filter(e => e.action === 'attack').flatMap(e => e.players.map(p => p.name));
+    const protectedPlayers = pendingNightEvents.filter(e => e.action === 'protect').flatMap(e => e.players.map(p => p.name));
+    
+    attackedPlayers.forEach(name => {
+        if (!protectedPlayers.includes(name)) {
+            const player = gamePlayers.find(p => p.name === name);
+            if (player) player.eliminated = true;
+        }
+    });
+    
+    // Apply jail status
+    const jailedPlayers = pendingNightEvents.filter(e => e.action === 'jailed').flatMap(e => e.players.map(p => p.name));
+    jailedPlayers.forEach(name => {
+        const player = gamePlayers.find(p => p.name === name);
+        if (player && !player.eliminated) player.jailed = true;
+    });
+    
+    // Display events in game tab
+    renderNightEvents();
+    
+    // Close modal and reset journal
+    document.getElementById('report-modal').classList.remove('active');
+    pendingNightEvents = [];
+    currentJournalAction = null;
+    selectedJournalPlayers.clear();
+    renderJournalPlayersList();
+    document.querySelectorAll('.journal-action-btn').forEach(btn => btn.classList.remove('active'));
+    
+    renderGame();
+}
+
+function renderNightEvents() {
+    const panel = document.getElementById('night-events-panel');
+    const list = document.getElementById('night-events-list');
+    
+    if (pendingNightEvents.length === 0) {
+        panel.style.display = 'none';
+        return;
+    }
+    
+    panel.style.display = 'block';
+    let html = '';
+    
+    pendingNightEvents.forEach(event => {
+        const icon = getActionIcon(event.action);
+        const label = getActionLabel(event.action);
+        const names = event.players.map(p => p.name).join(', ');
+        html += `<div class="night-event-item"><span class="night-event-icon">${icon}</span> ${label}: ${names}</div>`;
+    });
+    
+    list.innerHTML = html;
+}
 
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach((b, i) => { b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'notes' && i === 1)); });
-    if (name === 'notes') {
-        updateActionSelectors();
-        renderActionsList();
+    document.querySelectorAll('.nav-btn').forEach((b, i) => { 
+        b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'journal' && i === 1)); 
+    });
+    
+    if (name === 'journal') {
+        renderJournalPlayersList();
     }
 }
 
@@ -1209,217 +1480,10 @@ function endGame() {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-lobby').classList.add('active');
     gamePlayers = [];
-    nightActions = [];
     document.getElementById('notepad').value = '';
-}
-
-// ============ NIGHT ACTIONS SYSTEM ============
-
-function updateActionSelectors() {
-    const alivePlayers = gamePlayers.filter(p => !p.eliminated).map(p => p.name);
-    const allPlayers = gamePlayers.map(p => p.name);
-    
-    const selectors = [
-        'kill-attacker', 'kill-victim',
-        'save-protector', 'save-target',
-        'alibi-giver', 'alibi-receiver',
-        'jail-judge', 'jail-prisoner',
-        'block-actor', 'block-target'
-    ];
-    
-    selectors.forEach(id => {
-        const select = document.getElementById(id);
-        if (!select) return;
-        const isTarget = id.includes('victim') || id.includes('target') || id.includes('receiver') || id.includes('prisoner');
-        const options = (isTarget ? alivePlayers : allPlayers).map(name => `<option value="${name}">${name}</option>`).join('');
-        const placeholder = select.querySelector('option[value=""]');
-        select.innerHTML = placeholder ? placeholder.outerHTML + options : options;
-    });
-}
-
-function addAction(type, customActor = null, customTarget = null, customNote = null) {
-    let action = { type, timestamp: Date.now() };
-    
-    switch(type) {
-        case 'kill':
-            action.actor = document.getElementById('kill-attacker').value;
-            action.target = document.getElementById('kill-victim').value;
-            if (!action.actor || !action.target) { alert('Выберите кто и кого!'); return; }
-            action.desc = `🔪 ${action.actor} убил ${action.target}`;
-            break;
-        case 'save':
-            action.actor = document.getElementById('save-protector').value;
-            action.target = document.getElementById('save-target').value;
-            if (!action.actor || !action.target) { alert('Выберите кто и кого!'); return; }
-            action.desc = `🛡️ ${action.actor} защитил ${action.target}`;
-            break;
-        case 'alibi':
-            action.actor = document.getElementById('alibi-giver').value;
-            action.target = document.getElementById('alibi-receiver').value;
-            if (!action.actor || !action.target) { alert('Выберите кто и кому!'); return; }
-            action.desc = `📜 ${action.actor} дал алиби ${action.target}`;
-            break;
-        case 'jail':
-            action.actor = customActor || document.getElementById('jail-judge').value;
-            action.target = customTarget || document.getElementById('jail-prisoner').value;
-            if (!action.actor || !action.target) { alert('Выберите судью и заключённого!'); return; }
-            action.desc = `🔒 ${action.actor} посадил в тюрьму ${action.target}`;
-            break;
-        case 'block':
-            action.actor = document.getElementById('block-actor').value;
-            action.target = document.getElementById('block-target').value;
-            if (!action.actor || !action.target) { alert('Выберите кто и кого!'); return; }
-            action.desc = `⛔ ${action.actor} заблокировал ${action.target}`;
-            break;
-        case 'note':
-            action.desc = `📝 ${customNote || document.getElementById('custom-note').value}`;
-            if (!action.desc || action.desc === '📝 ') { alert('Введите текст заметки!'); return; }
-            document.getElementById('custom-note').value = '';
-            break;
-    }
-    
-    nightActions.push(action);
-    renderActionsList();
-    
-    // Reset inputs
-    ['kill-attacker','kill-victim','save-protector','save-target','alibi-giver','alibi-receiver','jail-judge','jail-prisoner','block-actor','block-target'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.selectedIndex = 0;
-    });
-}
-
-function removeAction(index) {
-    nightActions.splice(index, 1);
-    renderActionsList();
-}
-
-function renderActionsList() {
-    const list = document.getElementById('actions-list');
-    if (!list) return;
-    
-    if (nightActions.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:4px;">Действий пока нет</div>';
-        return;
-    }
-    
-    list.innerHTML = nightActions.map((action, i) => `
-        <div class="action-item">
-            <span class="action-desc">${action.desc}</span>
-            <button class="action-remove" onclick="removeAction(${i})">×</button>
-        </div>
-    `).join('');
-}
-
-// ============ REPORT SYSTEM ============
-
-function generateNightReport() {
-    if (nightActions.length === 0) {
-        alert('Добавьте хотя бы одно действие перед созданием отчёта!');
-        return;
-    }
-    
-    const report = {
-        killed: [],
-        saved: [],
-        alibi: [],
-        jailed: [],
-        blocked: [],
-        notes: []
-    };
-    
-    nightActions.forEach(action => {
-        switch(action.type) {
-            case 'kill': report.killed.push(action); break;
-            case 'save': report.saved.push(action); break;
-            case 'alibi': report.alibi.push(action); break;
-            case 'jail': report.jailed.push(action); break;
-            case 'block': report.blocked.push(action); break;
-            case 'note': report.notes.push(action); break;
-        }
-    });
-    
-    // Build report HTML
-    let html = '';
-    
-    if (report.killed.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title killed">💀 Убиты:</div>
-            ${report.killed.map(a => `<div class="report-item">${a.target} <span style="opacity:0.7;font-size:11px;">(убил: ${a.actor})</span></div>`).join('')}
-        </div>`;
-    }
-    
-    if (report.saved.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title saved">🛡️ Защищены (попытки убийства отражены):</div>
-            ${report.saved.map(a => `<div class="report-item">${a.target} <span style="opacity:0.7;font-size:11px;">(защитил: ${a.actor})</span></div>`).join('')}
-        </div>`;
-    }
-    
-    if (report.alibi.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title alibi">📜 Получили алиби (защищены от казни):</div>
-            ${report.alibi.map(a => `<div class="report-item">${a.target} <span style="opacity:0.7;font-size:11px;">(дал: ${a.actor})</span></div>`).join('')}
-        </div>`;
-    }
-    
-    if (report.jailed.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title jailed">🔒 Посажены в тюрьму (не могут действовать):</div>
-            ${report.jailed.map(a => `<div class="report-item">${a.target} <span style="opacity:0.7;font-size:11px;">(судья: ${a.actor})</span></div>`).join('')}
-        </div>`;
-    }
-    
-    if (report.blocked.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title blocked">⛔ Заблокированы (не смогли использовать способность):</div>
-            ${report.blocked.map(a => `<div class="report-item">${a.target} <span style="opacity:0.7;font-size:11px;">(заблокировал: ${a.actor})</span></div>`).join('')}
-        </div>`;
-    }
-    
-    if (report.notes.length > 0) {
-        html += `<div class="report-section">
-            <div class="report-section-title">📝 Заметки:</div>
-            ${report.notes.map(a => `<div class="report-item">${a.desc.replace('📝 ', '')}</div>`).join('')}
-        </div>`;
-    }
-    
-    document.getElementById('report-content').innerHTML = html || '<div style="color:var(--text-dim);text-align:center;">Нет данных для отчёта</div>';
-    document.getElementById('report-modal').classList.add('active');
-}
-
-function closeReportModal() {
-    document.getElementById('report-modal').classList.remove('active');
-}
-
-function applyReport() {
-    // Process kills - eliminate victims
-    nightActions.filter(a => a.type === 'kill').forEach(action => {
-        const player = gamePlayers.find(p => p.name === action.target);
-        if (player && !player.eliminated) {
-            player.eliminated = true;
-            player.jailed = false;
-        }
-    });
-    
-    // Process jail - mark as jailed (already handled in toggleJail, but ensure consistency)
-    nightActions.filter(a => a.type === 'jail').forEach(action => {
-        const player = gamePlayers.find(p => p.name === action.target);
-        if (player && !player.eliminated) {
-            player.jailed = true;
-        }
-    });
-    
-    // Clear night actions after applying
-    nightActions = [];
-    renderActionsList();
-    
-    // Update game display
-    renderGame();
-    
-    // Close modal
-    closeReportModal();
-    
-    alert('✅ Отчёт применён! Убитые игроки устранены, заключённые в тюрьме.');
+    pendingNightEvents = [];
+    currentJournalAction = null;
+    selectedJournalPlayers.clear();
 }
 
 renderLobby();
