@@ -419,17 +419,28 @@ h2 {
     z-index: 5;
 }
 
-/* Role image */
-.gp-role-img {
+/* Role image — fixed size, never compressed or stretched */
+.gp-role-img-wrap {
     width: 36px;
     min-width: 36px;
     max-width: 36px;
-    align-self: stretch;
-    object-fit: cover;
-    border-radius: 4px;
+    height: 54px;
     flex-shrink: 0;
+    align-self: flex-start;
     position: relative;
+    border-radius: 4px;
+    overflow: hidden;
     z-index: 1;
+}
+
+.gp-role-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 4px;
 }
 
 .gp-content {
@@ -1067,7 +1078,7 @@ h2 {
                 <span class="setting-toggle-icon">🛡️</span>
                 <span>
                     <span class="setting-toggle-name" style="color:var(--protect-color)">Защищён</span>
-                    <span class="setting-toggle-desc">Синий оттенок — под защитой на ночь</span>
+                    <span class="setting-toggle-desc">Синий оттенок карточки</span>
                 </span>
             </label>
             <label class="toggle-switch protect">
@@ -1081,7 +1092,7 @@ h2 {
                 <span class="setting-toggle-icon">📋</span>
                 <span>
                     <span class="setting-toggle-name" style="color:var(--alibi-color)">Алиби</span>
-                    <span class="setting-toggle-desc">Фиолетовый оттенок — алиби подтверждено</span>
+                    <span class="setting-toggle-desc">Фиолетовый оттенок карточки</span>
                 </span>
             </label>
             <label class="toggle-switch alibi">
@@ -1095,7 +1106,7 @@ h2 {
                 <span class="setting-toggle-icon">🚫</span>
                 <span>
                     <span class="setting-toggle-name" style="color:var(--block-color)">Заблокирован</span>
-                    <span class="setting-toggle-desc">Серый оттенок — заблокирован на ночь</span>
+                    <span class="setting-toggle-desc">Серый оттенок карточки</span>
                 </span>
             </label>
             <label class="toggle-switch block">
@@ -1491,7 +1502,7 @@ function renderGamePlayers() {
         card.className = classes;
 
         const teamClass = p.role ? 'team-' + p.role.team : '';
-        const roleImg = p.role ? `<img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.style.display='none'">` : '';
+        const roleImg = p.role ? `<div class="gp-role-img-wrap"><img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.parentElement.style.display='none'"></div>` : '';
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
 
         card.innerHTML = `
