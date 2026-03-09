@@ -314,6 +314,18 @@ h2 {
     gap: 6px;
     transition: all 0.2s;
     border: 1px solid var(--border);
+    isolation: isolate; /* чтобы псевдоэлемент не вылезал за пределы */
+}
+
+.game-player-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1; /* под контентом, но поверх --bg-card */
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 .game-player-card.eliminated {
@@ -321,9 +333,20 @@ h2 {
     order: 999;
 }
 
-.game-player-card.team-citizen { background: rgba(30,136,229,0.03); }
-.game-player-card.team-criminal { background: rgba(229,57,53,0.03); }
-.game-player-card.team-outcast { background: rgba(253,216,53,0.03); }
+.game-player-card.team-citizen::before {
+    background: rgba(30, 136, 229, 0.08);
+    opacity: 1;
+}
+
+.game-player-card.team-criminal::before {
+    background: rgba(229, 57, 53, 0.08);
+    opacity: 1;
+}
+
+.game-player-card.team-outcast::before {
+    background: rgba(253, 216, 53, 0.08);
+    opacity: 1;
+}
 
 .game-player-card.eliminated .elim-overlay { display: flex; }
 .game-player-card.jailed { filter: brightness(0.8); }
