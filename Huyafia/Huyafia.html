@@ -287,11 +287,62 @@ h2 {
 .turn-chip.jailed .jail-bars-mini { display: block; }
 
 /* Status tints on turn chips */
-.turn-chip.poisoned  { box-shadow: inset 0 0 0 2px var(--poison-color);  background: rgba(102,187,106,0.12) !important; }
-.turn-chip.sected    { box-shadow: inset 0 0 0 2px var(--sect-color);    background: rgba(255,202,40,0.12)  !important; }
-.turn-chip.protected { box-shadow: inset 0 0 0 2px var(--protect-color); background: rgba(66,165,245,0.12)  !important; }
-.turn-chip.alibied   { box-shadow: inset 0 0 0 2px var(--alibi-color);   background: rgba(171,71,188,0.12)  !important; }
-.turn-chip.blocked   { box-shadow: inset 0 0 0 2px var(--block-color);   background: rgba(120,144,156,0.15) !important; }
+/* Общий шаблон для штриховки: диагональные линии под углом 45 градусов */
+
+.turn-chip.poisoned {
+  box-shadow: inset 0 0 0 2px var(--poison-color);
+  background: repeating-linear-gradient(
+    40deg,
+    rgba(102, 187, 106, 0.12),
+    rgba(102, 187, 106, 0.12) 4px,
+    transparent 4px,
+    transparent 8px
+  ) !important;
+}
+
+.turn-chip.sected {
+  box-shadow: inset 0 0 0 2px var(--sect-color);
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 202, 40, 0.12),
+    rgba(255, 202, 40, 0.12) 4px,
+    transparent 4px,
+    transparent 8px
+  ) !important;
+}
+
+.turn-chip.protected {
+  box-shadow: inset 0 0 0 2px var(--protect-color);
+  background: repeating-linear-gradient(
+    50deg,
+    rgba(66, 165, 245, 0.12),
+    rgba(66, 165, 245, 0.12) 4px,
+    transparent 4px,
+    transparent 8px
+  ) !important;
+}
+
+.turn-chip.alibied {
+  box-shadow: inset 0 0 0 2px var(--alibi-color);
+  background: repeating-linear-gradient(
+    55deg,
+    rgba(171, 71, 188, 0.12),
+    rgba(171, 71, 188, 0.12) 4px,
+    transparent 4px,
+    transparent 8px
+  ) !important;
+}
+
+.turn-chip.blocked {
+  box-shadow: inset 0 0 0 2px var(--block-color);
+  background: repeating-linear-gradient(
+    60deg,
+    rgba(120, 144, 156, 0.15),
+    rgba(120, 144, 156, 0.15) 4px,
+    transparent 4px,
+    transparent 8px
+  ) !important;
+}
 
 /* Status icon row inside chip */
 .turn-chip-statuses {
@@ -1043,7 +1094,7 @@ h2 {
     <!-- Settings panel -->
     <div class="settings-panel" id="settings-panel">
         <h3>⚙️ Кнопки действий на картах</h3>
-        <p>Включи кнопки, которые хочешь видеть на карточках игроков. По умолчанию все выключены.</p>
+        <p>Включи кнопки, которые хочешь видеть на карточках игроков.</p>
 
         <div class="setting-toggle-row">
             <label class="setting-toggle-label" for="toggle-poison">
