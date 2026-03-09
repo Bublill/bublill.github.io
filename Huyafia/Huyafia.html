@@ -1725,7 +1725,7 @@ function pickRole(role) {
             } else if (oldRole !== null && newRole === null) {
                 logAction(`<span class="role-removed">Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
             } else {
-                logAction(`<span class="role-changed">! Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+                logAction(`<span class="role-changed">!!! Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
             }
         }
         player.role = role;
