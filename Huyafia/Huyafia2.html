@@ -712,10 +712,15 @@ h2 {
 }
 
 .action-log-message .player-name { font-weight: 600; }
-.action-log-message .role-change { color: var(--yellow); }
+/* Role actions - distinct colors */
+.action-log-message .role-assigned { color: var(--blue); }      /* Role set when none existed */
+.action-log-message .role-changed { color: var(--yellow); }     /* Role changed from existing */
+.action-log-message .role-removed { color: #ff9800; }           /* Role removed */
+/* Player status actions */
 .action-log-message .eliminated { color: var(--red); }
 .action-log-message .restored { color: var(--green); }
-.action-log-message .jailed { color: var(--yellow); }
+.action-log-message .jailed { color: #ff9800; }
+.action-log-message .freed { color: #66bb6a; }
 
 .bottom-nav {
     position: fixed;
@@ -1107,9 +1112,14 @@ function restorePlayer(idx) {
 
 function toggleJail(idx) {
     const player = gamePlayers[idx];
+    const wasJailed = player.jailed;
     player.jailed = !player.jailed;
-    const action = player.jailed ? 'посажен в тюрьму' : 'освобождён из тюрьмы';
-    logAction(`<span class="jailed">${action.charAt(0).toUpperCase() + action.slice(1)}:</span> <span class="player-name">${player.name}</span>`, 'jailed');
+    
+    if (player.jailed) {
+        logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>`, 'jailed');
+    } else {
+        logAction(`<span class="freed">✅ Освобождён из тюрьмы:</span> <span class="player-name">${player.name}</span>`, 'freed');
+    }
     renderGame();
 }
 
@@ -1159,10 +1169,21 @@ function renderRoleButtons() {
 function pickRole(role) {
     if (currentPickerPlayer !== null) {
         const player = gamePlayers[currentPickerPlayer];
-        const oldRole = player.role ? player.role.name : 'нет роли';
-        const newRole = role ? role.name : 'нет роли';
+        const oldRole = player.role ? player.role.name : null;
+        const newRole = role ? role.name : null;
+        
         if (oldRole !== newRole) {
-            logAction(`<span class="role-change">Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-change">${oldRole}</span> → <span class="role-change">${newRole}</span>`, 'role-change');
+            // Determine action type for better coloring and messaging
+            if (oldRole === null && newRole !== null) {
+                // Role assigned (was none)
+                logAction(`<span class="role-assigned">Роль назначена:</span> <span class="player-name">${player.name}</span>: <span class="role-assigned">${newRole}</span>`, 'role-assigned');
+            } else if (oldRole !== null && newRole === null) {
+                // Role removed
+                logAction(`<span class="role-removed">Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
+            } else if (oldRole !== null && newRole !== null) {
+                // Role changed (from existing to existing) - add exclamation mark
+                logAction(`<span class="role-changed">! Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+            }
         }
         player.role = role;
     }
