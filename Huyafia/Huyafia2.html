@@ -321,9 +321,9 @@ h2 {
     order: 999;
 }
 
-.game-player-card.team-citizen { border-left: 4px solid var(--blue); background: linear-gradient(135deg, var(--bg-card), rgba(30,136,229,0.08)); }
-.game-player-card.team-criminal { border-left: 4px solid var(--red); background: linear-gradient(135deg, var(--bg-card), rgba(229,57,53,0.08)); }
-.game-player-card.team-outcast { border-left: 4px solid var(--yellow); background: linear-gradient(135deg, var(--bg-card), rgba(253,216,53,0.08)); }
+.game-player-card.team-citizen { background: rgba(30,136,229,0.08); }
+.game-player-card.team-criminal { background: rgba(229,57,53,0.08); }
+.game-player-card.team-outcast { background: rgba(253,216,53,0.08); }
 
 .game-player-card.eliminated .elim-overlay { display: flex; }
 .game-player-card.jailed { filter: brightness(0.8); }
@@ -781,7 +781,7 @@ h2 {
 </div>
 
 <div id="screen-notes" class="screen">
-    <h1>📝 Блокнот</h1>
+    <h1>📝 Журнал</h1>
     <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
     <div class="action-log">
         <div class="action-log-header">
@@ -797,7 +797,7 @@ h2 {
         <span class="nav-icon">🎮</span>Игра
     </button>
     <button class="nav-btn" onclick="showScreen('notes')">
-        <span class="nav-icon">📝</span>Блокнот
+        <span class="nav-icon">📝</span>Журнал
     </button>
     <button class="nav-btn" onclick="endGame()">
         <span class="nav-icon">🚪</span>Выход
