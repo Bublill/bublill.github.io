@@ -294,9 +294,9 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 3px,
-    rgba(102,187,106,0.25) 3px,
-    rgba(102,187,106,0.25) 6px
+    transparent 8px,
+    rgba(102,187,106,0.25) 8px,
+    rgba(102,187,106,0.25) 10px
   ) !important;
 }
 
@@ -305,9 +305,9 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 3px,
-    rgba(255,202,40,0.25) 3px,
-    rgba(255,202,40,0.25) 6px
+    transparent 8px,
+    rgba(255,202,40,0.25) 8px,
+    rgba(255,202,40,0.25) 10px
   ) !important;
 }
 
@@ -316,9 +316,9 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 3px,
-    rgba(66,165,245,0.25) 3px,
-    rgba(66,165,245,0.25) 6px
+    transparent 8px,
+    rgba(66,165,245,0.25) 8px,
+    rgba(66,165,245,0.25) 10px
   ) !important;
 }
 
@@ -327,9 +327,9 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 3px,
-    rgba(171,71,188,0.25) 3px,
-    rgba(171,71,188,0.25) 6px
+    transparent 8px,
+    rgba(171,71,188,0.25) 8px,
+    rgba(171,71,188,0.25) 10px
   ) !important;
 }
 
@@ -338,9 +338,9 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 3px,
-    rgba(120,144,156,0.3) 3px,
-    rgba(120,144,156,0.3) 6px
+    transparent 8px,
+    rgba(120,144,156,0.25) 8px,
+    rgba(120,144,156,0.25) 10px
   ) !important;
 }
 
@@ -443,10 +443,13 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 4px,
-    rgba(102, 187, 106, 0.3) 4px,
-    rgba(102, 187, 106, 0.3) 8px
+    transparent 10px,
+    rgba(102, 187, 106, 0.25) 10px,
+    rgba(102, 187, 106, 0.25) 12px
   );
+}
+.game-player-card.poisoned {
+  border-color: var(--poison-color);
 }
 
 .game-player-card.sected .sect-tint {
@@ -454,10 +457,13 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 4px,
-    rgba(255, 202, 40, 0.28) 4px,
-    rgba(255, 202, 40, 0.28) 8px
+    transparent 10px,
+    rgba(255, 202, 40, 0.25) 10px,
+    rgba(255, 202, 40, 0.25) 12px
   );
+}
+.game-player-card.sected {
+  border-color: var(--sect-color);
 }
 
 .game-player-card.protected .protect-tint {
@@ -465,10 +471,13 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 4px,
-    rgba(66, 165, 245, 0.3) 4px,
-    rgba(66, 165, 245, 0.3) 8px
+    transparent 10px,
+    rgba(66, 165, 245, 0.25) 10px,
+    rgba(66, 165, 245, 0.25) 12px
   );
+}
+.game-player-card.protected {
+  border-color: var(--protect-color);
 }
 
 .game-player-card.alibied .alibi-tint {
@@ -476,10 +485,13 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 4px,
-    rgba(171, 71, 188, 0.28) 4px,
-    rgba(171, 71, 188, 0.28) 8px
+    transparent 10px,
+    rgba(171, 71, 188, 0.25) 10px,
+    rgba(171, 71, 188, 0.25) 12px
   );
+}
+.game-player-card.alibied {
+  border-color: var(--alibi-color);
 }
 
 .game-player-card.blocked .block-tint {
@@ -487,10 +499,13 @@ h2 {
   background: repeating-linear-gradient(
     45deg,
     transparent,
-    transparent 4px,
-    rgba(120, 144, 156, 0.35) 4px,
-    rgba(120, 144, 156, 0.35) 8px
+    transparent 10px,
+    rgba(120, 144, 156, 0.25) 10px,
+    rgba(120, 144, 156, 0.25) 12px
   );
+}
+.game-player-card.blocked {
+  border-color: var(--block-color);
 }
 
 .jail-overlay {
@@ -1105,6 +1120,401 @@ h2 {
     font-size: 12px;
     padding: 8px;
 }
+
+/* Night actions panel */
+.night-actions-panel {
+    background: var(--bg-card);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+}
+
+.night-actions-panel h3 {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.night-actions-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.night-action-btn {
+    flex: 1;
+    min-width: 70px;
+    padding: 8px 6px;
+    border-radius: 8px;
+    border: 2px solid;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-height: 50px;
+    position: relative;
+}
+
+.night-action-btn .night-icon { font-size: 18px; }
+.night-action-btn .night-label { font-size: 10px; text-align: center; }
+
+.night-action-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.night-action-btn.active .night-action-count {
+    background: #fff;
+    color: var(--accent);
+}
+
+.night-action-btn.kill-btn { border-color: var(--red); color: var(--red); }
+.night-action-btn.protect-btn { border-color: var(--protect-color); color: var(--protect-color); }
+.night-action-btn.alibi-btn { border-color: var(--alibi-color); color: var(--alibi-color); }
+.night-action-btn.jail-btn { border-color: var(--yellow); color: var(--yellow); }
+.night-action-btn.poison-btn { border-color: var(--poison-color); color: var(--poison-color); }
+.night-action-btn.sect-btn { border-color: var(--sect-color); color: var(--sect-color); }
+.night-action-btn.block-btn { border-color: var(--block-color); color: var(--block-color); }
+
+.night-action-btn.active.kill-btn { background: var(--red); color: #fff; }
+.night-action-btn.active.protect-btn { background: var(--protect-color); color: #fff; }
+.night-action-btn.active.alibi-btn { background: var(--alibi-color); color: #fff; }
+.night-action-btn.active.jail-btn { background: var(--yellow); color: #000; }
+.night-action-btn.active.poison-btn { background: var(--poison-color); color: #fff; }
+.night-action-btn.active.sect-btn { background: var(--sect-color); color: #fff; }
+.night-action-btn.active.block-btn { background: var(--block-color); color: #fff; }
+
+.night-actions-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.night-actions-controls .btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 10px;
+}
+
+/* Night report modal */
+.night-report-modal {
+    background: var(--bg-dark);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+}
+
+.night-report-header {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-dark);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.night-report-header h3 {
+    font-size: 16px;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.night-report-body {
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.night-report-entry {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.night-report-entry:last-child { border-bottom: none; }
+
+.night-report-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+}
+
+.night-report-text {
+    flex: 1;
+    font-weight: 500;
+}
+
+.night-report-kill { color: var(--red); }
+.night-report-protected { color: var(--protect-color); }
+.night-report-alibi { color: var(--alibi-color); }
+.night-report-jail { color: var(--yellow); }
+.night-report-poison { color: var(--poison-color); }
+.night-report-sect { color: var(--sect-color); }
+.night-report-block { color: var(--block-color); }
+
+.night-report-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-dark);
+    position: sticky;
+    bottom: 0;
+}
+
+.night-report-footer .btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Player selection highlight */
+.game-player-card.night-selected {
+    box-shadow: 0 0 0 3px var(--accent);
+    transform: scale(1.02);
+}
+
+/* ─── Settings Modal ─── */
+.settings-modal-panel {
+    background: var(--bg-dark);
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 560px;
+    height: 88vh;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    transition: transform 0.28s cubic-bezier(.32,1,.55,1);
+    overflow: hidden;
+}
+
+.settings-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.settings-modal-overlay.active { display: flex; }
+.settings-modal-overlay.active .settings-modal-panel {
+    transform: translateX(-50%) translateY(0);
+}
+
+.settings-modal-header {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.settings-modal-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+}
+
+.settings-modal-close {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-modal-close:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Drag handle */
+.settings-drag-handle {
+    width: 40px;
+    height: 4px;
+    background: #555;
+    border-radius: 2px;
+    margin: 8px auto 0;
+    flex-shrink: 0;
+}
+
+/* Settings tabs */
+.settings-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-dark);
+}
+
+.stab-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-input);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.stab-btn .stab-icon { font-size: 16px; }
+.stab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Tab content */
+.stab-content {
+    display: none;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.stab-content.active { display: flex; flex-direction: column; }
+
+.stab-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin: 12px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+.stab-section-title:first-child { margin-top: 0; }
+
+/* Roles grid in settings */
+.settings-roles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.settings-role-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.settings-role-item.enabled-citizen  { border-color: var(--blue);   background: rgba(30,136,229,0.08);  }
+.settings-role-item.enabled-criminal { border-color: var(--red);    background: rgba(229,57,53,0.08);   }
+.settings-role-item.enabled-outcast  { border-color: var(--yellow); background: rgba(253,216,53,0.08);  }
+
+.settings-role-check {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.15s;
+}
+
+.settings-role-item.enabled-citizen  .settings-role-check { background: var(--blue);   border-color: var(--blue);   color: #fff; }
+.settings-role-item.enabled-criminal .settings-role-check { background: var(--red);    border-color: var(--red);    color: #fff; }
+.settings-role-item.enabled-outcast  .settings-role-check { background: var(--yellow); border-color: var(--yellow); color: #000; }
+
+.settings-role-name {
+    font-size: 12px;
+    font-weight: 600;
+    flex: 1;
+}
+
+.settings-role-item.enabled-citizen  .settings-role-name { color: var(--blue); }
+.settings-role-item.enabled-criminal .settings-role-name { color: var(--red); }
+.settings-role-item.enabled-outcast  .settings-role-name { color: var(--yellow); }
+
+.settings-all-btns {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.settings-all-btns .btn {
+    flex: 1;
+    font-size: 11px;
+    padding: 7px 6px;
+}
+
+/* Night panel visibility setting */
+.night-panel-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+}
+
+.night-panel-toggle-info { flex: 1; }
+.night-panel-toggle-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.night-panel-toggle-info span { font-size: 11px; color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -1126,10 +1536,63 @@ h2 {
 </div>
 
 <div id="screen-game" class="screen">
-    <h1>🌙 Игра</h1>
+    <div class="notes-header" style="margin-bottom:12px;">
+        <h1 style="margin-bottom:0;">🌙 Игра</h1>
+        <button class="notes-settings-btn" onclick="openSettingsModal()" title="Настройки">⚙️</button>
+    </div>
     <h2>Очередь ходов</h2>
     <div id="turn-order" class="turn-order-bar"></div>
     <div id="stats-bar" class="stats-bar"></div>
+    
+    <!-- Night actions panel -->
+    <div class="night-actions-panel">
+        <h3>🌑 Ночные действия</h3>
+        <div class="night-actions-row">
+            <button class="night-action-btn kill-btn" onclick="selectNightAction('kill')">
+                <span class="night-icon">💀</span>
+                <span class="night-label">Убить</span>
+                <span class="night-action-count" id="night-count-kill" style="display:none;">0</span>
+            </button>
+            <button class="night-action-btn protect-btn" onclick="selectNightAction('protect')">
+                <span class="night-icon">🛡️</span>
+                <span class="night-label">Защитить</span>
+                <span class="night-action-count" id="night-count-protect" style="display:none;">0</span>
+            </button>
+            <button class="night-action-btn alibi-btn" onclick="selectNightAction('alibi')">
+                <span class="night-icon">📋</span>
+                <span class="night-label">Алиби</span>
+                <span class="night-action-count" id="night-count-alibi" style="display:none;">0</span>
+            </button>
+            <button class="night-action-btn jail-btn" onclick="selectNightAction('jail')">
+                <span class="night-icon">🔒</span>
+                <span class="night-label">Тюрьма</span>
+                <span class="night-action-count" id="night-count-jail" style="display:none;">0</span>
+            </button>
+        </div>
+        <div class="night-actions-row">
+            <button class="night-action-btn poison-btn" onclick="selectNightAction('poison')">
+                <span class="night-icon">🧪</span>
+                <span class="night-label">Отравить</span>
+                <span class="night-action-count" id="night-count-poison" style="display:none;">0</span>
+            </button>
+            <button class="night-action-btn sect-btn" onclick="selectNightAction('sect')">
+                <span class="night-icon">🕯️</span>
+                <span class="night-label">Секта</span>
+                <span class="night-action-count" id="night-count-sect" style="display:none;">0</span>
+            </button>
+            <button class="night-action-btn block-btn" onclick="selectNightAction('block')">
+                <span class="night-icon">🚫</span>
+                <span class="night-label">Блок</span>
+                <span class="night-action-count" id="night-count-block" style="display:none;">0</span>
+            </button>
+        </div>
+        <div class="night-actions-controls">
+            <button class="btn btn-dark" onclick="clearNightSelection()">✕ Очистить действия</button>
+            <button class="btn btn-dark" onclick="clearAllEffects()">✕ Очистить эффекты</button>
+            <button class="btn btn-red" onclick="generateNightReport()">📜 Отчёт о ночи</button>
+        </div>
+    </div>
+    
     <h2>Игроки</h2>
     <div id="game-players" class="game-player-grid"></div>
 </div>
@@ -1137,83 +1600,7 @@ h2 {
 <div id="screen-notes" class="screen">
     <div class="notes-header">
         <h1>📝 Журнал</h1>
-        <button class="notes-settings-btn" id="settings-toggle-btn" onclick="toggleSettingsPanel()" title="Настройки кнопок">⚙️</button>
-    </div>
-
-    <!-- Settings panel -->
-    <div class="settings-panel" id="settings-panel">
-        <h3>⚙️ Кнопки действий на картах</h3>
-        <p>Включи кнопки, которые хочешь видеть на карточках игроков.</p>
-
-        <div class="setting-toggle-row">
-            <label class="setting-toggle-label" for="toggle-poison">
-                <span class="setting-toggle-icon">🧪</span>
-                <span>
-                    <span class="setting-toggle-name" style="color:var(--poison-color)">Отравлен</span>
-                    <span class="setting-toggle-desc">Зелёный оттенок карточки</span>
-                </span>
-            </label>
-            <label class="toggle-switch poison">
-                <input type="checkbox" id="toggle-poison" onchange="updateBtnSetting('poison', this.checked)">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-toggle-row">
-            <label class="setting-toggle-label" for="toggle-sect">
-                <span class="setting-toggle-icon">🕯️</span>
-                <span>
-                    <span class="setting-toggle-name" style="color:var(--sect-color)">В секте</span>
-                    <span class="setting-toggle-desc">Янтарный оттенок карточки</span>
-                </span>
-            </label>
-            <label class="toggle-switch sect">
-                <input type="checkbox" id="toggle-sect" onchange="updateBtnSetting('sect', this.checked)">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-toggle-row">
-            <label class="setting-toggle-label" for="toggle-protect">
-                <span class="setting-toggle-icon">🛡️</span>
-                <span>
-                    <span class="setting-toggle-name" style="color:var(--protect-color)">Защищён</span>
-                    <span class="setting-toggle-desc">Синий оттенок карточки</span>
-                </span>
-            </label>
-            <label class="toggle-switch protect">
-                <input type="checkbox" id="toggle-protect" onchange="updateBtnSetting('protect', this.checked)">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-toggle-row">
-            <label class="setting-toggle-label" for="toggle-alibi">
-                <span class="setting-toggle-icon">📋</span>
-                <span>
-                    <span class="setting-toggle-name" style="color:var(--alibi-color)">Алиби</span>
-                    <span class="setting-toggle-desc">Фиолетовый оттенок карточки</span>
-                </span>
-            </label>
-            <label class="toggle-switch alibi">
-                <input type="checkbox" id="toggle-alibi" onchange="updateBtnSetting('alibi', this.checked)">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-
-        <div class="setting-toggle-row">
-            <label class="setting-toggle-label" for="toggle-block">
-                <span class="setting-toggle-icon">🚫</span>
-                <span>
-                    <span class="setting-toggle-name" style="color:var(--block-color)">Заблокирован</span>
-                    <span class="setting-toggle-desc">Серый оттенок карточки</span>
-                </span>
-            </label>
-            <label class="toggle-switch block">
-                <input type="checkbox" id="toggle-block" onchange="updateBtnSetting('block', this.checked)">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
+        <button class="notes-settings-btn" id="settings-toggle-btn" onclick="openSettingsModal()" title="Настройки">⚙️</button>
     </div>
 
     <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
@@ -1238,6 +1625,207 @@ h2 {
     </button>
 </div>
 
+<!-- Settings Modal -->
+<div id="settings-modal" class="settings-modal-overlay" onclick="closeSettingsModalOutside(event)">
+    <div class="settings-modal-panel">
+        <div class="settings-drag-handle"></div>
+        <div class="settings-modal-header">
+            <h3>⚙️ Настройки</h3>
+            <button class="settings-modal-close" onclick="closeSettingsModal()">✕</button>
+        </div>
+        <div class="settings-tabs">
+            <button class="stab-btn active" data-tab="roles" onclick="switchSettingsTab('roles')">
+                <span class="stab-icon">🎭</span>Роли
+            </button>
+            <button class="stab-btn" data-tab="night" onclick="switchSettingsTab('night')">
+                <span class="stab-icon">🌑</span>Ночь
+            </button>
+            <button class="stab-btn" data-tab="buttons" onclick="switchSettingsTab('buttons')">
+                <span class="stab-icon">🔘</span>Кнопки
+            </button>
+        </div>
+
+        <!-- Tab: Roles -->
+        <div id="stab-roles" class="stab-content active">
+            <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Выбери роли, которые будут доступны при назначении. Отключённые роли не появятся в окне выбора.</p>
+            <div class="settings-all-btns">
+                <button class="btn btn-dark" onclick="enableAllRoles()">Включить все</button>
+                <button class="btn btn-dark" onclick="disableAllRoles()">Отключить все</button>
+            </div>
+
+            <div class="stab-section-title">🔵 Горожане</div>
+            <div class="settings-roles-grid" id="settings-roles-citizen"></div>
+
+            <div class="stab-section-title">🔴 Преступники</div>
+            <div class="settings-roles-grid" id="settings-roles-criminal"></div>
+
+            <div class="stab-section-title">🟡 Отщепенцы</div>
+            <div class="settings-roles-grid" id="settings-roles-outcast"></div>
+        </div>
+
+        <!-- Tab: Night -->
+        <div id="stab-night" class="stab-content">
+            <div class="stab-section-title">🌑 Панель ночных действий</div>
+            <div class="night-panel-toggle-row">
+                <div class="night-panel-toggle-info">
+                    <strong>Показывать панель</strong>
+                    <span>Скрой всю панель ночных действий на экране игры</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-show-night-panel" onchange="updateShowNightPanel(this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="stab-section-title">🎛️ Кнопки ночных действий</div>
+            <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Выбери, какие действия отображать в панели.</p>
+
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-kill">
+                    <span class="setting-toggle-icon">💀</span>
+                    <span><span class="setting-toggle-name" style="color:var(--red)">Убить</span></span>
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-night-kill" onchange="updateNightBtnSetting('kill', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-protect">
+                    <span class="setting-toggle-icon">🛡️</span>
+                    <span><span class="setting-toggle-name" style="color:var(--protect-color)">Защитить</span></span>
+                </label>
+                <label class="toggle-switch protect">
+                    <input type="checkbox" id="toggle-night-protect" onchange="updateNightBtnSetting('protect', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-alibi">
+                    <span class="setting-toggle-icon">📋</span>
+                    <span><span class="setting-toggle-name" style="color:var(--alibi-color)">Алиби</span></span>
+                </label>
+                <label class="toggle-switch alibi">
+                    <input type="checkbox" id="toggle-night-alibi" onchange="updateNightBtnSetting('alibi', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-jail">
+                    <span class="setting-toggle-icon">🔒</span>
+                    <span><span class="setting-toggle-name" style="color:var(--yellow)">Тюрьма</span></span>
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-night-jail" onchange="updateNightBtnSetting('jail', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-poison">
+                    <span class="setting-toggle-icon">🧪</span>
+                    <span><span class="setting-toggle-name" style="color:var(--poison-color)">Отравить</span></span>
+                </label>
+                <label class="toggle-switch poison">
+                    <input type="checkbox" id="toggle-night-poison" onchange="updateNightBtnSetting('poison', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-sect">
+                    <span class="setting-toggle-icon">🕯️</span>
+                    <span><span class="setting-toggle-name" style="color:var(--sect-color)">Секта</span></span>
+                </label>
+                <label class="toggle-switch sect">
+                    <input type="checkbox" id="toggle-night-sect" onchange="updateNightBtnSetting('sect', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-night-block">
+                    <span class="setting-toggle-icon">🚫</span>
+                    <span><span class="setting-toggle-name" style="color:var(--block-color)">Блок</span></span>
+                </label>
+                <label class="toggle-switch block">
+                    <input type="checkbox" id="toggle-night-block" onchange="updateNightBtnSetting('block', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Tab: Buttons -->
+        <div id="stab-buttons" class="stab-content">
+            <div class="stab-section-title">🃏 Кнопки статусов на картах</div>
+            <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Включи кнопки, которые хочешь видеть на карточках игроков.</p>
+
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-poison">
+                    <span class="setting-toggle-icon">🧪</span>
+                    <span>
+                        <span class="setting-toggle-name" style="color:var(--poison-color)">Отравлен</span>
+                        <span class="setting-toggle-desc">Зелёный оттенок карточки</span>
+                    </span>
+                </label>
+                <label class="toggle-switch poison">
+                    <input type="checkbox" id="toggle-poison" onchange="updateBtnSetting('poison', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-sect">
+                    <span class="setting-toggle-icon">🕯️</span>
+                    <span>
+                        <span class="setting-toggle-name" style="color:var(--sect-color)">В секте</span>
+                        <span class="setting-toggle-desc">Янтарный оттенок карточки</span>
+                    </span>
+                </label>
+                <label class="toggle-switch sect">
+                    <input type="checkbox" id="toggle-sect" onchange="updateBtnSetting('sect', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-protect">
+                    <span class="setting-toggle-icon">🛡️</span>
+                    <span>
+                        <span class="setting-toggle-name" style="color:var(--protect-color)">Защищён</span>
+                        <span class="setting-toggle-desc">Синий оттенок карточки</span>
+                    </span>
+                </label>
+                <label class="toggle-switch protect">
+                    <input type="checkbox" id="toggle-protect" onchange="updateBtnSetting('protect', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-alibi">
+                    <span class="setting-toggle-icon">📋</span>
+                    <span>
+                        <span class="setting-toggle-name" style="color:var(--alibi-color)">Алиби</span>
+                        <span class="setting-toggle-desc">Фиолетовый оттенок карточки</span>
+                    </span>
+                </label>
+                <label class="toggle-switch alibi">
+                    <input type="checkbox" id="toggle-alibi" onchange="updateBtnSetting('alibi', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle-row">
+                <label class="setting-toggle-label" for="toggle-block">
+                    <span class="setting-toggle-icon">🚫</span>
+                    <span>
+                        <span class="setting-toggle-name" style="color:var(--block-color)">Заблокирован</span>
+                        <span class="setting-toggle-desc">Серый оттенок карточки</span>
+                    </span>
+                </label>
+                <label class="toggle-switch block">
+                    <input type="checkbox" id="toggle-block" onchange="updateBtnSetting('block', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="role-modal" class="modal-overlay" onclick="closeModalOutside(event)">
     <div class="modal">
         <div class="modal-header">
@@ -1255,6 +1843,20 @@ h2 {
             <div id="roles-outcast" class="role-grid"></div>
         </div>
         <button class="modal-close-btn" onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- Night report modal -->
+<div id="night-report-modal" class="modal-overlay" onclick="closeNightReportOutside(event)">
+    <div class="night-report-modal">
+        <div class="night-report-header">
+            <h3>🌑 Отчёт о ночи</h3>
+        </div>
+        <div id="night-report-body" class="night-report-body"></div>
+        <div class="night-report-footer">
+            <button class="btn btn-dark" onclick="closeNightReport()">✕ Закрыть</button>
+            <button class="btn btn-green" onclick="confirmNightReport()">✓ Подтвердить</button>
+        </div>
     </div>
 </div>
 
@@ -1276,12 +1878,36 @@ let btnSettings = JSON.parse(sessionStorage.getItem('mafia_btn_settings')) || {
     block: false
 };
 
+// Night action button visibility settings (default all true)
+let nightBtnSettings = JSON.parse(sessionStorage.getItem('mafia_night_btn_settings')) || {
+    kill: true,
+    protect: true,
+    alibi: true,
+    jail: true,
+    poison: true,
+    sect: true,
+    block: true
+};
+
+// Enabled roles for role picker (default: all roles enabled)
+const _storedEnabledRoles = JSON.parse(sessionStorage.getItem('mafia_enabled_roles'));
+let enabledRoles = _storedEnabledRoles 
+    ? new Set(_storedEnabledRoles) 
+    : null; // null means "not yet initialized, use all"
+
+// Show/hide the night actions panel
+let showNightPanel = JSON.parse(sessionStorage.getItem('mafia_show_night_panel')) ?? true;
+
 function savePlayers() {
     sessionStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
 }
 
 function saveBtnSettings() {
     sessionStorage.setItem('mafia_btn_settings', JSON.stringify(btnSettings));
+}
+
+function saveNightBtnSettings() {
+    sessionStorage.setItem('mafia_night_btn_settings', JSON.stringify(nightBtnSettings));
 }
 
 function saveActionLog() {
@@ -1337,12 +1963,103 @@ let currentPickerPlayer = null;
 let activeRoleTab = sessionStorage.getItem('mafia_role_tab') || 'citizen';
 let actionLog = JSON.parse(sessionStorage.getItem('mafia_action_log')) || [];
 
-// ── Settings panel ──────────────────────────────────────────────
-function toggleSettingsPanel() {
-    const panel = document.getElementById('settings-panel');
-    const btn   = document.getElementById('settings-toggle-btn');
-    const isOpen = panel.classList.toggle('open');
-    btn.classList.toggle('open', isOpen);
+// Night actions state
+let nightActions = {
+    kill: [],
+    protect: [],
+    alibi: [],
+    jail: [],
+    poison: [],
+    sect: [],
+    block: []
+};
+let currentNightAction = null;
+
+// ── Settings modal ──────────────────────────────────────────────
+let activeSettingsTab = 'roles';
+
+function openSettingsModal() {
+    applySettingsToggles();
+    renderRolesSettingsTab();
+    document.getElementById('settings-modal').classList.add('active');
+    document.getElementById('settings-toggle-btn').classList.add('open');
+}
+
+function closeSettingsModal() {
+    document.getElementById('settings-modal').classList.remove('active');
+    document.getElementById('settings-toggle-btn').classList.remove('open');
+}
+
+function closeSettingsModalOutside(e) {
+    if (e.target === document.getElementById('settings-modal')) closeSettingsModal();
+}
+
+function switchSettingsTab(tab) {
+    activeSettingsTab = tab;
+    document.querySelectorAll('.stab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    document.querySelectorAll('.stab-content').forEach(c => {
+        c.classList.toggle('active', c.id === 'stab-' + tab);
+    });
+    if (tab === 'roles') renderRolesSettingsTab();
+}
+
+function renderRolesSettingsTab() {
+    const containers = {
+        citizen:  document.getElementById('settings-roles-citizen'),
+        criminal: document.getElementById('settings-roles-criminal'),
+        outcast:  document.getElementById('settings-roles-outcast'),
+    };
+    Object.values(containers).forEach(c => { if(c) c.innerHTML = ''; });
+    ROLES.forEach(role => {
+        const c = containers[role.team];
+        if (!c) return;
+        const enabled = enabledRoles.has(role.id);
+        const enabledClass = enabled ? `enabled-${role.team}` : '';
+        const checkMark = enabled ? '✓' : '';
+        const item = document.createElement('div');
+        item.className = `settings-role-item ${enabledClass}`;
+        item.dataset.roleId = role.id;
+        item.innerHTML = `
+            <div class="settings-role-check">${checkMark}</div>
+            <span class="settings-role-name">${role.name}</span>`;
+        item.onclick = () => toggleRoleEnabled(role.id, role.team);
+        c.appendChild(item);
+    });
+}
+
+function toggleRoleEnabled(roleId, team) {
+    if (enabledRoles.has(roleId)) {
+        enabledRoles.delete(roleId);
+    } else {
+        enabledRoles.add(roleId);
+    }
+    saveEnabledRoles();
+    renderRolesSettingsTab();
+}
+
+function enableAllRoles() {
+    ROLES.forEach(r => enabledRoles.add(r.id));
+    saveEnabledRoles();
+    renderRolesSettingsTab();
+}
+
+function disableAllRoles() {
+    enabledRoles.clear();
+    saveEnabledRoles();
+    renderRolesSettingsTab();
+}
+
+function saveEnabledRoles() {
+    sessionStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
+}
+
+function updateShowNightPanel(value) {
+    showNightPanel = value;
+    sessionStorage.setItem('mafia_show_night_panel', JSON.stringify(value));
+    const panel = document.querySelector('.night-actions-panel');
+    if (panel) panel.style.display = value ? '' : 'none';
 }
 
 function updateBtnSetting(key, value) {
@@ -1351,11 +2068,30 @@ function updateBtnSetting(key, value) {
     if (gamePlayers.length > 0) renderGamePlayers();
 }
 
+function updateNightBtnSetting(key, value) {
+    nightBtnSettings[key] = value;
+    saveNightBtnSettings();
+    renderNightActionsPanel();
+}
+
 function applySettingsToggles() {
+    // Initialize enabledRoles if first run
+    if (enabledRoles === null) {
+        enabledRoles = new Set(ROLES.map(r => r.id));
+        saveEnabledRoles();
+    }
     Object.keys(btnSettings).forEach(key => {
         const el = document.getElementById('toggle-' + key);
         if (el) el.checked = btnSettings[key];
     });
+    Object.keys(nightBtnSettings).forEach(key => {
+        const el = document.getElementById('toggle-night-' + key);
+        if (el) el.checked = nightBtnSettings[key];
+    });
+    const nightPanelToggle = document.getElementById('toggle-show-night-panel');
+    if (nightPanelToggle) nightPanelToggle.checked = showNightPanel;
+    const panel = document.querySelector('.night-actions-panel');
+    if (panel) panel.style.display = showNightPanel ? '' : 'none';
 }
 
 // ── Player list (lobby) ─────────────────────────────────────────
@@ -1457,6 +2193,7 @@ function startGame() {
     logAction('🎮 Игра начата!');
     renderGame();
     renderActionLog();
+    renderNightActionsPanel();
 }
 
 function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
@@ -1599,11 +2336,26 @@ function renderGamePlayers() {
             if (p.alibied)   classes += ' alibied';
             if (p.blocked)   classes += ' blocked';
         }
+        
+        // Check if player is selected for current night action
+        let isSelectedForNight = false;
+        if (currentNightAction && !p.eliminated) {
+            isSelectedForNight = nightActions[currentNightAction].includes(idx);
+            if (isSelectedForNight) {
+                classes += ' night-selected';
+            }
+        }
+        
         card.className = classes;
 
         const teamClass = p.role ? 'team-' + p.role.team : '';
         const roleImg = p.role ? `<div class="gp-role-img-wrap"><img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.parentElement.style.display='none'"></div>` : '';
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
+
+        // Add onclick handler for night action selection
+        const nightClickHandler = currentNightAction && !p.eliminated 
+            ? `onclick="toggleNightPlayerSelection(${idx}); event.stopPropagation();"` 
+            : '';
 
         card.innerHTML = `
             <div class="elim-overlay">✕</div>
@@ -1615,7 +2367,7 @@ function renderGamePlayers() {
             <div class="block-tint"></div>
             ${buildStatusMarkers(p)}
             ${roleImg}
-            <div class="gp-content">
+            <div class="gp-content" ${nightClickHandler} style="${currentNightAction && !p.eliminated ? 'cursor:pointer;' : ''}">
                 <div class="gp-top">
                     <span class="gp-name ${teamClass}">${p.name}</span>
                     <div class="gp-actions">
@@ -1677,6 +2429,361 @@ function toggleStatus(idx, statusKey) {
     renderGame();
 }
 
+// ── Night actions ──────────────────────────────────────────────
+function selectNightAction(action) {
+    // Toggle: if clicking the same action, deselect it
+    if (currentNightAction === action) {
+        currentNightAction = null;
+    } else {
+        currentNightAction = action;
+    }
+    
+    // Update button visuals
+    document.querySelectorAll('.night-action-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    if (currentNightAction) {
+        const activeBtn = document.querySelector(`.night-action-btn.${currentNightAction}-btn`);
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+    
+    // Update action counts
+    updateNightActionCounts();
+    
+    // Re-render game players to update selection highlights
+    renderGamePlayers();
+}
+
+function updateNightActionCounts() {
+    Object.keys(nightActions).forEach(action => {
+        const countEl = document.getElementById(`night-count-${action}`);
+        const count = nightActions[action].length;
+        if (countEl) {
+            if (count > 0) {
+                countEl.textContent = count;
+                countEl.style.display = 'flex';
+            } else {
+                countEl.style.display = 'none';
+            }
+        }
+    });
+}
+
+function renderNightActionsPanel() {
+    // Show/hide night action buttons based on settings
+    const actionButtons = {
+        kill: document.querySelector('.night-action-btn.kill-btn'),
+        protect: document.querySelector('.night-action-btn.protect-btn'),
+        alibi: document.querySelector('.night-action-btn.alibi-btn'),
+        jail: document.querySelector('.night-action-btn.jail-btn'),
+        poison: document.querySelector('.night-action-btn.poison-btn'),
+        sect: document.querySelector('.night-action-btn.sect-btn'),
+        block: document.querySelector('.night-action-btn.block-btn')
+    };
+
+    Object.entries(actionButtons).forEach(([action, btn]) => {
+        if (nightBtnSettings[action]) {
+            btn.style.display = 'flex';
+        } else {
+            btn.style.display = 'none';
+        }
+    });
+}
+
+function toggleNightPlayerSelection(playerIdx) {
+    if (!currentNightAction) return;
+    
+    const player = gamePlayers[playerIdx];
+    const actionList = nightActions[currentNightAction];
+    const playerIndex = actionList.indexOf(playerIdx);
+
+    if (playerIndex > -1) {
+        // Deselect
+        actionList.splice(playerIndex, 1);
+    } else {
+        // Select (only if alive and not already eliminated)
+        if (!player.eliminated) {
+            actionList.push(playerIdx);
+        }
+    }
+
+    updateNightActionCounts();
+    renderGamePlayers();
+}
+
+function clearNightSelection() {
+    nightActions = {
+        kill: [],
+        protect: [],
+        alibi: [],
+        jail: [],
+        poison: [],
+        sect: [],
+        block: []
+    };
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    updateNightActionCounts();
+    renderGamePlayers();
+}
+
+function clearAllEffects() {
+    // Clear all status effects from all players (poisoned, sected, protected, alibied, blocked)
+    gamePlayers.forEach(player => {
+        player.poisoned = false;
+        player.protected = false;
+        player.alibied = false;
+        player.blocked = false;
+    });
+    logAction('🧹 Все эффекты ночи очищены', '');
+    renderGame();
+}
+
+function generateNightReport() {
+    const reportBody = document.getElementById('night-report-body');
+    const entries = [];
+    
+    // Find players who are both killed and protected (they survive)
+    const killedIndices = new Set(nightActions.kill.filter(idx => {
+        const player = gamePlayers[idx];
+        return player && !player.eliminated;
+    }));
+    const protectedIndices = new Set(nightActions.protect.filter(idx => {
+        const player = gamePlayers[idx];
+        return player && !player.eliminated;
+    }));
+    const savedIndices = new Set([...killedIndices].filter(idx => protectedIndices.has(idx)));
+    const actuallyKilledIndices = [...killedIndices].filter(idx => !savedIndices.has(idx));
+    const actuallyProtectedIndices = [...protectedIndices].filter(idx => !savedIndices.has(idx));
+    
+    // Players saved from death (killed AND protected)
+    savedIndices.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            entries.push({
+                type: 'saved',
+                icon: '🛡️💀',
+                text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-protected'
+            });
+        }
+    });
+    
+    // Killed players (not protected)
+    actuallyKilledIndices.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            entries.push({
+                type: 'kill',
+                icon: '💀',
+                text: `Убит: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-kill'
+            });
+        }
+    });
+    
+    // Protected players (not killed)
+    actuallyProtectedIndices.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            entries.push({
+                type: 'protect',
+                icon: '🛡️',
+                text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-protected'
+            });
+        }
+    });
+
+    // Alibi players
+    nightActions.alibi.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            entries.push({
+                type: 'alibi',
+                icon: '📋',
+                text: `Алиби: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-alibi'
+            });
+        }
+    });
+
+    // Jailed players
+    nightActions.jail.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            entries.push({
+                type: 'jail',
+                icon: '🔒',
+                text: `Тюрьма: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-jail'
+            });
+        }
+    });
+
+    // Poisoned players
+    nightActions.poison.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            entries.push({
+                type: 'poison',
+                icon: '🧪',
+                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-poison'
+            });
+        }
+    });
+
+    // Sect players
+    nightActions.sect.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            entries.push({
+                type: 'sect',
+                icon: '🕯️',
+                text: `В секте: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-sect'
+            });
+        }
+    });
+
+    // Blocked players
+    nightActions.block.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            entries.push({
+                type: 'block',
+                icon: '🚫',
+                text: `Заблокирован: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-block'
+            });
+        }
+    });
+    
+    if (entries.length === 0) {
+        reportBody.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет выбранных действий</div>';
+    } else {
+        reportBody.innerHTML = entries.map(entry => 
+            `<div class="night-report-entry">
+                <span class="night-report-icon">${entry.icon}</span>
+                <span class="night-report-text ${entry.class}">${entry.text}</span>
+            </div>`
+        ).join('');
+    }
+    
+    document.getElementById('night-report-modal').classList.add('active');
+}
+
+function closeNightReport() {
+    document.getElementById('night-report-modal').classList.remove('active');
+}
+
+function closeNightReportOutside(e) {
+    if (e.target === document.getElementById('night-report-modal')) {
+        closeNightReport();
+    }
+}
+
+function confirmNightReport() {
+    // Apply night actions
+
+    // Find players who are both killed and protected (they survive)
+    const killedSet = new Set(nightActions.kill);
+    const protectedSet = new Set(nightActions.protect);
+    const savedIndices = new Set([...killedSet].filter(idx => protectedSet.has(idx)));
+
+    // First, handle kills (eliminate players) - skip those who are protected
+    nightActions.kill.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            if (savedIndices.has(idx)) {
+                // Player was protected, they survive
+                logAction(`<span class="night-report-protected">🛡️💀 Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+            } else {
+                // Player dies
+                player.eliminated = true;
+                player.jailed = false;
+                player.poisoned = player.sected = player.protected = player.alibied = player.blocked = false;
+                logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
+            }
+        }
+    });
+
+    // Apply protect status ONLY for logging (no visual effect remains after night)
+    // Protection still works against kills, but doesn't leave a status
+    nightActions.protect.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            // Only log, don't apply the status
+            if (!savedIndices.has(idx)) {
+                // Protected but not killed - just log it
+                const def = STATUS_DEFS['protected'];
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            }
+            // Don't set player.protected = true - no visual effect
+        }
+    });
+    
+    // Apply alibi status
+    nightActions.alibi.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && !player.alibied) {
+            player.alibied = true;
+            const def = STATUS_DEFS['alibied'];
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+        }
+    });
+    
+    // Apply jail
+    nightActions.jail.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && !player.jailed) {
+            player.jailed = true;
+            logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>`, 'jailed');
+        }
+    });
+    
+    // Apply poison status
+    nightActions.poison.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && !player.poisoned) {
+            player.poisoned = true;
+            const def = STATUS_DEFS['poisoned'];
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+        }
+    });
+    
+    // Apply sect status
+    nightActions.sect.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && !player.sected) {
+            player.sected = true;
+            const def = STATUS_DEFS['sected'];
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+        }
+    });
+    
+    // Apply block status
+    nightActions.block.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && !player.blocked) {
+            player.blocked = true;
+            const def = STATUS_DEFS['blocked'];
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+        }
+    });
+    
+    // Clear night actions
+    clearNightSelection();
+    
+    // Close modal and re-render
+    closeNightReport();
+    renderGame();
+}
+
 // ── Role picker ─────────────────────────────────────────────────
 function openRolePicker(idx) {
     currentPickerPlayer = idx;
@@ -1704,7 +2811,10 @@ function renderRoleButtons() {
         outcast:  document.getElementById('roles-outcast')
     };
     Object.values(containers).forEach(c => c.innerHTML = '');
-    ROLES.forEach(role => {
+    const visibleRoles = (enabledRoles && enabledRoles.size > 0)
+        ? ROLES.filter(r => enabledRoles.has(r.id))
+        : ROLES;
+    visibleRoles.forEach(role => {
         const btn = document.createElement('button');
         btn.className = `role-btn team-${role.team}-bg`;
         btn.innerHTML = `<img src="${getRoleImgPath(role.id)}" class="role-btn-img" alt="${role.name}" onerror="this.style.display='none'"><span class="role-label team-${role.team}">${role.name}</span>`;
@@ -1725,7 +2835,7 @@ function pickRole(role) {
             } else if (oldRole !== null && newRole === null) {
                 logAction(`<span class="role-removed">Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
             } else {
-                logAction(`<span class="role-changed">!!! Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+                logAction(`<span class="role-changed">❗ Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
             }
         }
         player.role = role;
@@ -1745,7 +2855,6 @@ function showScreen(name) {
         b.classList.toggle('active', (name === 'game' && i === 0) || (name === 'notes' && i === 1));
     });
     if (name === 'notes') {
-        applySettingsToggles();
         renderActionLog();
     }
 }
