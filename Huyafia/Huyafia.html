@@ -1515,6 +1515,23 @@ h2 {
 .night-panel-toggle-info { flex: 1; }
 .night-panel-toggle-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
 .night-panel-toggle-info span { font-size: 11px; color: var(--text-dim); }
+
+/* Game clock */
+.game-clock {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: var(--text-main);
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
 </style>
 </head>
 <body>
@@ -1536,6 +1553,7 @@ h2 {
 </div>
 
 <div id="screen-game" class="screen">
+    <div class="game-clock" id="game-clock">00:00:00</div>
     <div class="notes-header" style="margin-bottom:12px;">
         <h1 style="margin-bottom:0;">🌙 Игра</h1>
         <button class="notes-settings-btn" onclick="openSettingsModal()" title="Настройки">⚙️</button>
@@ -2873,6 +2891,20 @@ function endGame() {
 // ── Init ────────────────────────────────────────────────────────
 renderLobby();
 applySettingsToggles();
+
+// ── Clock ──────────────────────────────────────────────────────
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const clockEl = document.getElementById('game-clock');
+    if (clockEl) {
+        clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+}
+setInterval(updateClock, 1000);
+updateClock();
 </script>
 </body>
 </html>
