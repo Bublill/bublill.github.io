@@ -2583,7 +2583,7 @@ function generateNightReport() {
         if (player) {
             entries.push({
                 type: 'saved',
-                icon: '🛡️💀',
+                icon: '⛑',
                 text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
                 class: 'night-report-protected'
             });
@@ -2719,7 +2719,7 @@ function confirmNightReport() {
         if (player && !player.eliminated) {
             if (savedIndices.has(idx)) {
                 // Player was protected, they survive
-                logAction(`<span class="night-report-protected">🛡️💀 Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
                 // Player dies
                 player.eliminated = true;
