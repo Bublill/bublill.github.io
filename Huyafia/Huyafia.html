@@ -3175,7 +3175,7 @@ function generateNightReport() {
             entries.push({
                 type: 'lucky-kill',
                 icon: '🍀',
-                text: `Пытались убить, но повезло (Везунчик): ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Пытались убить, но повезло: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
                 class: 'night-report-protected'
             });
         }
@@ -3218,7 +3218,7 @@ function generateNightReport() {
                 entries.push({
                     type: 'lucky-poison',
                     icon: '🍀',
-                    text: `Пытались отравить, но повезло (Везунчик): ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                    text: `Пытались отравить, но повезло: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
                     class: 'night-report-protected'
                 });
             } else if (isProtected) {
@@ -3375,7 +3375,7 @@ function confirmNightReport() {
                 logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else if (luckySavedFromKill.has(idx)) {
                 // Lucky player survives the kill
-                logAction(`<span class="night-report-protected">🍀 Пытались убить, но повезло (Везунчик):</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+                logAction(`<span class="night-report-protected">🍀 Пытались убить, но повезло:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
                 // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
@@ -3436,7 +3436,7 @@ function confirmNightReport() {
                 logAction(`<span class="night-report-protected">🛡️ Пытались отравить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else if (luckySavedFromPoison.has(idx)) {
                 // Lucky player survives poison
-                logAction(`<span class="night-report-protected">🍀 Пытались отравить, но повезло (Везунчик):</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+                logAction(`<span class="night-report-protected">🍀 Пытались отравить, но повезло:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
                 // Poison applies normally
                 player.poisoned = true;
