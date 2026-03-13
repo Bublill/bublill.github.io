@@ -1629,6 +1629,7 @@ h2 {
         </div>
         <div id="action-log-list" class="action-log-list"></div>
     </div>
+    <button class="btn btn-dark btn-full" onclick="window.open('https://gaga.ru/gaga/files/pdf/rules/ru/2944-423096.pdf', '_blank')" style="margin-top:10px;">📖 Открыть правила игры</button>
 </div>
 
 <div id="bottom-nav" class="bottom-nav">
@@ -1878,6 +1879,23 @@ h2 {
     </div>
 </div>
 
+<!-- Judge/Sectant death modal -->
+<div id="death-action-modal" class="modal-overlay" onclick="closeDeathActionOutside(event)">
+    <div class="night-report-modal">
+        <div class="night-report-header">
+            <h3 id="death-action-title">Смерть судьи</h3>
+        </div>
+        <div class="night-report-body">
+            <p id="death-action-text" style="margin-bottom:16px;"></p>
+            <p style="color:var(--text-dim);font-size:13px;">Хотите освободить всех заключённых?</p>
+        </div>
+        <div class="night-report-footer">
+            <button class="btn btn-dark" onclick="closeDeathAction()">✕ Отмена</button>
+            <button class="btn btn-red" id="death-action-confirm">✓ Освободить всех</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const DEFAULT_PLAYERS = [
     "Димон","Вова","Вадим","Катя","Влад","Рома","Маша","Инна",
@@ -1930,6 +1948,17 @@ function saveNightBtnSettings() {
 
 function saveActionLog() {
     sessionStorage.setItem('mafia_action_log', JSON.stringify(actionLog));
+}
+
+// Save game state (players, night actions, settings)
+function saveGameState() {
+    sessionStorage.setItem('mafia_game_players', JSON.stringify(gamePlayers));
+    sessionStorage.setItem('mafia_night_actions', JSON.stringify(nightActions));
+    sessionStorage.setItem('mafia_game_started', gamePlayers.length > 0 ? 'true' : 'false');
+}
+
+function saveEnabledRoles() {
+    sessionStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
 }
 
 function logAction(message, className = '') {
@@ -2205,6 +2234,7 @@ function startGame() {
     }));
     actionLog = [];
     saveActionLog();
+    saveGameState();
     document.getElementById('screen-lobby').classList.remove('active');
     document.getElementById('screen-game').classList.add('active');
     document.getElementById('bottom-nav').classList.add('active');
@@ -2212,6 +2242,28 @@ function startGame() {
     renderGame();
     renderActionLog();
     renderNightActionsPanel();
+}
+
+// Restore game state from sessionStorage
+function restoreGameState() {
+    const savedGamePlayers = sessionStorage.getItem('mafia_game_players');
+    const savedNightActions = sessionStorage.getItem('mafia_night_actions');
+    const gameStarted = sessionStorage.getItem('mafia_game_started');
+    
+    if (gameStarted === 'true' && savedGamePlayers) {
+        gamePlayers = JSON.parse(savedGamePlayers);
+        if (savedNightActions) {
+            nightActions = JSON.parse(savedNightActions);
+        }
+        // Switch to game screen
+        document.getElementById('screen-lobby').classList.remove('active');
+        document.getElementById('screen-game').classList.add('active');
+        document.getElementById('bottom-nav').classList.add('active');
+        renderGame();
+        renderActionLog();
+        renderNightActionsPanel();
+        updateNightActionCounts();
+    }
 }
 
 function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
@@ -2224,13 +2276,15 @@ function renderStats() {
     const outcasts   = alive.filter(p => p.role && p.role.team === 'outcast').length;
     const unassigned = alive.filter(p => !p.role).length;
     const jailed     = gamePlayers.filter(p => !p.eliminated && p.jailed).length;
+    const sected     = gamePlayers.filter(p => !p.eliminated && p.sected).length;
     document.getElementById('stats-bar').innerHTML = `
         <span class="stat-item">👥 ${alive.length}/${total}</span>
         <span class="stat-item team-citizen">🔵 ${citizens}</span>
         <span class="stat-item team-criminal">🔴 ${criminals}</span>
         <span class="stat-item team-outcast">🟡 ${outcasts}</span>
         ${unassigned ? `<span class="stat-item">❓ ${unassigned}</span>` : ''}
-        ${jailed     ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}`;
+        ${jailed     ? `<span class="stat-item">🔒 ${jailed}</span>` : ''}
+        ${sected     ? `<span class="stat-item">🕯️ ${sected}</span>` : ''}`;
 }
 
 function getRoleShortName(roleName) {
@@ -2240,52 +2294,96 @@ function getRoleShortName(roleName) {
 function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
-    const withTurnOrder = gamePlayers
-        .filter(p => p.role && p.role.turnOrder !== null)
-        .sort((a, b) => a.role.turnOrder - b.role.turnOrder);
-
-    if (withTurnOrder.length === 0) {
-        bar.innerHTML = '<span style="color:#666;font-size:12px;padding:4px;">Назначьте роли, чтобы увидеть очередь</span>';
-        return;
-    }
-
-    withTurnOrder.forEach(p => {
-        if (p.eliminated) {
-            const marker = document.createElement('div');
-            marker.className = 'turn-dead-marker';
-            const teamClass = 'team-' + p.role.team;
-            marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${getRoleShortName(p.role.name)}</div>`;
-            marker.title = `${p.name} (${p.role.name}) — мёртв`;
-            bar.appendChild(marker);
-        } else {
-            const chip = document.createElement('div');
-            // Build status classes for the chip
-            const statusClasses = Object.entries(BTN_SETTING_MAP)
-                .filter(([, statusKey]) => p[statusKey])
-                .map(([, statusKey]) => statusKey)
-                .join(' ');
-            chip.className = 'turn-chip team-' + p.role.team +
-                (p.jailed ? ' jailed' : '') +
-                (statusClasses ? ' ' + statusClasses : '');
-
-            // Build status icons row (only active statuses)
-            const statusIcons = Object.entries(BTN_SETTING_MAP)
-                .filter(([, statusKey]) => p[statusKey])
-                .map(([, statusKey]) => STATUS_DEFS[statusKey].icon)
-                .join('');
-            const statusRow = statusIcons
-                ? `<div class="turn-chip-statuses">${statusIcons}</div>`
-                : '';
-
-            chip.innerHTML = `
-                <img src="${getRoleImgPath(p.role.id)}" class="turn-chip-role-img" alt="${p.role.name}" onerror="this.style.display='none'">
-                <span style="font-size:11px;font-weight:700;">${p.role.name}</span>
-                <span style="font-size:9px;opacity:0.7;">${p.name}</span>
-                ${statusRow}
-                <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>`;
-            bar.appendChild(chip);
+    
+    // Get all roles with turn order
+    const rolesWithTurnOrder = ROLES.filter(r => r.turnOrder !== null);
+    
+    // Check if there are players without roles
+    const playersWithoutRoles = gamePlayers.filter(p => !p.eliminated && !p.role).length > 0;
+    
+    // Get assigned roles mapping
+    const assignedRoles = {};
+    gamePlayers.forEach(p => {
+        if (p.role) {
+            assignedRoles[p.role.id] = p;
         }
     });
+    
+    // Sort all roles by turn order
+    const sortedRoles = [...rolesWithTurnOrder].sort((a, b) => a.turnOrder - b.turnOrder);
+    
+    // Render each role slot (assigned or empty)
+    sortedRoles.forEach(role => {
+        const player = assignedRoles[role.id];
+        
+        // Skip if no player assigned and all players have roles
+        if (!player && !playersWithoutRoles) {
+            return;
+        }
+        
+        // Skip if no player assigned and some players already have roles (show only until all assigned)
+        if (!player && gamePlayers.some(p => p.role)) {
+            // Check if there are any unassigned roles before this one
+            const hasUnassignedBefore = sortedRoles
+                .filter(r => r.turnOrder < role.turnOrder)
+                .some(r => !assignedRoles[r.id]);
+            if (!hasUnassignedBefore && !playersWithoutRoles) {
+                return;
+            }
+        }
+        
+        if (player) {
+            // Player has this role
+            if (player.eliminated) {
+                const marker = document.createElement('div');
+                marker.className = 'turn-dead-marker';
+                const teamClass = 'team-' + player.role.team;
+                marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${getRoleShortName(player.role.name)}</div>`;
+                marker.title = `${player.name} (${player.role.name}) — мёртв`;
+                bar.appendChild(marker);
+            } else {
+                const chip = document.createElement('div');
+                const statusClasses = Object.entries(BTN_SETTING_MAP)
+                    .filter(([, statusKey]) => player[statusKey])
+                    .map(([, statusKey]) => statusKey)
+                    .join(' ');
+                chip.className = 'turn-chip team-' + player.role.team +
+                    (player.jailed ? ' jailed' : '') +
+                    (statusClasses ? ' ' + statusClasses : '');
+
+                const statusIcons = Object.entries(BTN_SETTING_MAP)
+                    .filter(([, statusKey]) => player[statusKey])
+                    .map(([, statusKey]) => STATUS_DEFS[statusKey].icon)
+                    .join('');
+                const statusRow = statusIcons
+                    ? `<div class="turn-chip-statuses">${statusIcons}</div>`
+                    : '';
+
+                chip.innerHTML = `
+                    <img src="${getRoleImgPath(player.role.id)}" class="turn-chip-role-img" alt="${player.role.name}" onerror="this.style.display='none'">
+                    <span style="font-size:11px;font-weight:700;">${player.role.name}</span>
+                    <span style="font-size:9px;opacity:0.7;">${player.name}</span>
+                    ${statusRow}
+                    <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>`;
+                bar.appendChild(chip);
+            }
+        } else if (playersWithoutRoles) {
+            // Empty slot for unassigned role
+            const marker = document.createElement('div');
+            marker.className = 'turn-dead-marker';
+            const teamClass = 'team-' + role.team;
+            marker.innerHTML = `
+                <div class="turn-dead-letters ${teamClass}" style="font-weight:700;"><span>?</span></div>
+                <div class="turn-dead-bar ${teamClass}"></div>
+                <div class="turn-dead-letters ${teamClass}" style="opacity:0.5;font-weight:700;">${getRoleShortNameLong(role.name)}</div>`;
+            marker.title = `${role.name} — нет игрока`;
+            bar.appendChild(marker);
+        }
+    });
+}
+
+function getRoleShortNameLong(roleName) {
+    return roleName.slice(0, 6).toUpperCase().split('').map(l => `<span>${l}</span>`).join('');
 }
 
 // ── Status badge helpers ────────────────────────────────────────
@@ -2407,11 +2505,30 @@ function eliminatePlayer(idx) {
     if (!player.eliminated) {
         logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
     }
+
     player.eliminated = true;
     player.jailed = false;
     // Clear night statuses on death
     player.poisoned = player.sected = player.protected = player.alibied = player.blocked = false;
+    
+    // Check for jailed/sected players AFTER eliminating the current player
+    const jailedPlayers = gamePlayers.filter(p => p.jailed && !p.eliminated);
+    const sectedPlayers = gamePlayers.filter(p => p.sected && !p.eliminated);
+    
+    saveGameState();
     renderGame();
+
+    // Show modal if judge dies and there are jailed players
+    if (player.role && player.role.id === 'judge' && jailedPlayers.length > 0) {
+        showDeathActionModal('judge', jailedPlayers.length);
+        return;
+    }
+
+    // Show modal if sectant dies and there are sected players
+    if (player.role && player.role.id === 'sectant' && sectedPlayers.length > 0) {
+        showDeathActionModal('sectant', sectedPlayers.length);
+        return;
+    }
 }
 
 function restorePlayer(idx) {
@@ -2420,6 +2537,7 @@ function restorePlayer(idx) {
         logAction(`<span class="restored">Воскрешён:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'restored');
     }
     player.eliminated = false;
+    saveGameState();
     renderGame();
 }
 
@@ -2431,6 +2549,7 @@ function toggleJail(idx) {
     } else {
         logAction(`<span class="freed">✅ Освобождён из тюрьмы:</span> <span class="player-name">${player.name}</span>`, 'freed');
     }
+    saveGameState();
     renderGame();
 }
 
@@ -2444,6 +2563,7 @@ function toggleStatus(idx, statusKey) {
     } else {
         logAction(`<span class="${def.logKey}">${def.logOff}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
     }
+    saveGameState();
     renderGame();
 }
 
@@ -2511,7 +2631,7 @@ function renderNightActionsPanel() {
 
 function toggleNightPlayerSelection(playerIdx) {
     if (!currentNightAction) return;
-    
+
     const player = gamePlayers[playerIdx];
     const actionList = nightActions[currentNightAction];
     const playerIndex = actionList.indexOf(playerIdx);
@@ -2527,6 +2647,7 @@ function toggleNightPlayerSelection(playerIdx) {
     }
 
     updateNightActionCounts();
+    saveGameState();
     renderGamePlayers();
 }
 
@@ -2545,6 +2666,7 @@ function clearNightSelection() {
         btn.classList.remove('active');
     });
     updateNightActionCounts();
+    saveGameState();
     renderGamePlayers();
 }
 
@@ -2557,13 +2679,14 @@ function clearAllEffects() {
         player.blocked = false;
     });
     logAction('🧹 Все эффекты ночи очищены', '');
+    saveGameState();
     renderGame();
 }
 
 function generateNightReport() {
     const reportBody = document.getElementById('night-report-body');
     const entries = [];
-    
+
     // Find players who are both killed and protected (they survive)
     const killedIndices = new Set(nightActions.kill.filter(idx => {
         const player = gamePlayers[idx];
@@ -2576,7 +2699,32 @@ function generateNightReport() {
     const savedIndices = new Set([...killedIndices].filter(idx => protectedIndices.has(idx)));
     const actuallyKilledIndices = [...killedIndices].filter(idx => !savedIndices.has(idx));
     const actuallyProtectedIndices = [...protectedIndices].filter(idx => !savedIndices.has(idx));
-    
+
+    // Find lucky players saved from kills
+    const luckySavedFromKill = new Set();
+    actuallyKilledIndices.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && player.role && player.role.id === 'lucky') {
+            luckySavedFromKill.add(idx);
+        }
+    });
+
+    // Find players saved from poison by protection or lucky
+    const savedFromPoison = new Set();
+    const poisonedNormally = new Set();
+    nightActions.poison.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            if (protectedIndices.has(idx)) {
+                savedFromPoison.add(idx);
+            } else if (player.role && player.role.id === 'lucky') {
+                savedFromPoison.add(idx);
+            } else {
+                poisonedNormally.add(idx);
+            }
+        }
+    });
+
     // Players saved from death (killed AND protected)
     savedIndices.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2589,9 +2737,23 @@ function generateNightReport() {
             });
         }
     });
-    
-    // Killed players (not protected)
-    actuallyKilledIndices.forEach(idx => {
+
+    // Lucky players saved from kills
+    luckySavedFromKill.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            entries.push({
+                type: 'lucky-kill',
+                icon: '🍀',
+                text: `Пытались убить, но повезло (Везунчик): ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-protected'
+            });
+        }
+    });
+
+    // Killed players (not protected, not lucky)
+    const finalKilledIndices = actuallyKilledIndices.filter(idx => !luckySavedFromKill.has(idx));
+    finalKilledIndices.forEach(idx => {
         const player = gamePlayers[idx];
         if (player) {
             entries.push({
@@ -2602,16 +2764,53 @@ function generateNightReport() {
             });
         }
     });
-    
+
     // Protected players (not killed)
     actuallyProtectedIndices.forEach(idx => {
         const player = gamePlayers[idx];
-        if (player) {
+        if (player && !luckySavedFromKill.has(idx)) {
             entries.push({
                 type: 'protect',
                 icon: '🛡️',
                 text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
                 class: 'night-report-protected'
+            });
+        }
+    });
+
+    // Players saved from poison
+    savedFromPoison.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            const isLucky = player.role && player.role.id === 'lucky';
+            const isProtected = protectedIndices.has(idx);
+            if (isLucky && !isProtected) {
+                entries.push({
+                    type: 'lucky-poison',
+                    icon: '🍀',
+                    text: `Пытались отравить, но повезло (Везунчик): ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                    class: 'night-report-protected'
+                });
+            } else if (isProtected) {
+                entries.push({
+                    type: 'saved-poison',
+                    icon: '🛡️',
+                    text: `Пытались отравить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                    class: 'night-report-protected'
+                });
+            }
+        }
+    });
+
+    // Poisoned players (not saved)
+    poisonedNormally.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player) {
+            entries.push({
+                type: 'poison',
+                icon: '🧪',
+                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                class: 'night-report-poison'
             });
         }
     });
@@ -2642,19 +2841,6 @@ function generateNightReport() {
         }
     });
 
-    // Poisoned players
-    nightActions.poison.forEach(idx => {
-        const player = gamePlayers[idx];
-        if (player && !player.eliminated) {
-            entries.push({
-                type: 'poison',
-                icon: '🧪',
-                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
-                class: 'night-report-poison'
-            });
-        }
-    });
-
     // Sect players
     nightActions.sect.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2680,18 +2866,18 @@ function generateNightReport() {
             });
         }
     });
-    
+
     if (entries.length === 0) {
         reportBody.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет выбранных действий</div>';
     } else {
-        reportBody.innerHTML = entries.map(entry => 
+        reportBody.innerHTML = entries.map(entry =>
             `<div class="night-report-entry">
                 <span class="night-report-icon">${entry.icon}</span>
                 <span class="night-report-text ${entry.class}">${entry.text}</span>
             </div>`
         ).join('');
     }
-    
+
     document.getElementById('night-report-modal').classList.add('active');
 }
 
@@ -2713,19 +2899,61 @@ function confirmNightReport() {
     const protectedSet = new Set(nightActions.protect);
     const savedIndices = new Set([...killedSet].filter(idx => protectedSet.has(idx)));
 
-    // First, handle kills (eliminate players) - skip those who are protected
+    // Find lucky players who are targeted by kills or poison
+    const luckySavedFromKill = new Set();
+    const luckySavedFromPoison = new Set();
+
+    // Check for lucky players targeted by kills
+    nightActions.kill.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated && player.role && player.role.id === 'lucky') {
+            if (!savedIndices.has(idx)) {
+                luckySavedFromKill.add(idx);
+            }
+        }
+    });
+
+    // Check for lucky players targeted by poison (also check if protected from poison)
+    nightActions.poison.forEach(idx => {
+        const player = gamePlayers[idx];
+        if (player && !player.eliminated) {
+            // Lucky ability: survives poison
+            if (player.role && player.role.id === 'lucky') {
+                luckySavedFromPoison.add(idx);
+            }
+            // Protection also blocks poison
+            if (protectedSet.has(idx)) {
+                // Player is protected, so poison doesn't work - don't add to poison list
+                const poisonIndex = nightActions.poison.indexOf(idx);
+                if (poisonIndex > -1) {
+                    // Mark this poison as blocked by protection (we'll skip it later)
+                }
+            }
+        }
+    });
+
+    // First, handle kills (eliminate players) - skip those who are protected or lucky
+    // Collect dead judge/sectant for post-processing
+    const deadJudgeOrSectant = [];
+    
     nightActions.kill.forEach(idx => {
         const player = gamePlayers[idx];
         if (player && !player.eliminated) {
             if (savedIndices.has(idx)) {
                 // Player was protected, they survive
                 logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+            } else if (luckySavedFromKill.has(idx)) {
+                // Lucky player survives the kill
+                logAction(`<span class="night-report-protected">🍀 Пытались убить, но повезло (Везунчик):</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
-                // Player dies
+                // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
-                player.jailed = false;
-                player.poisoned = player.sected = player.protected = player.alibied = player.blocked = false;
                 logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
+                
+                // Check if dead player is judge or sectant
+                if (player.role && (player.role.id === 'judge' || player.role.id === 'sectant')) {
+                    deadJudgeOrSectant.push(player);
+                }
             }
         }
     });
@@ -2736,7 +2964,7 @@ function confirmNightReport() {
         const player = gamePlayers[idx];
         if (player && !player.eliminated) {
             // Only log, don't apply the status
-            if (!savedIndices.has(idx)) {
+            if (!savedIndices.has(idx) && !luckySavedFromKill.has(idx)) {
                 // Protected but not killed - just log it
                 const def = STATUS_DEFS['protected'];
                 logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
@@ -2744,7 +2972,7 @@ function confirmNightReport() {
             // Don't set player.protected = true - no visual effect
         }
     });
-    
+
     // Apply alibi status
     nightActions.alibi.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2754,7 +2982,7 @@ function confirmNightReport() {
             logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
         }
     });
-    
+
     // Apply jail
     nightActions.jail.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2763,17 +2991,27 @@ function confirmNightReport() {
             logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>`, 'jailed');
         }
     });
-    
-    // Apply poison status
+
+    // Apply poison status (skip if player is lucky or protected)
     nightActions.poison.forEach(idx => {
         const player = gamePlayers[idx];
         if (player && !player.eliminated && !player.poisoned) {
-            player.poisoned = true;
-            const def = STATUS_DEFS['poisoned'];
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            // Check if player is protected (protection blocks poison)
+            if (protectedSet.has(idx)) {
+                // Player was protected from poison
+                logAction(`<span class="night-report-protected">🛡️ Пытались отравить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+            } else if (luckySavedFromPoison.has(idx)) {
+                // Lucky player survives poison
+                logAction(`<span class="night-report-protected">🍀 Пытались отравить, но повезло (Везунчик):</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+            } else {
+                // Poison applies normally
+                player.poisoned = true;
+                const def = STATUS_DEFS['poisoned'];
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            }
         }
     });
-    
+
     // Apply sect status
     nightActions.sect.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2783,7 +3021,7 @@ function confirmNightReport() {
             logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
         }
     });
-    
+
     // Apply block status
     nightActions.block.forEach(idx => {
         const player = gamePlayers[idx];
@@ -2793,13 +3031,120 @@ function confirmNightReport() {
             logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
         }
     });
-    
+
     // Clear night actions
     clearNightSelection();
-    
+
+    // Clear statuses of dead players (after all actions are applied)
+    gamePlayers.forEach(p => {
+        if (p.eliminated) {
+            p.jailed = false;
+            p.poisoned = p.sected = p.protected = p.alibied = p.blocked = false;
+        }
+    });
+
     // Close modal and re-render
     closeNightReport();
+    saveGameState();
     renderGame();
+
+    // Check for dead judge/sectant and show modal if needed
+    checkDeadJudgeOrSectant(deadJudgeOrSectant);
+}
+
+// ── Judge/Sectant death action modal ───────────────────────────
+let deathActionCallback = null;
+
+function showDeathActionModal(roleType, count) {
+    const modal = document.getElementById('death-action-modal');
+    const title = document.getElementById('death-action-title');
+    const text = document.getElementById('death-action-text');
+    const confirmBtn = document.getElementById('death-action-confirm');
+    
+    if (roleType === 'judge') {
+        title.textContent = '👨‍⚖️ Судья убит';
+        text.textContent = `Судья (${getDeadJudgeName()}) мёртв. В тюрьме находится ${count} игрок(ов).`;
+        confirmBtn.textContent = '✓ Освободить всех';
+        deathActionCallback = () => releaseAllJailed();
+    } else if (roleType === 'sectant') {
+        title.textContent = '🕯️ Сектант убит';
+        text.textContent = `Сектант (${getDeadSectantName()}) мёртв. В секте находится ${count} игрок(ов).`;
+        confirmBtn.textContent = '✓ Распустить секту';
+        deathActionCallback = () => releaseAllSected();
+    }
+    
+    confirmBtn.onclick = () => {
+        if (deathActionCallback) deathActionCallback();
+        closeDeathAction();
+    };
+    
+    modal.classList.add('active');
+}
+
+function getDeadJudgeName() {
+    const judge = gamePlayers.find(p => p.role && p.role.id === 'judge' && p.eliminated);
+    return judge ? judge.name : 'Судья';
+}
+
+function getDeadSectantName() {
+    const sectant = gamePlayers.find(p => p.role && p.role.id === 'sectant' && p.eliminated);
+    return sectant ? sectant.name : 'Сектант';
+}
+
+function releaseAllJailed() {
+    let count = 0;
+    gamePlayers.forEach(p => {
+        if (p.jailed && !p.eliminated) {
+            p.jailed = false;
+            count++;
+        }
+    });
+    logAction(`✅ Освобождено из тюрьмы: ${count} иг. (смерть судьи)`, 'freed');
+    saveGameState();
+    renderGame();
+}
+
+function releaseAllSected() {
+    let count = 0;
+    gamePlayers.forEach(p => {
+        if (p.sected && !p.eliminated) {
+            p.sected = false;
+            count++;
+        }
+    });
+    logAction(`✅ Распущена секта: ${count} иг. (смерть сектанта)`, 'sected-log');
+    saveGameState();
+    renderGame();
+}
+
+function closeDeathAction() {
+    document.getElementById('death-action-modal').classList.remove('active');
+}
+
+function closeDeathActionOutside(e) {
+    if (e.target === document.getElementById('death-action-modal')) {
+        closeDeathAction();
+    }
+}
+
+function checkDeadJudgeOrSectant(deadPlayers) {
+    // Small delay to ensure render is complete
+    setTimeout(() => {
+        // Check if any dead player is judge or sectant and there are jailed/sected players
+        const jailedPlayers = gamePlayers.filter(p => p.jailed && !p.eliminated);
+        const sectedPlayers = gamePlayers.filter(p => p.sected && !p.eliminated);
+
+        for (const player of deadPlayers) {
+            if (player.role && player.role.id === 'judge' && jailedPlayers.length > 0) {
+                showDeathActionModal('judge', jailedPlayers.length);
+                return;
+            }
+            if (player.role && player.role.id === 'sectant' && sectedPlayers.length > 0) {
+                showDeathActionModal('sectant', sectedPlayers.length);
+                return;
+            }
+        }
+    }, 100);
 }
 
 // ── Role picker ─────────────────────────────────────────────────
@@ -2858,6 +3203,7 @@ function pickRole(role) {
         }
         player.role = role;
     }
+    saveGameState();
     closeModal();
     renderGame();
 }
@@ -2885,12 +3231,17 @@ function endGame() {
     gamePlayers = [];
     actionLog = [];
     saveActionLog();
+    // Clear saved game state
+    sessionStorage.removeItem('mafia_game_players');
+    sessionStorage.removeItem('mafia_night_actions');
+    sessionStorage.removeItem('mafia_game_started');
     document.getElementById('notepad').value = '';
 }
 
 // ── Init ────────────────────────────────────────────────────────
 renderLobby();
 applySettingsToggles();
+restoreGameState(); // Restore game state if page was refreshed
 
 // ── Clock ──────────────────────────────────────────────────────
 function updateClock() {
