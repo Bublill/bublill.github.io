@@ -380,7 +380,7 @@ h2 {
     display: flex;
     flex-direction: row;
     gap: 6px;
-    transition: all 0.2s;
+    transition: all 0.5s ease-in-out;
     border: 1px solid var(--border);
     isolation: isolate;
 }
@@ -399,6 +399,10 @@ h2 {
 .game-player-card.eliminated {
     opacity: 0.5;
     order: 999;
+}
+
+.game-player-card {
+    transition: transform 0.25s ease-in-out;
 }
 
 .game-player-card.team-citizen::before { background: rgba(30, 136, 229, 0.08); opacity: 1; }
@@ -1564,7 +1568,7 @@ h2 {
     
     <!-- Night actions panel -->
     <div class="night-actions-panel">
-        <h3>Ночные действия</h3>
+        <h3>Ночные действия (Ночь <span id="night-counter">1</span>)</h3>
         <div class="night-actions-row">
             <button class="night-action-btn kill-btn" onclick="selectNightAction('kill')">
                 <span class="night-icon">💀</span>
@@ -1692,6 +1696,17 @@ h2 {
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="toggle-show-night-panel" onchange="updateShowNightPanel(this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="night-panel-toggle-row">
+                <div class="night-panel-toggle-info">
+                    <strong>Показывать часы</strong>
+                    <span>Скрыть часы в левом верхнем углу</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-show-clock" onchange="updateShowClock(this.checked)">
                     <span class="toggle-slider"></span>
                 </label>
             </div>
@@ -1948,6 +1963,24 @@ h2 {
     </div>
 </div>
 
+<!-- Avenger death modal -->
+<div id="avenger-modal" class="modal-overlay" onclick="closeAvengerOutside(event)">
+    <div class="night-report-modal">
+        <div class="night-report-header">
+            <h3>🎯 Мститель убит</h3>
+        </div>
+        <div class="night-report-body">
+            <p id="avenger-text" style="margin-bottom:16px;"></p>
+            <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Выберите игрока, которого убьёт мститель, или отмените действие:</p>
+            <div id="avenger-targets" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;"></div>
+        </div>
+        <div class="night-report-footer">
+            <button class="btn btn-dark" onclick="closeAvenger()">✕ Отмена</button>
+            <button class="btn btn-green" id="avenger-confirm" style="display:none;">✓ Подтвердить</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const DEFAULT_PLAYERS = [
     "Димон","Вова","Вадим","Катя","Влад","Рома","Маша","Инна",
@@ -1986,6 +2019,9 @@ let enabledRoles = _storedEnabledRoles
 // Show/hide the night actions panel
 let showNightPanel = JSON.parse(localStorage.getItem('mafia_show_night_panel')) ?? true;
 
+// Show/hide game clock
+let showClock = JSON.parse(localStorage.getItem('mafia_show_clock')) ?? true;
+
 function savePlayers() {
     localStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
 }
@@ -2007,6 +2043,7 @@ function saveGameState() {
     localStorage.setItem('mafia_game_players', JSON.stringify(gamePlayers));
     localStorage.setItem('mafia_night_actions', JSON.stringify(nightActions));
     localStorage.setItem('mafia_game_started', gamePlayers.length > 0 ? 'true' : 'false');
+    localStorage.setItem('mafia_night_count', nightCount.toString());
 }
 
 function saveEnabledRoles() {
@@ -2073,6 +2110,7 @@ let nightActions = {
     block: []
 };
 let currentNightAction = null;
+let nightCount = 1;
 
 // ── Settings modal ──────────────────────────────────────────────
 let activeSettingsTab = 'roles';
@@ -2161,6 +2199,13 @@ function updateShowNightPanel(value) {
     if (panel) panel.style.display = value ? '' : 'none';
 }
 
+function updateShowClock(value) {
+    showClock = value;
+    localStorage.setItem('mafia_show_clock', JSON.stringify(value));
+    const clock = document.getElementById('game-clock');
+    if (clock) clock.style.display = value ? '' : 'none';
+}
+
 function updateBtnSetting(key, value) {
     btnSettings[key] = value;
     saveBtnSettings();
@@ -2189,8 +2234,12 @@ function applySettingsToggles() {
     });
     const nightPanelToggle = document.getElementById('toggle-show-night-panel');
     if (nightPanelToggle) nightPanelToggle.checked = showNightPanel;
+    const clockToggle = document.getElementById('toggle-show-clock');
+    if (clockToggle) clockToggle.checked = showClock;
     const panel = document.querySelector('.night-actions-panel');
     if (panel) panel.style.display = showNightPanel ? '' : 'none';
+    const clock = document.getElementById('game-clock');
+    if (clock) clock.style.display = showClock ? '' : 'none';
 }
 
 // ── Player list (lobby) ─────────────────────────────────────────
@@ -2273,6 +2322,7 @@ function jailBarsMiniSVG() {
 // ── Game start ──────────────────────────────────────────────────
 function startGame() {
     if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
+    nightCount = 1;
     gamePlayers = Array.from(selectedPlayers).map(name => ({
         name,
         role: null,
@@ -2301,11 +2351,15 @@ function restoreGameState() {
     const savedGamePlayers = localStorage.getItem('mafia_game_players');
     const savedNightActions = localStorage.getItem('mafia_night_actions');
     const gameStarted = localStorage.getItem('mafia_game_started');
+    const savedNightCount = localStorage.getItem('mafia_night_count');
 
     if (gameStarted === 'true' && savedGamePlayers) {
         gamePlayers = JSON.parse(savedGamePlayers);
         if (savedNightActions) {
             nightActions = JSON.parse(savedNightActions);
+        }
+        if (savedNightCount) {
+            nightCount = parseInt(savedNightCount, 10) || 1;
         }
         // Switch to game screen
         document.getElementById('screen-lobby').classList.remove('active');
@@ -2315,10 +2369,11 @@ function restoreGameState() {
         renderActionLog();
         renderNightActionsPanel();
         updateNightActionCounts();
+        updateNightCounter();
     }
 }
 
-function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); }
+function renderGame() { renderTurnOrder(); renderStats(); renderGamePlayers(); updateNightCounter(); }
 
 function renderStats() {
     const alive      = gamePlayers.filter(p => !p.eliminated);
@@ -2481,16 +2536,34 @@ function buildStatusMarkers(player) {
 
 function renderGamePlayers() {
     const c = document.getElementById('game-players');
-    c.innerHTML = '';
+    const existingCards = Array.from(c.querySelectorAll('.game-player-card'));
+    
     const sorted = [...gamePlayers].sort((a, b) => {
         if (a.eliminated && !b.eliminated) return 1;
         if (!a.eliminated && b.eliminated) return -1;
         return 0;
     });
 
-    sorted.forEach((p) => {
+    // Update or create cards for each player
+    sorted.forEach((p, newIndex) => {
         const idx = gamePlayers.indexOf(p);
-        const card = document.createElement('div');
+        let card = existingCards[newIndex];
+        
+        // Check if this card is for the right player
+        if (card) {
+            const nameEl = card.querySelector('.gp-name');
+            if (nameEl && nameEl.textContent !== p.name) {
+                // Wrong player, remove old card
+                card.remove();
+                card = null;
+            }
+        }
+        
+        if (!card) {
+            // Create new card
+            card = document.createElement('div');
+            c.appendChild(card);
+        }
 
         let classes = 'game-player-card';
         if (p.eliminated) classes += ' eliminated';
@@ -2504,7 +2577,7 @@ function renderGamePlayers() {
             if (p.alibied)   classes += ' alibied';
             if (p.blocked)   classes += ' blocked';
         }
-        
+
         // Check if player is selected for current night action
         let isSelectedForNight = false;
         if (currentNightAction && !p.eliminated) {
@@ -2513,7 +2586,7 @@ function renderGamePlayers() {
                 classes += ' night-selected';
             }
         }
-        
+
         card.className = classes;
 
         const teamClass = p.role ? 'team-' + p.role.team : '';
@@ -2521,8 +2594,8 @@ function renderGamePlayers() {
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
 
         // Add onclick handler for night action selection
-        const nightClickHandler = currentNightAction && !p.eliminated 
-            ? `onclick="toggleNightPlayerSelection(${idx}); event.stopPropagation();"` 
+        const nightClickHandler = currentNightAction && !p.eliminated
+            ? `onclick="toggleNightPlayerSelection(${idx}); event.stopPropagation();"`
             : '';
 
         card.innerHTML = `
@@ -2547,8 +2620,12 @@ function renderGamePlayers() {
                 <div class="gp-role ${teamClass}" onclick="openRolePicker(${idx})">${roleText}</div>
                 ${buildStatusButtons(idx, p)}
             </div>`;
-        c.appendChild(card);
     });
+    
+    // Remove extra cards
+    while (c.children.length > sorted.length) {
+        c.removeChild(c.lastChild);
+    }
 }
 
 // ── Player actions ──────────────────────────────────────────────
@@ -2562,25 +2639,95 @@ function eliminatePlayer(idx) {
     player.jailed = false;
     // Clear night statuses on death
     player.poisoned = player.sected = player.protected = player.alibied = player.blocked = false;
+
+    saveGameState();
     
+    // FLIP animation: get positions of ALL cards before change
+    const cardsBefore = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+    const firstPositions = {};
+    cardsBefore.forEach(card => {
+        const nameEl = card.querySelector('.gp-name');
+        if (nameEl) {
+            firstPositions[nameEl.textContent] = card.getBoundingClientRect();
+        }
+    });
+    
+    // Render to apply new order
+    renderGamePlayers();
+    
+    // Animate ALL cards to their new positions
+    const newCards = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+    newCards.forEach(card => {
+        const nameEl = card.querySelector('.gp-name');
+        if (nameEl) {
+            const playerName = nameEl.textContent;
+            const player = gamePlayers.find(p => p.name === playerName);
+            const first = firstPositions[playerName];
+            
+            if (first) {
+                const last = card.getBoundingClientRect();
+                const deltaY = first.top - last.top;
+                const deltaX = first.left - last.left;
+                
+                // Set initial state (offset by delta)
+                card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                card.style.transition = 'none';
+                
+                if (player && player.eliminated) {
+                    card.style.opacity = '1';
+                }
+                
+                // Force reflow
+                card.offsetHeight;
+                
+                // Animate to final position
+                card.style.transform = '';
+                card.style.transition = 'transform 0.25s ease-in-out, opacity 0.25s ease-in';
+                
+                if (player && player.eliminated) {
+                    card.style.opacity = '0.5';
+                }
+                
+                // Clean up inline styles after animation
+                setTimeout(() => {
+                    card.style.transform = '';
+                    card.style.opacity = '';
+                    card.style.transition = '';
+                }, 250);
+            }
+        }
+    });
+
     // Check for jailed/sected players AFTER eliminating the current player
     const jailedPlayers = gamePlayers.filter(p => p.jailed && !p.eliminated);
     const sectedPlayers = gamePlayers.filter(p => p.sected && !p.eliminated);
-    
-    saveGameState();
-    renderGame();
 
-    // Show modal if judge dies and there are jailed players
-    if (player.role && player.role.id === 'judge' && jailedPlayers.length > 0) {
-        showDeathActionModal('judge', jailedPlayers.length);
-        return;
-    }
+    // Check for avenger
+    const isAvenger = player.role && player.role.id === 'avenger';
 
-    // Show modal if sectant dies and there are sected players
-    if (player.role && player.role.id === 'sectant' && sectedPlayers.length > 0) {
-        showDeathActionModal('sectant', sectedPlayers.length);
-        return;
-    }
+    // Wait for animation to complete before checking judge/sectant/avenger
+    setTimeout(() => {
+        renderStats();
+        renderTurnOrder();
+        
+        // Show modal if judge dies and there are jailed players
+        if (player.role && player.role.id === 'judge' && jailedPlayers.length > 0) {
+            showDeathActionModal('judge', jailedPlayers.length);
+            return;
+        }
+
+        // Show modal if sectant dies and there are sected players
+        if (player.role && player.role.id === 'sectant' && sectedPlayers.length > 0) {
+            showDeathActionModal('sectant', sectedPlayers.length);
+            return;
+        }
+
+        // Show modal if avenger dies
+        if (isAvenger) {
+            showAvengerModal(player);
+            return;
+        }
+    }, 250);
 }
 
 function restorePlayer(idx) {
@@ -2590,7 +2737,54 @@ function restorePlayer(idx) {
     }
     player.eliminated = false;
     saveGameState();
-    renderGame();
+    
+    // FLIP animation: get positions of ALL cards before change
+    const cardsBefore = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+    const firstPositions = {};
+    cardsBefore.forEach(card => {
+        const nameEl = card.querySelector('.gp-name');
+        if (nameEl) {
+            firstPositions[nameEl.textContent] = card.getBoundingClientRect();
+        }
+    });
+    
+    // Render to apply new order
+    renderGamePlayers();
+    
+    // Animate ALL cards to their new positions
+    const newCards = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+    newCards.forEach(card => {
+        const nameEl = card.querySelector('.gp-name');
+        if (nameEl) {
+            const playerName = nameEl.textContent;
+            const player = gamePlayers.find(p => p.name === playerName);
+            const first = firstPositions[playerName];
+            
+            if (first) {
+                const last = card.getBoundingClientRect();
+                const deltaY = first.top - last.top;
+                const deltaX = first.left - last.left;
+                
+                card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                card.style.transition = 'none';
+                card.style.opacity = '1';
+                
+                // Force reflow
+                card.offsetHeight;
+                
+                // Animate to final position
+                card.style.transform = '';
+                card.style.transition = 'transform 0.25s ease-in-out';
+                
+                // Clean up inline styles after animation
+                setTimeout(() => {
+                    card.style.transform = '';
+                    card.style.opacity = '';
+                    card.style.transition = '';
+                }, 250);
+            }
+        }
+    });
 }
 
 function toggleJail(idx) {
@@ -2658,6 +2852,13 @@ function updateNightActionCounts() {
             }
         }
     });
+}
+
+function updateNightCounter() {
+    const counterEl = document.getElementById('night-counter');
+    if (counterEl) {
+        counterEl.textContent = nightCount;
+    }
 }
 
 function renderNightActionsPanel() {
@@ -2973,7 +3174,7 @@ function confirmNightReport() {
             if (player.role && player.role.id === 'lucky') {
                 luckySavedFromPoison.add(idx);
             }
-            // Protection also blocks poison
+            // Protection still blocks poison
             if (protectedSet.has(idx)) {
                 // Player is protected, so poison doesn't work - don't add to poison list
                 const poisonIndex = nightActions.poison.indexOf(idx);
@@ -2985,9 +3186,10 @@ function confirmNightReport() {
     });
 
     // First, handle kills (eliminate players) - skip those who are protected or lucky
-    // Collect dead judge/sectant for post-processing
+    // Collect dead judge/sectant/avenger for post-processing
     const deadJudgeOrSectant = [];
-    
+    const deadAvenger = null;
+
     nightActions.kill.forEach(idx => {
         const player = gamePlayers[idx];
         if (player && !player.eliminated) {
@@ -3001,10 +3203,13 @@ function confirmNightReport() {
                 // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
                 logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
-                
-                // Check if dead player is judge or sectant
+
+                // Check if dead player is judge, sectant, or avenger
                 if (player.role && (player.role.id === 'judge' || player.role.id === 'sectant')) {
                     deadJudgeOrSectant.push(player);
+                }
+                if (player.role && player.role.id === 'avenger') {
+                    deadAvenger = player;
                 }
             }
         }
@@ -3084,6 +3289,11 @@ function confirmNightReport() {
         }
     });
 
+    // Log night completion with night number
+    logAction(`🌙 Ночь ${nightCount} завершена`, '');
+    nightCount++;
+    updateNightCounter();
+
     // Clear night actions
     clearNightSelection();
 
@@ -3095,17 +3305,94 @@ function confirmNightReport() {
         }
     });
 
-    // Close modal and re-render
+    // Close modal
     closeNightReport();
     saveGameState();
-    renderGame();
+    
+    // Small delay to ensure modal is fully closed
+    setTimeout(() => {
+        // FLIP animation for ALL players
+        const firstPositions = {};
+        
+        // Get positions before render
+        const cardsBefore = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+        cardsBefore.forEach(card => {
+            const nameEl = card.querySelector('.gp-name');
+            if (nameEl) {
+                firstPositions[nameEl.textContent] = card.getBoundingClientRect();
+            }
+        });
+        
+        // Render to apply new order
+        renderGamePlayers();
+        
+        // Force reflow to ensure positions are calculated correctly
+        document.getElementById('game-players').offsetHeight;
+        
+        // Animate ALL cards to their new positions
+        const newCards = Array.from(document.querySelectorAll('#game-players .game-player-card'));
+        newCards.forEach(card => {
+            const nameEl = card.querySelector('.gp-name');
+            if (nameEl) {
+                const playerName = nameEl.textContent;
+                const player = gamePlayers.find(p => p.name === playerName);
+                const first = firstPositions[playerName];
+                
+                if (first) {
+                    const last = card.getBoundingClientRect();
+                    const deltaY = first.top - last.top;
+                    const deltaX = first.left - last.left;
+                    
+                    card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                    card.style.transition = 'none';
+                    
+                    if (player && player.eliminated) {
+                        card.style.opacity = '1';
+                    }
+                    
+                    // Force reflow
+                    card.offsetHeight;
+                    
+                    // Animate to final position
+                    card.style.transform = '';
+                    card.style.transition = 'transform 0.25s ease-in-out, opacity 0.25s ease-in';
+                    
+                    if (player && player.eliminated) {
+                        card.style.opacity = '0.5';
+                    }
+                    
+                    // Clean up inline styles after animation
+                    setTimeout(() => {
+                        card.style.transform = '';
+                        card.style.opacity = '';
+                        card.style.transition = '';
+                    }, 250);
+                }
+            }
+        });
+        
+        setTimeout(() => {
+            renderStats();
+            renderTurnOrder();
+            
+            // Show avenger modal if avenger died
+            if (deadAvenger) {
+                showAvengerModal(deadAvenger);
+                return;
+            }
+        }, 250);
 
-    // Check for dead judge/sectant and show modal if needed
-    checkDeadJudgeOrSectant(deadJudgeOrSectant);
+        // Check for dead judge/sectant and show modal if needed
+        checkDeadJudgeOrSectant(deadJudgeOrSectant);
+    }, 50);
 }
 
 // ── Judge/Sectant death action modal ───────────────────────────
 let deathActionCallback = null;
+
+// ── Avenger death modal ────────────────────────────────────────
+let avengerTargetIndex = null;
+let deadAvengerPlayer = null;
 
 function showDeathActionModal(roleType, count) {
     const modal = document.getElementById('death-action-modal');
@@ -3179,6 +3466,82 @@ function closeDeathActionOutside(e) {
     }
 }
 
+// ── Avenger modal functions ─────────────────────────────────────
+function showAvengerModal(deadPlayer) {
+    deadAvengerPlayer = deadPlayer;
+    avengerTargetIndex = null;
+    
+    const modal = document.getElementById('avenger-modal');
+    const text = document.getElementById('avenger-text');
+    const targetsDiv = document.getElementById('avenger-targets');
+    const confirmBtn = document.getElementById('avenger-confirm');
+    
+    text.textContent = `${deadPlayer.name} (Мститель) убит. Кто должен умереть?`;
+    confirmBtn.style.display = 'none';
+    
+    // Build list of alive players (excluding the dead avenger)
+    const alivePlayers = gamePlayers.filter(p => !p.eliminated && p !== deadPlayer);
+    
+    if (alivePlayers.length === 0) {
+        targetsDiv.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет живых игроков</div>';
+    } else {
+        targetsDiv.innerHTML = alivePlayers.map((p, idx) => {
+            const originalIdx = gamePlayers.indexOf(p);
+            return `
+                <div class="night-report-entry" style="cursor:pointer;border-radius:6px;" 
+                     onclick="selectAvengerTarget(${originalIdx})">
+                    <span class="night-report-icon">🎯</span>
+                    <span class="night-report-text">${p.name}${p.role ? ` (${p.role.name})` : ''}</span>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    confirmBtn.onclick = () => {
+        if (avengerTargetIndex !== null) {
+            const target = gamePlayers[avengerTargetIndex];
+            if (target) {
+                target.eliminated = true;
+                target.jailed = false;
+                target.poisoned = target.sected = target.protected = target.alibied = target.blocked = false;
+                logAction(`<span class="eliminated">🎯 Мститель убил:</span> <span class="player-name">${target.name}</span>${target.role ? ` (${target.role.name})` : ''}`, 'eliminated');
+                saveGameState();
+                renderGame();
+            }
+        }
+        closeAvenger();
+    };
+    
+    modal.classList.add('active');
+}
+
+function selectAvengerTarget(idx) {
+    avengerTargetIndex = idx;
+    const player = gamePlayers[idx];
+    const confirmBtn = document.getElementById('avenger-confirm');
+    const targetsDiv = document.getElementById('avenger-targets');
+    
+    // Update visual selection
+    targetsDiv.querySelectorAll('.night-report-entry').forEach(el => {
+        el.style.background = '';
+    });
+    event.currentTarget.style.background = 'rgba(229, 57, 53, 0.2)';
+    
+    confirmBtn.style.display = 'flex';
+}
+
+function closeAvenger() {
+    document.getElementById('avenger-modal').classList.remove('active');
+    deadAvengerPlayer = null;
+    avengerTargetIndex = null;
+}
+
+function closeAvengerOutside(e) {
+    if (e.target === document.getElementById('avenger-modal')) {
+        closeAvenger();
+    }
+}
+
 function openRulesModal() {
     document.getElementById('rules-modal').classList.add('active');
 }
@@ -3194,8 +3557,13 @@ function closeRulesModalOutside(e) {
 }
 
 function checkDeadJudgeOrSectant(deadPlayers) {
-    // Small delay to ensure render is complete
+    // Delay to ensure animation and render are complete
     setTimeout(() => {
+        // Check if avenger modal is already open
+        if (document.getElementById('avenger-modal').classList.contains('active')) {
+            return;
+        }
+        
         // Check if any dead player is judge or sectant and there are jailed/sected players
         const jailedPlayers = gamePlayers.filter(p => p.jailed && !p.eliminated);
         const sectedPlayers = gamePlayers.filter(p => p.sected && !p.eliminated);
@@ -3210,7 +3578,7 @@ function checkDeadJudgeOrSectant(deadPlayers) {
                 return;
             }
         }
-    }, 100);
+    }, 300);
 }
 
 // ── Role picker ─────────────────────────────────────────────────
@@ -3296,11 +3664,13 @@ function endGame() {
     document.getElementById('screen-lobby').classList.add('active');
     gamePlayers = [];
     actionLog = [];
+    nightCount = 1;
     saveActionLog();
     // Clear saved game state
     localStorage.removeItem('mafia_game_players');
     localStorage.removeItem('mafia_night_actions');
     localStorage.removeItem('mafia_game_started');
+    localStorage.removeItem('mafia_night_count');
     document.getElementById('notepad').value = '';
 }
 
