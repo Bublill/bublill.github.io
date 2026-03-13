@@ -1629,7 +1629,7 @@ h2 {
         </div>
         <div id="action-log-list" class="action-log-list"></div>
     </div>
-    <button class="btn btn-dark btn-full" onclick="window.open('https://gaga.ru/gaga/files/pdf/rules/ru/2944-423096.pdf', '_blank')" style="margin-top:10px;">📖 Открыть правила игры</button>
+    <button class="btn btn-dark btn-full" onclick="openRulesModal()" style="margin-top:10px;">📖 Правила игры</button>
 </div>
 
 <div id="bottom-nav" class="bottom-nav">
@@ -1879,6 +1879,58 @@ h2 {
     </div>
 </div>
 
+<!-- Rules modal -->
+<div id="rules-modal" class="modal-overlay" onclick="closeRulesModalOutside(event)">
+    <div class="night-report-modal" style="max-width:600px;max-height:85vh;">
+        <div class="night-report-header">
+            <h3>📖 Правила игры</h3>
+        </div>
+        <div class="night-report-body" style="max-height:60vh;overflow-y:auto;">
+            <button class="btn btn-red btn-full" onclick="window.open('https://gaga.ru/gaga/files/pdf/rules/ru/2944-423096.pdf', '_blank')" style="margin-bottom:16px;">
+                📄 Открыть полные правила (PDF)
+            </button>
+            
+            <h4 style="color:var(--blue);margin:12px 0 8px;">🔵 Горожане</h4>
+            <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                <div style="margin-bottom:6px;"><strong>Мирный житель</strong> — обычный горожанин, без способностей.</div>
+                <div style="margin-bottom:6px;"><strong>Агент</strong> — внедряется в Мафию/Картель ночью, притворяясь одним из них.</div>
+                <div style="margin-bottom:6px;"><strong>Судья</strong> — сажает игрока в тюрьму: тот теряет способности и голос.</div>
+                <div style="margin-bottom:6px;"><strong>Детектив</strong> — проверяет фракцию игрока (горожанин / преступник / отщепенец).</div>
+                <div style="margin-bottom:6px;"><strong>Журналист</strong> — проверяет, принадлежат ли два игрока одной фракции.</div>
+                <div style="margin-bottom:6px;"><strong>Доктор</strong> — лечит одного игрока, спасая от смерти (нельзя лечить одного дважды подряд).</div>
+                <div style="margin-bottom:6px;"><strong>Телохранитель</strong> — умирает вместо выбранного игрока, если в того стреляют.</div>
+                <div style="margin-bottom:6px;"><strong>Патрульный</strong> — копия Детектива, вступает в игру после гибели Детектива.</div>
+                <div style="margin-bottom:6px;"><strong>Экстрасенс</strong> — проверяет, являются ли игрок и оба его соседа горожанами.</div>
+                <div style="margin-bottom:6px;"><strong>Поклонница</strong> — даёт алиби выбранному игроку, отменяя его казнь на голосовании.</div>
+                <div style="margin-bottom:6px;"><strong>Сыщик</strong> — может либо проверить, мирный ли житель цель, либо убить её.</div>
+                <div style="margin-bottom:6px;"><strong>Везунчик</strong> — неуязвим для ночных убийств и тюрьмы; умирает только от казни.</div>
+                <div style="margin-bottom:6px;"><strong>Мститель</strong> — после смерти убивает одного игрока по своему выбору.</div>
+            </div>
+            
+            <h4 style="color:var(--red);margin:12px 0 8px;">🔴 Преступники</h4>
+            <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                <div style="margin-bottom:6px;"><strong>Мафия/Картель</strong> — каждую ночь вместе выбирают и убивают одного игрока.</div>
+                <div style="margin-bottom:6px;"><strong>Босс/Главарь</strong> — решающий голос при спорном выборе цели Мафии/Картеля.</div>
+                <div style="margin-bottom:6px;"><strong>Адвокат</strong> — блокирует способность выбранного игрока на ночь.</div>
+                <div style="margin-bottom:6px;"><strong>Любовница</strong> — на выбранного игрока ведущий даёт ложный ответ при проверке.</div>
+                <div style="margin-bottom:6px;"><strong>Ищейка</strong> — проверяет, является ли цель мирным жителем или нет.</div>
+                <div style="margin-bottom:6px;"><strong>Оборотень</strong> — при проверке всегда выглядит как горожанин.</div>
+            </div>
+            
+            <h4 style="color:var(--yellow);margin:12px 0 8px;">🟡 Отщепенцы</h4>
+            <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                <div style="margin-bottom:6px;"><strong>Маньяк</strong> — каждую ночь убивает; побеждает, оставшись один на один с последним выжившим.</div>
+                <div style="margin-bottom:6px;"><strong>Отравитель</strong> — отравляет игрока, который умирает после следующего дневного голосования. Цель — уничтожить всех.</div>
+                <div style="margin-bottom:6px;"><strong>Революционер</strong> — убивает по ночам, но только не мирных жителей; побеждает, оставшись с последним мирным.</div>
+                <div style="margin-bottom:6px;"><strong>Сектант</strong> — вербует игроков в секту; побеждает, когда все живые становятся сектантами.</div>
+            </div>
+        </div>
+        <div class="night-report-footer">
+            <button class="btn btn-dark" onclick="closeRulesModal()">✕ Закрыть</button>
+        </div>
+    </div>
+</div>
+
 <!-- Judge/Sectant death modal -->
 <div id="death-action-modal" class="modal-overlay" onclick="closeDeathActionOutside(event)">
     <div class="night-report-modal">
@@ -1903,10 +1955,10 @@ const DEFAULT_PLAYERS = [
     "Оля","Лена","Тёма"
 ];
 
-let ALL_PLAYERS = JSON.parse(sessionStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
+let ALL_PLAYERS = JSON.parse(localStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
 
 // Button visibility settings (default all false)
-let btnSettings = JSON.parse(sessionStorage.getItem('mafia_btn_settings')) || {
+let btnSettings = JSON.parse(localStorage.getItem('mafia_btn_settings')) || {
     poison: false,
     sect: false,
     protect: false,
@@ -1915,7 +1967,7 @@ let btnSettings = JSON.parse(sessionStorage.getItem('mafia_btn_settings')) || {
 };
 
 // Night action button visibility settings (default all true)
-let nightBtnSettings = JSON.parse(sessionStorage.getItem('mafia_night_btn_settings')) || {
+let nightBtnSettings = JSON.parse(localStorage.getItem('mafia_night_btn_settings')) || {
     kill: true,
     protect: true,
     alibi: true,
@@ -1926,39 +1978,39 @@ let nightBtnSettings = JSON.parse(sessionStorage.getItem('mafia_night_btn_settin
 };
 
 // Enabled roles for role picker (default: all roles enabled)
-const _storedEnabledRoles = JSON.parse(sessionStorage.getItem('mafia_enabled_roles'));
-let enabledRoles = _storedEnabledRoles 
-    ? new Set(_storedEnabledRoles) 
+const _storedEnabledRoles = JSON.parse(localStorage.getItem('mafia_enabled_roles'));
+let enabledRoles = _storedEnabledRoles
+    ? new Set(_storedEnabledRoles)
     : null; // null means "not yet initialized, use all"
 
 // Show/hide the night actions panel
-let showNightPanel = JSON.parse(sessionStorage.getItem('mafia_show_night_panel')) ?? true;
+let showNightPanel = JSON.parse(localStorage.getItem('mafia_show_night_panel')) ?? true;
 
 function savePlayers() {
-    sessionStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
+    localStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
 }
 
 function saveBtnSettings() {
-    sessionStorage.setItem('mafia_btn_settings', JSON.stringify(btnSettings));
+    localStorage.setItem('mafia_btn_settings', JSON.stringify(btnSettings));
 }
 
 function saveNightBtnSettings() {
-    sessionStorage.setItem('mafia_night_btn_settings', JSON.stringify(nightBtnSettings));
+    localStorage.setItem('mafia_night_btn_settings', JSON.stringify(nightBtnSettings));
 }
 
 function saveActionLog() {
-    sessionStorage.setItem('mafia_action_log', JSON.stringify(actionLog));
+    localStorage.setItem('mafia_action_log', JSON.stringify(actionLog));
 }
 
 // Save game state (players, night actions, settings)
 function saveGameState() {
-    sessionStorage.setItem('mafia_game_players', JSON.stringify(gamePlayers));
-    sessionStorage.setItem('mafia_night_actions', JSON.stringify(nightActions));
-    sessionStorage.setItem('mafia_game_started', gamePlayers.length > 0 ? 'true' : 'false');
+    localStorage.setItem('mafia_game_players', JSON.stringify(gamePlayers));
+    localStorage.setItem('mafia_night_actions', JSON.stringify(nightActions));
+    localStorage.setItem('mafia_game_started', gamePlayers.length > 0 ? 'true' : 'false');
 }
 
 function saveEnabledRoles() {
-    sessionStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
+    localStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
 }
 
 function logAction(message, className = '') {
@@ -2007,8 +2059,8 @@ function getRoleImgPath(roleId) {
 let selectedPlayers = new Set();
 let gamePlayers = [];
 let currentPickerPlayer = null;
-let activeRoleTab = sessionStorage.getItem('mafia_role_tab') || 'citizen';
-let actionLog = JSON.parse(sessionStorage.getItem('mafia_action_log')) || [];
+let activeRoleTab = localStorage.getItem('mafia_role_tab') || 'citizen';
+let actionLog = JSON.parse(localStorage.getItem('mafia_action_log')) || [];
 
 // Night actions state
 let nightActions = {
@@ -2099,12 +2151,12 @@ function disableAllRoles() {
 }
 
 function saveEnabledRoles() {
-    sessionStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
+    localStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
 }
 
 function updateShowNightPanel(value) {
     showNightPanel = value;
-    sessionStorage.setItem('mafia_show_night_panel', JSON.stringify(value));
+    localStorage.setItem('mafia_show_night_panel', JSON.stringify(value));
     const panel = document.querySelector('.night-actions-panel');
     if (panel) panel.style.display = value ? '' : 'none';
 }
@@ -2244,12 +2296,12 @@ function startGame() {
     renderNightActionsPanel();
 }
 
-// Restore game state from sessionStorage
+// Restore game state from localStorage
 function restoreGameState() {
-    const savedGamePlayers = sessionStorage.getItem('mafia_game_players');
-    const savedNightActions = sessionStorage.getItem('mafia_night_actions');
-    const gameStarted = sessionStorage.getItem('mafia_game_started');
-    
+    const savedGamePlayers = localStorage.getItem('mafia_game_players');
+    const savedNightActions = localStorage.getItem('mafia_night_actions');
+    const gameStarted = localStorage.getItem('mafia_game_started');
+
     if (gameStarted === 'true' && savedGamePlayers) {
         gamePlayers = JSON.parse(savedGamePlayers);
         if (savedNightActions) {
@@ -3127,6 +3179,20 @@ function closeDeathActionOutside(e) {
     }
 }
 
+function openRulesModal() {
+    document.getElementById('rules-modal').classList.add('active');
+}
+
+function closeRulesModal() {
+    document.getElementById('rules-modal').classList.remove('active');
+}
+
+function closeRulesModalOutside(e) {
+    if (e.target === document.getElementById('rules-modal')) {
+        closeRulesModal();
+    }
+}
+
 function checkDeadJudgeOrSectant(deadPlayers) {
     // Small delay to ensure render is complete
     setTimeout(() => {
@@ -3158,7 +3224,7 @@ function openRolePicker(idx) {
 
 function switchRoleTab(team, save = true) {
     activeRoleTab = team;
-    if (save) sessionStorage.setItem('mafia_role_tab', team);
+    if (save) localStorage.setItem('mafia_role_tab', team);
     document.querySelectorAll('.role-tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.team === team);
     });
@@ -3232,9 +3298,9 @@ function endGame() {
     actionLog = [];
     saveActionLog();
     // Clear saved game state
-    sessionStorage.removeItem('mafia_game_players');
-    sessionStorage.removeItem('mafia_night_actions');
-    sessionStorage.removeItem('mafia_game_started');
+    localStorage.removeItem('mafia_game_players');
+    localStorage.removeItem('mafia_night_actions');
+    localStorage.removeItem('mafia_game_started');
     document.getElementById('notepad').value = '';
 }
 
