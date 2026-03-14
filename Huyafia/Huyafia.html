@@ -58,6 +58,7 @@ h1 {
     margin-bottom: 12px;
     text-transform: uppercase;
     letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 h2 {
@@ -66,6 +67,7 @@ h2 {
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .btn {
@@ -77,6 +79,7 @@ h2 {
     cursor: pointer;
     transition: all 0.15s;
     color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .btn:active { transform: scale(0.95); }
@@ -111,6 +114,7 @@ h2 {
     grid-template-columns: 1fr 1fr;
     gap: 6px;
     margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .player-check {
@@ -123,6 +127,7 @@ h2 {
     border: 2px solid transparent;
     transition: all 0.15s;
     gap: 8px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .player-check.checked {
@@ -154,6 +159,7 @@ h2 {
     color: #fff;
     font-size: 14px;
     display: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .player-check.checked .check-box::after { display: block; }
@@ -164,6 +170,7 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .player-remove-btn {
@@ -180,6 +187,7 @@ h2 {
     align-items: center;
     justify-content: center;
     opacity: 0.6;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
 .player-remove-btn:hover {
@@ -201,6 +209,7 @@ h2 {
     scrollbar-width: none;
     align-items: stretch;
     min-height: 70px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
 }
 
 .turn-order-bar::-webkit-scrollbar { display: none; }
@@ -221,6 +230,7 @@ h2 {
     position: relative;
     overflow: hidden;
     text-align: center;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
 }
 
 .turn-chip.team-citizen { color: var(--blue); border: 1px solid var(--blue); background: rgba(30,136,229,0.05); }
@@ -233,6 +243,7 @@ h2 {
     object-fit: cover;
     border-radius: 3px;
     flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
 }
 
 .turn-dead-marker {
@@ -245,6 +256,7 @@ h2 {
     padding: 0 2px;
     position: relative;
     align-self: stretch;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .turn-dead-bar {
@@ -265,6 +277,7 @@ h2 {
     line-height: 1;
     flex-shrink: 0;
     letter-spacing: -0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .turn-dead-letters span {
@@ -352,6 +365,7 @@ h2 {
     flex-wrap: wrap;
     font-size: 10px;
     line-height: 1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .jail-bars-mini {
@@ -370,6 +384,7 @@ h2 {
     grid-template-columns: 1fr 1fr;
     gap: 6px;
     margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .game-player-card {
@@ -383,6 +398,7 @@ h2 {
     transition: all 0.5s ease-in-out;
     border: 1px solid var(--border);
     isolation: isolate;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .game-player-card::before {
@@ -424,12 +440,14 @@ h2 {
     gap: 2px;
     pointer-events: none;
     align-items: flex-end;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .status-badge {
     font-size: 13px;
     line-height: 1;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 /* Card tints for statuses (stacked on top of team tints via extra overlay divs) */
@@ -536,6 +554,7 @@ h2 {
     color: var(--red);
     pointer-events: none;
     z-index: 5;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
 }
 
 /* Role image — fixed size, never compressed or stretched */
@@ -548,8 +567,9 @@ h2 {
     align-self: flex-start;
     position: relative;
     border-radius: 4px;
-    overflow: hidden;
+    overflow: visible;
     z-index: 1;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.75));
 }
 
 .gp-role-img {
@@ -560,6 +580,7 @@ h2 {
     object-fit: cover;
     object-position: top center;
     border-radius: 4px;
+    overflow: hidden;
 }
 
 .gp-content {
@@ -570,6 +591,7 @@ h2 {
     min-width: 0;
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .gp-top {
@@ -577,6 +599,7 @@ h2 {
     align-items: center;
     justify-content: space-between;
     gap: 4px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .gp-name {
@@ -586,6 +609,7 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
 .gp-actions {
@@ -595,6 +619,7 @@ h2 {
     flex-wrap: wrap;
     justify-content: flex-end;
     max-width: 80px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Base action button style */
@@ -613,6 +638,7 @@ h2 {
     z-index: 3;
     transition: all 0.15s;
     line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
 .gp-jail-btn {
@@ -655,6 +681,7 @@ h2 {
     justify-content: center;
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
 }
 
 .gp-role:active { background: #444; }
@@ -665,6 +692,7 @@ h2 {
     gap: 4px;
     flex-wrap: wrap;
     justify-content: flex-end;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .gp-status-btn {
@@ -683,9 +711,10 @@ h2 {
     white-space: nowrap;
     font-weight: 600;
     line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
-.gp-status-btn .btn-label { font-size: 9px; }
+.gp-status-btn .btn-label { font-size: 9px; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
 
 .gp-status-btn.poison-btn  { border-color: var(--poison-color);  color: var(--poison-color);  }
 .gp-status-btn.sect-btn    { border-color: var(--sect-color);    color: var(--sect-color);    }
@@ -737,9 +766,10 @@ h2 {
     top: 0;
     background: var(--bg-dark);
     z-index: 5;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.modal-header h3 { font-size: 16px; color: var(--text-main); }
+.modal-header h3 { font-size: 16px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
 
 .role-tabs {
     display: flex;
@@ -750,6 +780,7 @@ h2 {
     position: sticky;
     top: 48px;
     z-index: 4;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .role-tab-btn {
@@ -763,6 +794,7 @@ h2 {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .role-tab-btn.active { background: var(--accent); color: #fff; }
@@ -770,13 +802,14 @@ h2 {
 .role-tab-btn.team-criminal-tab.active { background: var(--red); }
 .role-tab-btn.team-outcast-tab.active  { background: var(--yellow); color: #000; }
 
-.modal-body { padding: 8px; }
+.modal-body { padding: 8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
 .role-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 4px;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .role-btn {
@@ -793,6 +826,7 @@ h2 {
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .role-btn:active { transform: scale(0.93); }
@@ -804,9 +838,11 @@ h2 {
     aspect-ratio: 2/3;
     object-fit: cover;
     border-radius: 4px;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.8));
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
-.role-btn .role-label { font-size: 9px; line-height: 1.1; }
+.role-btn .role-label { font-size: 9px; line-height: 1.1; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
 
 .role-btn.team-citizen-bg { border-color: var(--blue); }
 .role-btn.team-citizen-bg:active { background: rgba(30,136,229,0.2); }
@@ -825,6 +861,7 @@ h2 {
     font-weight: 600;
     cursor: pointer;
     border-top: 1px solid var(--border);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .clear-role-btn {
@@ -837,6 +874,7 @@ h2 {
     cursor: pointer;
     border-radius: 6px;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* ─── Notes screen ─── */
@@ -846,6 +884,7 @@ h2 {
     justify-content: center;
     position: relative;
     margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .notes-header h1 {
@@ -867,6 +906,7 @@ h2 {
     justify-content: center;
     cursor: pointer;
     transition: all 0.15s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .notes-settings-btn:active, .notes-settings-btn.open {
@@ -883,6 +923,7 @@ h2 {
     border-radius: 10px;
     padding: 12px;
     margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-panel.open { display: block; }
@@ -893,12 +934,14 @@ h2 {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-panel p {
     font-size: 11px;
     color: var(--text-dim);
     margin-bottom: 10px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .setting-toggle-row {
@@ -908,6 +951,7 @@ h2 {
     padding: 8px 0;
     border-bottom: 1px solid var(--border);
     gap: 10px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .setting-toggle-row:last-child { border-bottom: none; }
@@ -917,16 +961,19 @@ h2 {
     align-items: center;
     gap: 8px;
     font-size: 13px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .setting-toggle-icon {
     font-size: 16px;
     width: 24px;
     text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .setting-toggle-name {
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .setting-toggle-desc {
@@ -934,6 +981,7 @@ h2 {
     color: var(--text-dim);
     display: block;
     margin-top: 1px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Toggle switch */
@@ -942,6 +990,7 @@ h2 {
     width: 42px;
     height: 24px;
     flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .toggle-switch input {
@@ -958,6 +1007,7 @@ h2 {
     background: #444;
     border-radius: 24px;
     transition: 0.2s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .toggle-slider::before {
@@ -970,6 +1020,7 @@ h2 {
     background: #aaa;
     border-radius: 50%;
     transition: 0.2s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .toggle-switch input:checked + .toggle-slider { background: var(--red); }
@@ -997,6 +1048,7 @@ h2 {
     font-size: 14px;
     resize: vertical;
     font-family: inherit;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Action log */
@@ -1007,6 +1059,7 @@ h2 {
     border-radius: 8px;
     max-height: 300px;
     overflow-y: auto;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .action-log-header {
@@ -1017,6 +1070,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .action-log-clear {
@@ -1026,6 +1080,7 @@ h2 {
     font-size: 11px;
     cursor: pointer;
     padding: 2px 6px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .action-log-clear:hover { color: var(--red); }
@@ -1033,6 +1088,7 @@ h2 {
 .action-log-list {
     padding: 8px;
     font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .action-log-entry {
@@ -1040,6 +1096,7 @@ h2 {
     border-bottom: 1px solid var(--border);
     display: flex;
     gap: 6px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .action-log-entry:last-child { border-bottom: none; }
@@ -1049,9 +1106,10 @@ h2 {
     font-size: 10px;
     flex-shrink: 0;
     min-width: 55px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.action-log-message { flex: 1; }
+.action-log-message { flex: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .action-log-message .player-name   { font-weight: 600; }
 .action-log-message .role-assigned { color: var(--blue); }
 .action-log-message .role-changed  { color: var(--yellow); }
@@ -1076,6 +1134,7 @@ h2 {
     border-top: 1px solid var(--border);
     display: none;
     z-index: 50;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .bottom-nav.active { display: flex; }
@@ -1092,10 +1151,11 @@ h2 {
     flex-direction: column;
     align-items: center;
     gap: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
 .nav-btn.active { color: var(--red); }
-.nav-btn .nav-icon { font-size: 20px; }
+.nav-btn .nav-icon { font-size: 20px; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
 
 .stats-bar {
     display: flex;
@@ -1103,6 +1163,7 @@ h2 {
     justify-content: center;
     margin-bottom: 10px;
     flex-wrap: wrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .stat-item {
@@ -1111,18 +1172,21 @@ h2 {
     padding: 4px 10px;
     background: var(--bg-card);
     border-radius: 6px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .select-actions {
     display: flex;
     gap: 6px;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .select-actions .btn {
     flex: 1;
     font-size: 12px;
     padding: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Night actions panel */
@@ -1132,6 +1196,24 @@ h2 {
     padding: 10px;
     margin-bottom: 12px;
     border: 1px solid var(--border);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.night-actions-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.night-actions-panel-header h3 {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-actions-panel h3 {
@@ -1140,6 +1222,33 @@ h2 {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.status-rows-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.status-rows-toggle-btn:active { transform: scale(0.93); }
+
+.status-rows-toggle-btn.active {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: rgba(30,136,229,0.1);
 }
 
 .night-actions-row {
@@ -1147,6 +1256,7 @@ h2 {
     gap: 6px;
     flex-wrap: wrap;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-action-btn {
@@ -1168,8 +1278,8 @@ h2 {
     position: relative;
 }
 
-.night-action-btn .night-icon { font-size: 18px; }
-.night-action-btn .night-label { font-size: 10px; text-align: center; }
+.night-action-btn .night-icon { font-size: 18px; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+.night-action-btn .night-label { font-size: 10px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
 
 .night-action-count {
     position: absolute;
@@ -1187,6 +1297,7 @@ h2 {
     justify-content: center;
     padding: 0 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 
 .night-action-btn.active .night-action-count {
@@ -1214,12 +1325,14 @@ h2 {
     display: flex;
     gap: 6px;
     margin-top: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-actions-controls .btn {
     flex: 1;
     font-size: 12px;
     padding: 10px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Night report modal */
@@ -1231,6 +1344,7 @@ h2 {
     max-height: 80vh;
     overflow-y: auto;
     border: 1px solid var(--border);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-header {
@@ -1241,6 +1355,7 @@ h2 {
     position: sticky;
     top: 0;
     z-index: 5;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-header h3 {
@@ -1248,12 +1363,14 @@ h2 {
     color: var(--text-main);
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .night-report-body {
     padding: 14px;
     font-size: 14px;
     line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-entry {
@@ -1262,6 +1379,7 @@ h2 {
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-entry:last-child { border-bottom: none; }
@@ -1271,11 +1389,13 @@ h2 {
     flex-shrink: 0;
     width: 24px;
     text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-text {
     flex: 1;
     font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-kill { color: var(--red); }
@@ -1294,6 +1414,7 @@ h2 {
     background: var(--bg-dark);
     position: sticky;
     bottom: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .night-report-footer .btn {
@@ -1301,6 +1422,11 @@ h2 {
     padding: 12px;
     font-size: 14px;
     font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.night-report-body h4 {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* Player selection highlight */
@@ -1326,6 +1452,7 @@ h2 {
     transform: translateX(-50%) translateY(100%);
     transition: transform 0.28s cubic-bezier(.32,1,.55,1);
     overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-modal-overlay {
@@ -1350,6 +1477,7 @@ h2 {
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-modal-header h3 {
@@ -1357,6 +1485,7 @@ h2 {
     font-weight: 700;
     color: var(--text-main);
     letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .settings-modal-close {
@@ -1371,6 +1500,7 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-modal-close:active { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -1383,6 +1513,7 @@ h2 {
     border-radius: 2px;
     margin: 8px auto 0;
     flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Settings tabs */
@@ -1393,6 +1524,7 @@ h2 {
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
     background: var(--bg-dark);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .stab-btn {
@@ -1410,9 +1542,10 @@ h2 {
     flex-direction: column;
     align-items: center;
     gap: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.stab-btn .stab-icon { font-size: 16px; }
+.stab-btn .stab-icon { font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .stab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* Tab content */
@@ -1423,6 +1556,7 @@ h2 {
     min-height: 0;
     padding: 12px;
     -webkit-overflow-scrolling: touch;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .stab-content.active { display: flex; flex-direction: column; }
@@ -1436,6 +1570,7 @@ h2 {
     margin: 12px 0 8px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--border);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .stab-section-title:first-child { margin-top: 0; }
@@ -1446,6 +1581,7 @@ h2 {
     grid-template-columns: 1fr 1fr;
     gap: 5px;
     margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-role-item {
@@ -1459,6 +1595,7 @@ h2 {
     border: 1px solid var(--border);
     transition: all 0.15s;
     user-select: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-role-item.enabled-citizen  { border-color: var(--blue);   background: rgba(30,136,229,0.08);  }
@@ -1476,6 +1613,7 @@ h2 {
     justify-content: center;
     font-size: 11px;
     transition: all 0.15s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .settings-role-item.enabled-citizen  .settings-role-check { background: var(--blue);   border-color: var(--blue);   color: #fff; }
@@ -1486,6 +1624,7 @@ h2 {
     font-size: 12px;
     font-weight: 600;
     flex: 1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .settings-role-item.enabled-citizen  .settings-role-name { color: var(--blue); }
@@ -1502,6 +1641,7 @@ h2 {
     flex: 1;
     font-size: 11px;
     padding: 7px 6px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Night panel visibility setting */
@@ -1514,11 +1654,12 @@ h2 {
     border-radius: 10px;
     border: 1px solid var(--border);
     margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.night-panel-toggle-info { flex: 1; }
-.night-panel-toggle-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
-.night-panel-toggle-info span { font-size: 11px; color: var(--text-dim); }
+.night-panel-toggle-info { flex: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+.night-panel-toggle-info strong { display: block; font-size: 14px; margin-bottom: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+.night-panel-toggle-info span { font-size: 11px; color: var(--text-dim); text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
 /* Game clock */
 .game-clock {
@@ -1535,6 +1676,7 @@ h2 {
     color: var(--text-main);
     z-index: 1000;
     box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 </style>
 </head>
@@ -1568,7 +1710,10 @@ h2 {
     
     <!-- Night actions panel -->
     <div class="night-actions-panel">
-        <h3>Ночные действия (Ночь <span id="night-counter">1</span>)</h3>
+        <div class="night-actions-panel-header">
+            <h3>Ночные действия (Ночь <span id="night-counter">1</span>)</h3>
+            <button class="status-rows-toggle-btn" id="status-rows-toggle-btn" onclick="toggleStatusRows()" title="Показать/скрыть статусы на картах">🏷️ Статусы</button>
+        </div>
         <div class="night-actions-row">
             <button class="night-action-btn kill-btn" onclick="selectNightAction('kill')">
                 <span class="night-icon">💀</span>
@@ -1990,6 +2135,9 @@ const DEFAULT_PLAYERS = [
 
 let ALL_PLAYERS = JSON.parse(localStorage.getItem('mafia_players')) || [...DEFAULT_PLAYERS];
 
+// Restore selected players from localStorage
+let selectedPlayers = new Set(JSON.parse(localStorage.getItem('mafia_selected_players')) || []);
+
 // Button visibility settings (default all false)
 let btnSettings = JSON.parse(localStorage.getItem('mafia_btn_settings')) || {
     poison: false,
@@ -2022,8 +2170,12 @@ let showNightPanel = JSON.parse(localStorage.getItem('mafia_show_night_panel')) 
 // Show/hide game clock
 let showClock = JSON.parse(localStorage.getItem('mafia_show_clock')) ?? true;
 
+// Show/hide status button rows on player cards
+let showStatusRows = JSON.parse(localStorage.getItem('mafia_show_status_rows')) ?? false;
+
 function savePlayers() {
     localStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
+    localStorage.setItem('mafia_selected_players', JSON.stringify([...selectedPlayers]));
 }
 
 function saveBtnSettings() {
@@ -2093,7 +2245,6 @@ function getRoleImgPath(roleId) {
     return `Assets/RoleCards/${roleId}.webp`;
 }
 
-let selectedPlayers = new Set();
 let gamePlayers = [];
 let currentPickerPlayer = null;
 let activeRoleTab = localStorage.getItem('mafia_role_tab') || 'citizen';
@@ -2218,6 +2369,14 @@ function updateNightBtnSetting(key, value) {
     renderNightActionsPanel();
 }
 
+function toggleStatusRows() {
+    showStatusRows = !showStatusRows;
+    localStorage.setItem('mafia_show_status_rows', JSON.stringify(showStatusRows));
+    const btn = document.getElementById('status-rows-toggle-btn');
+    if (btn) btn.classList.toggle('active', showStatusRows);
+    renderGamePlayers();
+}
+
 function applySettingsToggles() {
     // Initialize enabledRoles if first run
     if (enabledRoles === null) {
@@ -2240,6 +2399,8 @@ function applySettingsToggles() {
     if (panel) panel.style.display = showNightPanel ? '' : 'none';
     const clock = document.getElementById('game-clock');
     if (clock) clock.style.display = showClock ? '' : 'none';
+    const statusToggleBtn = document.getElementById('status-rows-toggle-btn');
+    if (statusToggleBtn) statusToggleBtn.classList.toggle('active', showStatusRows);
 }
 
 // ── Player list (lobby) ─────────────────────────────────────────
@@ -2323,6 +2484,8 @@ function jailBarsMiniSVG() {
 function startGame() {
     if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
     nightCount = 1;
+    // Persist selected players so they survive page refresh
+    localStorage.setItem('mafia_selected_players', JSON.stringify([...selectedPlayers]));
     gamePlayers = Array.from(selectedPlayers).map(name => ({
         name,
         role: null,
@@ -2370,6 +2533,13 @@ function restoreGameState() {
         renderNightActionsPanel();
         updateNightActionCounts();
         updateNightCounter();
+    } else {
+        // Restore selected players for lobby
+        const savedSelectedPlayers = localStorage.getItem('mafia_selected_players');
+        if (savedSelectedPlayers) {
+            selectedPlayers = new Set(JSON.parse(savedSelectedPlayers));
+        }
+        renderLobby();
     }
 }
 
@@ -2401,68 +2571,73 @@ function getRoleShortName(roleName) {
 function renderTurnOrder() {
     const bar = document.getElementById('turn-order');
     bar.innerHTML = '';
-    
+
     // Get all roles with turn order
     const rolesWithTurnOrder = ROLES.filter(r => r.turnOrder !== null);
-    
+
     // Check if there are players without roles
     const playersWithoutRoles = gamePlayers.filter(p => !p.eliminated && !p.role).length > 0;
-    
-    // Get assigned roles mapping
-    const assignedRoles = {};
+
+    // Get assigned roles mapping (array of players per role to support multiple players with same role)
+    const assignedRolesMap = {};
     gamePlayers.forEach(p => {
         if (p.role) {
-            assignedRoles[p.role.id] = p;
+            if (!assignedRolesMap[p.role.id]) {
+                assignedRolesMap[p.role.id] = [];
+            }
+            assignedRolesMap[p.role.id].push(p);
         }
     });
-    
+
     // Sort all roles by turn order
     const sortedRoles = [...rolesWithTurnOrder].sort((a, b) => a.turnOrder - b.turnOrder);
-    
+
     // Render each role slot (assigned or empty)
     sortedRoles.forEach(role => {
-        const player = assignedRoles[role.id];
+        const players = assignedRolesMap[role.id] || [];
 
         // Skip if no player assigned and all players have roles
-        if (!player && !playersWithoutRoles) {
+        if (players.length === 0 && !playersWithoutRoles) {
             return;
         }
 
-        if (player) {
-            // Player has this role
-            if (player.eliminated) {
-                const marker = document.createElement('div');
-                marker.className = 'turn-dead-marker';
-                const teamClass = 'team-' + player.role.team;
-                marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${getRoleShortName(player.role.name)}</div>`;
-                marker.title = `${player.name} (${player.role.name}) — мёртв`;
-                bar.appendChild(marker);
-            } else {
-                const chip = document.createElement('div');
-                const statusClasses = Object.entries(BTN_SETTING_MAP)
-                    .filter(([, statusKey]) => player[statusKey])
-                    .map(([, statusKey]) => statusKey)
-                    .join(' ');
-                chip.className = 'turn-chip team-' + player.role.team +
-                    (player.jailed ? ' jailed' : '') +
-                    (statusClasses ? ' ' + statusClasses : '');
+        if (players.length > 0) {
+            // Render each player with this role
+            players.forEach(player => {
+                if (player.eliminated) {
+                    const marker = document.createElement('div');
+                    marker.className = 'turn-dead-marker';
+                    const teamClass = 'team-' + player.role.team;
+                    marker.innerHTML = `<div class="turn-dead-bar ${teamClass}"></div><div class="turn-dead-letters ${teamClass}">${getRoleShortName(player.role.name)}</div>`;
+                    marker.title = `${player.name} (${player.role.name}) — мёртв`;
+                    bar.appendChild(marker);
+                } else {
+                    const chip = document.createElement('div');
+                    const statusClasses = Object.entries(BTN_SETTING_MAP)
+                        .filter(([, statusKey]) => player[statusKey])
+                        .map(([, statusKey]) => statusKey)
+                        .join(' ');
+                    chip.className = 'turn-chip team-' + player.role.team +
+                        (player.jailed ? ' jailed' : '') +
+                        (statusClasses ? ' ' + statusClasses : '');
 
-                const statusIcons = Object.entries(BTN_SETTING_MAP)
-                    .filter(([, statusKey]) => player[statusKey])
-                    .map(([, statusKey]) => STATUS_DEFS[statusKey].icon)
-                    .join('');
-                const statusRow = statusIcons
-                    ? `<div class="turn-chip-statuses">${statusIcons}</div>`
-                    : '';
+                    const statusIcons = Object.entries(BTN_SETTING_MAP)
+                        .filter(([, statusKey]) => player[statusKey])
+                        .map(([, statusKey]) => STATUS_DEFS[statusKey].icon)
+                        .join('');
+                    const statusRow = statusIcons
+                        ? `<div class="turn-chip-statuses">${statusIcons}</div>`
+                        : '';
 
-                chip.innerHTML = `
-                    <img src="${getRoleImgPath(player.role.id)}" class="turn-chip-role-img" alt="${player.role.name}" onerror="this.style.display='none'">
-                    <span style="font-size:11px;font-weight:700;">${player.role.name}</span>
-                    <span style="font-size:9px;opacity:0.7;">${player.name}</span>
-                    ${statusRow}
-                    <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>`;
-                bar.appendChild(chip);
-            }
+                    chip.innerHTML = `
+                        <img src="${getRoleImgPath(player.role.id)}" class="turn-chip-role-img" alt="${player.role.name}" onerror="this.style.display='none'">
+                        <span style="font-size:11px;font-weight:700;">${player.role.name}</span>
+                        <span style="font-size:9px;opacity:0.7;">${player.name}</span>
+                        ${statusRow}
+                        <div class="jail-bars-mini">${jailBarsMiniSVG()}</div>`;
+                    bar.appendChild(chip);
+                }
+            });
         } else if (playersWithoutRoles) {
             // Empty slot for unassigned role
             const marker = document.createElement('div');
@@ -2479,7 +2654,7 @@ function renderTurnOrder() {
 }
 
 function getRoleShortNameLong(roleName) {
-    return roleName.slice(0, 6).toUpperCase().split('').map(l => `<span>${l}</span>`).join('');
+    return roleName.slice(0, 4).toUpperCase().split('').map(l => `<span>${l}</span>`).join('');
 }
 
 // ── Status badge helpers ────────────────────────────────────────
@@ -2501,10 +2676,10 @@ const BTN_SETTING_MAP = {
 };
 
 function buildStatusButtons(idx, player) {
+    if (!showStatusRows) return '';
     const classMap = { poisoned: 'poison-btn', sected: 'sect-btn', protected: 'protect-btn', alibied: 'alibi-btn', blocked: 'block-btn' };
     const btns = [];
     Object.entries(BTN_SETTING_MAP).forEach(([settingKey, statusKey]) => {
-        if (!btnSettings[settingKey]) return;
         const def = STATUS_DEFS[statusKey];
         const activeClass = player[statusKey] ? ' active' : '';
         btns.push(`<button class="gp-status-btn ${classMap[statusKey]}${activeClass}" onclick="toggleStatus(${idx},'${statusKey}')" title="${def.label}">${def.icon}</button>`);
@@ -2625,7 +2800,7 @@ function renderGamePlayers() {
 function eliminatePlayer(idx) {
     const player = gamePlayers[idx];
     if (!player.eliminated) {
-        logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
+        logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
     }
 
     player.eliminated = true;
@@ -2822,7 +2997,7 @@ function eliminatePlayer(idx) {
 function restorePlayer(idx) {
     const player = gamePlayers[idx];
     if (player.eliminated) {
-        logAction(`<span class="restored">Воскрешён:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'restored');
+        logAction(`<span class="restored">👼 Воскрешён:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'restored');
     }
     player.eliminated = false;
     saveGameState();
@@ -2961,6 +3136,10 @@ function restorePlayer(idx) {
                 }
             }
         });
+
+        // Update stats and turn order after animation
+        renderStats();
+        renderTurnOrder();
     }, 30);
 }
 
@@ -3365,7 +3544,7 @@ function confirmNightReport() {
     // First, handle kills (eliminate players) - skip those who are protected or lucky
     // Collect dead judge/sectant/avenger for post-processing
     const deadJudgeOrSectant = [];
-    const deadAvenger = null;
+    let deadAvenger = null;
 
     nightActions.kill.forEach(idx => {
         const player = gamePlayers[idx];
@@ -3379,7 +3558,7 @@ function confirmNightReport() {
             } else {
                 // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
-                logAction(`<span class="eliminated">Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
+                logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
 
                 // Check if dead player is judge, sectant, or avenger
                 if (player.role && (player.role.id === 'judge' || player.role.id === 'sectant')) {
@@ -3490,6 +3669,17 @@ function confirmNightReport() {
     setTimeout(() => {
         // FLIP animation for ALL players
         const c = document.getElementById('game-players');
+        
+        // Get positions BEFORE any changes (this is the key fix!)
+        const firstPositions = {};
+        const cardsBefore = Array.from(c.querySelectorAll('.game-player-card'));
+        cardsBefore.forEach(card => {
+            const nameEl = card.querySelector('.gp-name');
+            if (nameEl) {
+                firstPositions[nameEl.textContent] = card.getBoundingClientRect();
+            }
+        });
+
         const sorted = [...gamePlayers].sort((a, b) => {
             if (a.eliminated && !b.eliminated) return 1;
             if (!a.eliminated && b.eliminated) return -1;
@@ -3499,13 +3689,13 @@ function confirmNightReport() {
         // Update each card's content (without reordering)
         sorted.forEach((p) => {
             const idxP = gamePlayers.indexOf(p);
-            
+
             // Find existing card for this player
             let card = Array.from(c.querySelectorAll('.game-player-card')).find(c => {
                 const nameEl = c.querySelector('.gp-name');
                 return nameEl && nameEl.textContent === p.name;
             });
-            
+
             if (!card) {
                 card = document.createElement('div');
                 c.appendChild(card);
@@ -3564,7 +3754,7 @@ function confirmNightReport() {
                     ${buildStatusButtons(idxP, p)}
                 </div>`;
         });
-        
+
         // Remove extra cards
         const allCards = Array.from(c.querySelectorAll('.game-player-card'));
         const currentNames = sorted.map(p => p.name);
@@ -3572,16 +3762,6 @@ function confirmNightReport() {
             const nameEl = card.querySelector('.gp-name');
             if (!nameEl || !currentNames.includes(nameEl.textContent)) {
                 card.remove();
-            }
-        });
-
-        // Get positions BEFORE reordering
-        const firstPositions = {};
-        const cardsBefore = Array.from(c.querySelectorAll('.game-player-card'));
-        cardsBefore.forEach(card => {
-            const nameEl = card.querySelector('.gp-name');
-            if (nameEl) {
-                firstPositions[nameEl.textContent] = card.getBoundingClientRect();
             }
         });
 
@@ -3896,11 +4076,11 @@ function pickRole(role) {
         const newRole = role ? role.name : null;
         if (oldRole !== newRole) {
             if (oldRole === null && newRole !== null) {
-                logAction(`<span class="role-assigned">Роль назначена:</span> <span class="player-name">${player.name}</span>: <span class="role-assigned">${newRole}</span>`, 'role-assigned');
+                logAction(`<span class="role-assigned">🎭 Роль назначена:</span> <span class="player-name">${player.name}</span>: <span class="role-assigned">${newRole}</span>`, 'role-assigned');
             } else if (oldRole !== null && newRole === null) {
-                logAction(`<span class="role-removed">Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
+                logAction(`<span class="role-removed">❌ Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
             } else {
-                logAction(`<span class="role-changed">❗ Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+                logAction(`<span class="role-changed">🔄 Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
             }
         }
         player.role = role;
@@ -3930,6 +4110,9 @@ function endGame() {
     document.getElementById('bottom-nav').classList.remove('active');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-lobby').classList.add('active');
+    // Restore selectedPlayers from the game's player list so the same selection is preserved
+    selectedPlayers = new Set(gamePlayers.map(p => p.name));
+    localStorage.setItem('mafia_selected_players', JSON.stringify([...selectedPlayers]));
     gamePlayers = [];
     actionLog = [];
     nightCount = 1;
@@ -3940,10 +4123,10 @@ function endGame() {
     localStorage.removeItem('mafia_game_started');
     localStorage.removeItem('mafia_night_count');
     document.getElementById('notepad').value = '';
+    renderLobby();
 }
 
 // ── Init ────────────────────────────────────────────────────────
-renderLobby();
 applySettingsToggles();
 restoreGameState(); // Restore game state if page was refreshed
 
