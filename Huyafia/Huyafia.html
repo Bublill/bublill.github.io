@@ -1199,6 +1199,44 @@ h2 {
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
+.step-mode-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.step-mode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.step-mode-status {
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.step-mode-question {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.step-mode-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.step-mode-controls .btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px;
+}
+
 .night-actions-panel-header {
     display: flex;
     align-items: center;
@@ -1707,6 +1745,18 @@ h2 {
     <h2>Очередь ходов</h2>
     <div id="turn-order" class="turn-order-bar"></div>
     <div id="stats-bar" class="stats-bar"></div>
+
+    <div class="step-mode-panel">
+        <div class="step-mode-header">
+            <button class="btn btn-dark" id="step-mode-toggle-btn" onclick="toggleStepMode()">🧭 Пошаговый режим</button>
+            <span class="step-mode-status" id="step-mode-status">Выключен</span>
+        </div>
+        <div class="step-mode-question" id="step-mode-question" style="display:none;"></div>
+        <div class="step-mode-controls" id="step-mode-controls" style="display:none;">
+            <button class="btn btn-dark" onclick="skipStepModeRole()">⏭ Пропустить роль</button>
+            <button class="btn btn-red" onclick="finishStepModeNow()">✅ Завершить ночь</button>
+        </div>
+    </div>
     
     <!-- Night actions panel -->
     <div class="night-actions-panel">
@@ -1852,6 +1902,17 @@ h2 {
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="toggle-show-clock" onchange="updateShowClock(this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="night-panel-toggle-row">
+                <div class="night-panel-toggle-info">
+                    <strong>Показывать пошаговый режим</strong>
+                    <span>Скрыть/показать кнопку и панель пошаговой ночи</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-show-step-mode" onchange="updateShowStepMode(this.checked)">
                     <span class="toggle-slider"></span>
                 </label>
             </div>
@@ -2173,6 +2234,9 @@ let showClock = JSON.parse(localStorage.getItem('mafia_show_clock')) ?? true;
 // Show/hide status button rows on player cards
 let showStatusRows = JSON.parse(localStorage.getItem('mafia_show_status_rows')) ?? false;
 
+// Show/hide step mode panel
+let showStepMode = JSON.parse(localStorage.getItem('mafia_show_step_mode')) ?? true;
+
 function savePlayers() {
     localStorage.setItem('mafia_players', JSON.stringify(ALL_PLAYERS));
     localStorage.setItem('mafia_selected_players', JSON.stringify([...selectedPlayers]));
@@ -2262,6 +2326,35 @@ let nightActions = {
 };
 let currentNightAction = null;
 let nightCount = 1;
+let stepModeActive = false;
+let stepModeQueue = [];
+let stepModeIndex = -1;
+let stepModeSelections = [];
+
+const ROLE_STEP_CONFIG = {
+    doctor:        { effectAction: 'protect', question: 'Кого лечит доктор?', targetCount: 1 },
+    bodyguard:     { effectAction: 'protect', question: 'Кого прикрывает телохранитель?', targetCount: 1 },
+    mafia:         { effectAction: 'kill',    question: 'Кого убивает мафия?', targetCount: 1 },
+    cartel:        { effectAction: 'kill',    question: 'Кого убивает картель?', targetCount: 1 },
+    boss:          { effectAction: 'kill',    question: 'Кого приказывает убить босс?', targetCount: 1 },
+    leader:        { effectAction: 'kill',    question: 'Кого приказывает убить главарь?', targetCount: 1 },
+    werewolf:      { effectAction: 'kill',    question: 'Кого убивает оборотень?', targetCount: 1 },
+    maniac:        { effectAction: 'kill',    question: 'Кого убивает маньяк?', targetCount: 1 },
+    revolutionary: { effectAction: 'kill',    question: 'Кого убивает революционер?', targetCount: 1 },
+    sleuth:        { effectAction: 'kill',    question: 'Кого выбирает сыщик?', targetCount: 1 },
+    judge:         { effectAction: 'jail',    question: 'Кого сажает в тюрьму судья?', targetCount: 1 },
+    fangirl:       { effectAction: 'alibi',   question: 'Кому выдаёт алиби поклонница?', targetCount: 1 },
+    lawyer:        { effectAction: 'block',   question: 'Кого блокирует адвокат?', targetCount: 1 },
+    poisoner:      { effectAction: 'poison',  question: 'Кого отравляет отравитель?', targetCount: 1 },
+    sectant:       { effectAction: 'sect',    question: 'Кого вербует сектант?', targetCount: 1 },
+    detective:     { effectAction: null,      question: 'Кого проверяет детектив?', targetCount: 1 },
+    patrol:        { effectAction: null,      question: 'Кого проверяет патрульный?', targetCount: 1 },
+    journalist:    { effectAction: null,      question: 'Кого выбирает журналист (2 человека)?', targetCount: 2 },
+    tracker:       { effectAction: null,      question: 'Кого проверяет ищейка?', targetCount: 1 },
+    psychic:       { effectAction: null,      question: 'Кого проверяет экстрасенс?', targetCount: 1 },
+    mistress:      { effectAction: null,      question: 'Кого выбирает любовница?', targetCount: 1 },
+    agent:         { effectAction: null,      question: 'Кого выбирает агент?', targetCount: 1 }
+};
 
 // ── Settings modal ──────────────────────────────────────────────
 let activeSettingsTab = 'roles';
@@ -2357,6 +2450,23 @@ function updateShowClock(value) {
     if (clock) clock.style.display = value ? '' : 'none';
 }
 
+function updateShowStepMode(value) {
+    showStepMode = value;
+    localStorage.setItem('mafia_show_step_mode', JSON.stringify(value));
+    const panel = document.querySelector('.step-mode-panel');
+    if (panel) panel.style.display = value ? '' : 'none';
+    if (!value && stepModeActive) {
+        stepModeActive = false;
+        stepModeQueue = [];
+        stepModeIndex = -1;
+        stepModeSelections = [];
+        currentNightAction = null;
+        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        renderGamePlayers();
+    }
+    renderStepModePanel();
+}
+
 function updateBtnSetting(key, value) {
     btnSettings[key] = value;
     saveBtnSettings();
@@ -2395,10 +2505,14 @@ function applySettingsToggles() {
     if (nightPanelToggle) nightPanelToggle.checked = showNightPanel;
     const clockToggle = document.getElementById('toggle-show-clock');
     if (clockToggle) clockToggle.checked = showClock;
+    const stepModeToggle = document.getElementById('toggle-show-step-mode');
+    if (stepModeToggle) stepModeToggle.checked = showStepMode;
     const panel = document.querySelector('.night-actions-panel');
     if (panel) panel.style.display = showNightPanel ? '' : 'none';
     const clock = document.getElementById('game-clock');
     if (clock) clock.style.display = showClock ? '' : 'none';
+    const stepPanel = document.querySelector('.step-mode-panel');
+    if (stepPanel) stepPanel.style.display = showStepMode ? '' : 'none';
     const statusToggleBtn = document.getElementById('status-rows-toggle-btn');
     if (statusToggleBtn) statusToggleBtn.classList.toggle('active', showStatusRows);
 }
@@ -2698,6 +2812,20 @@ function buildStatusMarkers(player) {
     return html ? `<div class="status-markers">${html}</div>` : '';
 }
 
+function canSelectPlayerAtNight(player) {
+    return !player.eliminated && (currentNightAction !== null || stepModeActive);
+}
+
+function isSelectedForNightByIndex(playerIdx) {
+    if (stepModeActive) {
+        return isPlayerSelectedInCurrentStep(playerIdx);
+    }
+    if (currentNightAction && nightActions[currentNightAction]) {
+        return nightActions[currentNightAction].includes(playerIdx);
+    }
+    return false;
+}
+
 function renderGamePlayers() {
     const c = document.getElementById('game-players');
     
@@ -2742,8 +2870,8 @@ function renderGamePlayers() {
 
         // Check if player is selected for current night action
         let isSelectedForNight = false;
-        if (currentNightAction && !p.eliminated) {
-            isSelectedForNight = nightActions[currentNightAction].includes(idx);
+        if (canSelectPlayerAtNight(p)) {
+            isSelectedForNight = isSelectedForNightByIndex(idx);
             if (isSelectedForNight) {
                 classes += ' night-selected';
             }
@@ -2756,7 +2884,7 @@ function renderGamePlayers() {
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
 
         // Add onclick handler for night action selection
-        const nightClickHandler = currentNightAction && !p.eliminated
+        const nightClickHandler = canSelectPlayerAtNight(p)
             ? `onclick="toggleNightPlayerSelection(${idx}); event.stopPropagation();"`
             : '';
 
@@ -2770,7 +2898,7 @@ function renderGamePlayers() {
             <div class="block-tint"></div>
             ${buildStatusMarkers(p)}
             ${roleImg}
-            <div class="gp-content" ${nightClickHandler} style="${currentNightAction && !p.eliminated ? 'cursor:pointer;' : ''}">
+            <div class="gp-content" ${nightClickHandler} style="${canSelectPlayerAtNight(p) ? 'cursor:pointer;' : ''}">
                 <div class="gp-top">
                     <span class="gp-name ${teamClass}">${p.name}</span>
                     <div class="gp-actions">
@@ -2857,8 +2985,8 @@ function eliminatePlayer(idx) {
         }
 
         let isSelectedForNight = false;
-        if (currentNightAction && !p.eliminated) {
-            isSelectedForNight = nightActions[currentNightAction].includes(idxP);
+        if (canSelectPlayerAtNight(p)) {
+            isSelectedForNight = isSelectedForNightByIndex(idxP);
             if (isSelectedForNight) {
                 classes += ' night-selected';
             }
@@ -2870,7 +2998,7 @@ function eliminatePlayer(idx) {
         const roleImg = p.role ? `<div class="gp-role-img-wrap"><img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.parentElement.style.display='none'"></div>` : '';
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
 
-        const nightClickHandler = currentNightAction && !p.eliminated
+        const nightClickHandler = canSelectPlayerAtNight(p)
             ? `onclick="toggleNightPlayerSelection(${idxP}); event.stopPropagation();"`
             : '';
 
@@ -2884,7 +3012,7 @@ function eliminatePlayer(idx) {
             <div class="block-tint"></div>
             ${buildStatusMarkers(p)}
             ${roleImg}
-            <div class="gp-content" ${nightClickHandler} style="${currentNightAction && !p.eliminated ? 'cursor:pointer;' : ''}">
+            <div class="gp-content" ${nightClickHandler} style="${canSelectPlayerAtNight(p) ? 'cursor:pointer;' : ''}">
                 <div class="gp-top">
                     <span class="gp-name ${teamClass}">${p.name}</span>
                     <div class="gp-actions">
@@ -3048,8 +3176,8 @@ function restorePlayer(idx) {
         }
 
         let isSelectedForNight = false;
-        if (currentNightAction && !p.eliminated) {
-            isSelectedForNight = nightActions[currentNightAction].includes(idxP);
+        if (canSelectPlayerAtNight(p)) {
+            isSelectedForNight = isSelectedForNightByIndex(idxP);
             if (isSelectedForNight) {
                 classes += ' night-selected';
             }
@@ -3061,7 +3189,7 @@ function restorePlayer(idx) {
         const roleImg = p.role ? `<div class="gp-role-img-wrap"><img src="${getRoleImgPath(p.role.id)}" class="gp-role-img" alt="" onerror="this.parentElement.style.display='none'"></div>` : '';
         const roleText = p.role ? p.role.name : '❓ Назначить роль';
 
-        const nightClickHandler = currentNightAction && !p.eliminated
+        const nightClickHandler = canSelectPlayerAtNight(p)
             ? `onclick="toggleNightPlayerSelection(${idxP}); event.stopPropagation();"`
             : '';
 
@@ -3075,7 +3203,7 @@ function restorePlayer(idx) {
             <div class="block-tint"></div>
             ${buildStatusMarkers(p)}
             ${roleImg}
-            <div class="gp-content" ${nightClickHandler} style="${currentNightAction && !p.eliminated ? 'cursor:pointer;' : ''}">
+            <div class="gp-content" ${nightClickHandler} style="${canSelectPlayerAtNight(p) ? 'cursor:pointer;' : ''}">
                 <div class="gp-top">
                     <span class="gp-name ${teamClass}">${p.name}</span>
                     <div class="gp-actions">
@@ -3171,28 +3299,192 @@ function toggleStatus(idx, statusKey) {
 
 // ── Night actions ──────────────────────────────────────────────
 function selectNightAction(action) {
-    // Toggle: if clicking the same action, deselect it
-    if (currentNightAction === action) {
-        currentNightAction = null;
+    if (stepModeActive) {
+        const currentStep = getCurrentStep();
+        const expectedAction = currentStep ? currentStep.effectAction : null;
+        if (action !== expectedAction) return;
+        currentNightAction = expectedAction;
     } else {
-        currentNightAction = action;
+        if (!action) {
+            currentNightAction = null;
+        } else if (currentNightAction === action) {
+            currentNightAction = null;
+        } else {
+            currentNightAction = action;
+        }
     }
-    
-    // Update button visuals
+
     document.querySelectorAll('.night-action-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    
+
     if (currentNightAction) {
         const activeBtn = document.querySelector(`.night-action-btn.${currentNightAction}-btn`);
         if (activeBtn) activeBtn.classList.add('active');
     }
-    
-    // Update action counts
+
     updateNightActionCounts();
-    
-    // Re-render game players to update selection highlights
+    renderStepModePanel();
     renderGamePlayers();
+}
+
+function getStepModeQueue() {
+    return gamePlayers
+        .map((player, idx) => ({ player, idx }))
+        .filter(({ player }) => !player.eliminated && player.role && player.role.turnOrder !== null)
+        .sort((a, b) => {
+            const ta = a.player.role.turnOrder;
+            const tb = b.player.role.turnOrder;
+            return ta - tb || a.player.name.localeCompare(b.player.name, 'ru');
+        })
+        .map(({ player, idx }) => {
+            const conf = ROLE_STEP_CONFIG[player.role.id] || {};
+            return {
+                actorIdx: idx,
+                roleId: player.role.id,
+                roleName: player.role.name,
+                actorName: player.name,
+                effectAction: conf.effectAction || null,
+                targetCount: conf.targetCount || 1,
+                question: conf.question || `Кого выбирает ${player.role.name.toLowerCase()}?`
+            };
+        });
+}
+
+function getCurrentStep() {
+    return stepModeQueue[stepModeIndex] || null;
+}
+
+function getCurrentStepSelection() {
+    const step = getCurrentStep();
+    if (!step) return null;
+    return stepModeSelections.find(s => s.actorIdx === step.actorIdx && s.roleId === step.roleId) || null;
+}
+
+function syncNightActionsFromStepMode() {
+    const keys = ['kill','protect','alibi','jail','poison','sect','block'];
+    keys.forEach(k => { nightActions[k] = []; });
+
+    stepModeSelections.forEach(sel => {
+        if (!sel.effectAction || !nightActions[sel.effectAction]) return;
+        sel.targetIndices.forEach(idx => {
+            if (!gamePlayers[idx] || gamePlayers[idx].eliminated) return;
+            nightActions[sel.effectAction].push(idx);
+        });
+    });
+}
+
+function isPlayerSelectedInCurrentStep(playerIdx) {
+    if (!stepModeActive) return false;
+    const selection = getCurrentStepSelection();
+    return !!selection && selection.targetIndices.includes(playerIdx);
+}
+
+function renderStepModePanel() {
+    const toggleBtn = document.getElementById('step-mode-toggle-btn');
+    const statusEl = document.getElementById('step-mode-status');
+    const questionEl = document.getElementById('step-mode-question');
+    const controlsEl = document.getElementById('step-mode-controls');
+    const panelEl = document.querySelector('.step-mode-panel');
+    if (!toggleBtn || !statusEl || !questionEl || !controlsEl || !panelEl) return;
+
+    panelEl.style.display = showStepMode ? '' : 'none';
+    if (!showStepMode) return;
+
+    if (!stepModeActive) {
+        toggleBtn.textContent = '🧭 Пошаговый режим';
+        toggleBtn.classList.remove('btn-red');
+        toggleBtn.classList.add('btn-dark');
+        statusEl.textContent = 'Выключен';
+        questionEl.style.display = 'none';
+        controlsEl.style.display = 'none';
+        return;
+    }
+
+    const step = getCurrentStep();
+    const selection = getCurrentStepSelection();
+    const selectedCount = selection ? selection.targetIndices.length : 0;
+    const neededCount = step ? step.targetCount : 1;
+    const progress = `${stepModeIndex + 1}/${stepModeQueue.length}`;
+
+    toggleBtn.textContent = '✕ Остановить пошаговый режим';
+    toggleBtn.classList.remove('btn-dark');
+    toggleBtn.classList.add('btn-red');
+    if (!step) {
+        statusEl.textContent = 'Активен • нет ходов';
+        questionEl.textContent = 'Нет ролей с ночным ходом. Сначала назначь роли игрокам.';
+        questionEl.style.display = 'block';
+        controlsEl.style.display = 'none';
+        return;
+    }
+
+    statusEl.textContent = `Активен • Шаг ${progress}`;
+    questionEl.textContent = `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
+    questionEl.style.display = 'block';
+    controlsEl.style.display = 'flex';
+}
+
+function toggleStepMode() {
+    if (stepModeActive) {
+        stepModeActive = false;
+        stepModeQueue = [];
+        stepModeIndex = -1;
+        stepModeSelections = [];
+        currentNightAction = null;
+        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    stepModeQueue = getStepModeQueue();
+
+    clearNightSelection();
+    stepModeSelections = [];
+    stepModeActive = true;
+
+    if (stepModeQueue.length === 0) {
+        stepModeIndex = 0;
+        currentNightAction = null;
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    stepModeIndex = 0;
+    const firstStep = getCurrentStep();
+    selectNightAction(firstStep && firstStep.effectAction ? firstStep.effectAction : null);
+    renderStepModePanel();
+}
+
+function skipStepModeRole() {
+    if (!stepModeActive) return;
+    advanceStepMode();
+}
+
+function finishStepModeNow() {
+    if (!stepModeActive) return;
+    syncNightActionsFromStepMode();
+    stepModeActive = false;
+    stepModeQueue = [];
+    stepModeIndex = -1;
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+    renderStepModePanel();
+    renderGamePlayers();
+    generateNightReport();
+}
+
+function advanceStepMode() {
+    if (!stepModeActive) return;
+    stepModeIndex++;
+    if (stepModeIndex >= stepModeQueue.length) {
+        finishStepModeNow();
+        return;
+    }
+    const step = getCurrentStep();
+    selectNightAction(step && step.effectAction ? step.effectAction : null);
+    renderStepModePanel();
 }
 
 function updateNightActionCounts() {
@@ -3239,20 +3531,54 @@ function renderNightActionsPanel() {
 }
 
 function toggleNightPlayerSelection(playerIdx) {
-    if (!currentNightAction) return;
-
     const player = gamePlayers[playerIdx];
+    if (!player || player.eliminated) return;
+
+    if (stepModeActive) {
+        const step = getCurrentStep();
+        if (!step) return;
+
+        let selection = getCurrentStepSelection();
+        if (!selection) {
+            selection = {
+                actorIdx: step.actorIdx,
+                roleId: step.roleId,
+                actorName: step.actorName,
+                roleName: step.roleName,
+                effectAction: step.effectAction,
+                targetIndices: []
+            };
+            stepModeSelections.push(selection);
+        }
+
+        const pos = selection.targetIndices.indexOf(playerIdx);
+        if (pos > -1) {
+            selection.targetIndices.splice(pos, 1);
+        } else if (selection.targetIndices.length < step.targetCount) {
+            selection.targetIndices.push(playerIdx);
+        }
+
+        syncNightActionsFromStepMode();
+        updateNightActionCounts();
+        saveGameState();
+        renderStepModePanel();
+        renderGamePlayers();
+
+        if (selection.targetIndices.length >= step.targetCount) {
+            advanceStepMode();
+        }
+        return;
+    }
+
+    if (!currentNightAction || !nightActions[currentNightAction]) return;
+
     const actionList = nightActions[currentNightAction];
     const playerIndex = actionList.indexOf(playerIdx);
 
     if (playerIndex > -1) {
-        // Deselect
         actionList.splice(playerIndex, 1);
     } else {
-        // Select (only if alive and not already eliminated)
-        if (!player.eliminated) {
-            actionList.push(playerIdx);
-        }
+        actionList.push(playerIdx);
     }
 
     updateNightActionCounts();
@@ -3274,7 +3600,11 @@ function clearNightSelection() {
     document.querySelectorAll('.night-action-btn').forEach(btn => {
         btn.classList.remove('active');
     });
+    if (!stepModeActive) {
+        stepModeSelections = [];
+    }
     updateNightActionCounts();
+    renderStepModePanel();
     saveGameState();
     renderGamePlayers();
 }
@@ -3290,6 +3620,36 @@ function clearAllEffects() {
     logAction('🧹 Все эффекты ночи очищены', '');
     saveGameState();
     renderGame();
+}
+
+function getStepInfoEntries() {
+    return stepModeSelections
+        .filter(sel => !sel.effectAction && sel.targetIndices.length > 0)
+        .map(sel => {
+            const actor = gamePlayers[sel.actorIdx];
+            if (!actor) return null;
+            const targets = sel.targetIndices
+                .map(idx => gamePlayers[idx])
+                .filter(Boolean)
+                .map(p => `${p.name}${p.role ? ` (${p.role.name})` : ''}`);
+            if (targets.length === 0) return null;
+
+            let text;
+            if (sel.roleId === 'journalist' && targets.length >= 2) {
+                text = `${sel.actorName} (${sel.roleName}) сравнил: ${targets.join(' и ')}`;
+            } else if (sel.roleId === 'mistress') {
+                text = `${sel.actorName} (${sel.roleName}) выбрала цель для ложного ответа: ${targets[0]}`;
+            } else {
+                text = `${sel.actorName} (${sel.roleName}) проверил: ${targets.join(', ')}`;
+            }
+
+            return {
+                icon: '🔎',
+                text,
+                class: 'night-report-block'
+            };
+        })
+        .filter(Boolean);
 }
 
 function generateNightReport() {
@@ -3476,6 +3836,9 @@ function generateNightReport() {
         }
     });
 
+    // Informational checks selected in step mode
+    entries.push(...getStepInfoEntries());
+
     if (entries.length === 0) {
         reportBody.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">Нет выбранных действий</div>';
     } else {
@@ -3645,12 +4008,18 @@ function confirmNightReport() {
         }
     });
 
+    // Log informational checks from step mode
+    getStepInfoEntries().forEach(entry => {
+        logAction(`<span class="night-report-block">${entry.icon} ${entry.text}</span>`, 'night-report-block');
+    });
+
     // Log night completion with night number
     logAction(`🌙 Ночь ${nightCount} завершена`, '');
     nightCount++;
     updateNightCounter();
 
     // Clear night actions
+    stepModeSelections = [];
     clearNightSelection();
 
     // Clear statuses of dead players (after all actions are applied)
@@ -3741,7 +4110,7 @@ function confirmNightReport() {
                 <div class="block-tint"></div>
                 ${buildStatusMarkers(p)}
                 ${roleImg}
-                <div class="gp-content" ${nightClickHandler} style="${currentNightAction && !p.eliminated ? 'cursor:pointer;' : ''}">
+                <div class="gp-content" ${nightClickHandler} style="${canSelectPlayerAtNight(p) ? 'cursor:pointer;' : ''}">
                     <div class="gp-top">
                         <span class="gp-name ${teamClass}">${p.name}</span>
                         <div class="gp-actions">
