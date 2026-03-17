@@ -3474,6 +3474,110 @@ function advanceStepMode() {
     renderStepModePanel();
 }
 
+function getStepModeQueue() {
+    const aliveRoleIds = new Set(
+        gamePlayers
+            .filter(p => !p.eliminated && p.role)
+            .map(p => p.role.id)
+    );
+
+    return ROLES
+        .filter(role => aliveRoleIds.has(role.id) && ROLE_STEP_ACTIONS[role.id])
+        .sort((a, b) => {
+            const ta = a.turnOrder === null ? 999 : a.turnOrder;
+            const tb = b.turnOrder === null ? 999 : b.turnOrder;
+            return ta - tb || a.name.localeCompare(b.name, 'ru');
+        })
+        .map(role => ({
+            roleId: role.id,
+            roleName: role.name,
+            action: ROLE_STEP_ACTIONS[role.id].action,
+            question: ROLE_STEP_ACTIONS[role.id].question
+        }))
+        .filter(step => nightBtnSettings[step.action] !== false);
+}
+
+function renderStepModePanel() {
+    const toggleBtn = document.getElementById('step-mode-toggle-btn');
+    const statusEl = document.getElementById('step-mode-status');
+    const questionEl = document.getElementById('step-mode-question');
+    const controlsEl = document.getElementById('step-mode-controls');
+    if (!toggleBtn || !statusEl || !questionEl || !controlsEl) return;
+
+    if (!stepModeActive) {
+        toggleBtn.textContent = '🧭 Пошаговый режим';
+        toggleBtn.classList.remove('btn-red');
+        toggleBtn.classList.add('btn-dark');
+        statusEl.textContent = 'Выключен';
+        questionEl.style.display = 'none';
+        controlsEl.style.display = 'none';
+        return;
+    }
+
+    const step = stepModeQueue[stepModeIndex];
+    const progress = `${stepModeIndex + 1}/${stepModeQueue.length}`;
+    toggleBtn.textContent = '✕ Остановить пошаговый режим';
+    toggleBtn.classList.remove('btn-dark');
+    toggleBtn.classList.add('btn-red');
+    statusEl.textContent = `Активен • Шаг ${progress}`;
+    questionEl.textContent = step ? step.question : 'Роли для выбора не найдены';
+    questionEl.style.display = 'block';
+    controlsEl.style.display = 'flex';
+}
+
+function toggleStepMode() {
+    if (stepModeActive) {
+        stepModeActive = false;
+        stepModeQueue = [];
+        stepModeIndex = -1;
+        currentNightAction = null;
+        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    stepModeQueue = getStepModeQueue();
+    if (stepModeQueue.length === 0) {
+        alert('Нет живых ролей с ночным действием.');
+        return;
+    }
+
+    clearNightSelection();
+    stepModeActive = true;
+    stepModeIndex = 0;
+    selectNightAction(stepModeQueue[0].action);
+    renderStepModePanel();
+}
+
+function skipStepModeRole() {
+    if (!stepModeActive) return;
+    advanceStepMode();
+}
+
+function finishStepModeNow() {
+    if (!stepModeActive) return;
+    stepModeActive = false;
+    stepModeQueue = [];
+    stepModeIndex = -1;
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+    renderStepModePanel();
+    renderGamePlayers();
+    generateNightReport();
+}
+
+function advanceStepMode() {
+    if (!stepModeActive) return;
+    stepModeIndex++;
+    if (stepModeIndex >= stepModeQueue.length) {
+        finishStepModeNow();
+        return;
+    }
+    selectNightAction(stepModeQueue[stepModeIndex].action);
+    renderStepModePanel();
+}
+
 function updateNightActionCounts() {
     Object.keys(nightActions).forEach(action => {
         const countEl = document.getElementById(`night-count-${action}`);
@@ -3571,6 +3675,10 @@ function toggleNightPlayerSelection(playerIdx) {
     updateNightActionCounts();
     saveGameState();
     renderGamePlayers();
+
+    if (stepModeActive && playerIndex === -1 && !player.eliminated) {
+        advanceStepMode();
+    }
 }
 
 function clearNightSelection() {
