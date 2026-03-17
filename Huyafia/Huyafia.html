@@ -3578,6 +3578,165 @@ function advanceStepMode() {
     renderStepModePanel();
 }
 
+function getStepModeQueue() {
+    return gamePlayers
+        .map((player, idx) => ({ player, idx }))
+        .filter(({ player }) => !player.eliminated && player.role && player.role.turnOrder !== null)
+        .sort((a, b) => {
+            const ta = a.player.role.turnOrder;
+            const tb = b.player.role.turnOrder;
+            return ta - tb || a.player.name.localeCompare(b.player.name, 'ru');
+        })
+        .map(({ player, idx }) => {
+            const conf = ROLE_STEP_CONFIG[player.role.id] || {};
+            return {
+                actorIdx: idx,
+                roleId: player.role.id,
+                roleName: player.role.name,
+                actorName: player.name,
+                effectAction: conf.effectAction || null,
+                targetCount: conf.targetCount || 1,
+                question: conf.question || `Кого выбирает ${player.role.name.toLowerCase()}?`
+            };
+        });
+}
+
+function getCurrentStep() {
+    return stepModeQueue[stepModeIndex] || null;
+}
+
+function getCurrentStepSelection() {
+    const step = getCurrentStep();
+    if (!step) return null;
+    return stepModeSelections.find(s => s.actorIdx === step.actorIdx && s.roleId === step.roleId) || null;
+}
+
+function syncNightActionsFromStepMode() {
+    const keys = ['kill','protect','alibi','jail','poison','sect','block'];
+    keys.forEach(k => { nightActions[k] = []; });
+
+    stepModeSelections.forEach(sel => {
+        if (!sel.effectAction || !nightActions[sel.effectAction]) return;
+        sel.targetIndices.forEach(idx => {
+            if (!gamePlayers[idx] || gamePlayers[idx].eliminated) return;
+            nightActions[sel.effectAction].push(idx);
+        });
+    });
+}
+
+function isPlayerSelectedInCurrentStep(playerIdx) {
+    if (!stepModeActive) return false;
+    const selection = getCurrentStepSelection();
+    return !!selection && selection.targetIndices.includes(playerIdx);
+}
+
+function renderStepModePanel() {
+    const toggleBtn = document.getElementById('step-mode-toggle-btn');
+    const statusEl = document.getElementById('step-mode-status');
+    const questionEl = document.getElementById('step-mode-question');
+    const controlsEl = document.getElementById('step-mode-controls');
+    const panelEl = document.querySelector('.step-mode-panel');
+    if (!toggleBtn || !statusEl || !questionEl || !controlsEl || !panelEl) return;
+
+    panelEl.style.display = showStepMode ? '' : 'none';
+    if (!showStepMode) return;
+
+    if (!stepModeActive) {
+        toggleBtn.textContent = '🧭 Пошаговый режим';
+        toggleBtn.classList.remove('btn-red');
+        toggleBtn.classList.add('btn-dark');
+        statusEl.textContent = 'Выключен';
+        questionEl.style.display = 'none';
+        controlsEl.style.display = 'none';
+        return;
+    }
+
+    const step = getCurrentStep();
+    const selection = getCurrentStepSelection();
+    const selectedCount = selection ? selection.targetIndices.length : 0;
+    const neededCount = step ? step.targetCount : 1;
+    const progress = `${stepModeIndex + 1}/${stepModeQueue.length}`;
+
+    toggleBtn.textContent = '✕ Остановить пошаговый режим';
+    toggleBtn.classList.remove('btn-dark');
+    toggleBtn.classList.add('btn-red');
+    if (!step) {
+        statusEl.textContent = 'Активен • нет ходов';
+        questionEl.textContent = 'Нет ролей с ночным ходом. Сначала назначь роли игрокам.';
+        questionEl.style.display = 'block';
+        controlsEl.style.display = 'none';
+        return;
+    }
+
+    statusEl.textContent = `Активен • Шаг ${progress}`;
+    questionEl.textContent = `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
+    questionEl.style.display = 'block';
+    controlsEl.style.display = 'flex';
+}
+
+function toggleStepMode() {
+    if (stepModeActive) {
+        stepModeActive = false;
+        stepModeQueue = [];
+        stepModeIndex = -1;
+        stepModeSelections = [];
+        currentNightAction = null;
+        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    stepModeQueue = getStepModeQueue();
+
+    clearNightSelection();
+    stepModeSelections = [];
+    stepModeActive = true;
+
+    if (stepModeQueue.length === 0) {
+        stepModeIndex = 0;
+        currentNightAction = null;
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    stepModeIndex = 0;
+    const firstStep = getCurrentStep();
+    selectNightAction(firstStep && firstStep.effectAction ? firstStep.effectAction : null);
+    renderStepModePanel();
+}
+
+function skipStepModeRole() {
+    if (!stepModeActive) return;
+    advanceStepMode();
+}
+
+function finishStepModeNow() {
+    if (!stepModeActive) return;
+    syncNightActionsFromStepMode();
+    stepModeActive = false;
+    stepModeQueue = [];
+    stepModeIndex = -1;
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+    renderStepModePanel();
+    renderGamePlayers();
+    generateNightReport();
+}
+
+function advanceStepMode() {
+    if (!stepModeActive) return;
+    stepModeIndex++;
+    if (stepModeIndex >= stepModeQueue.length) {
+        finishStepModeNow();
+        return;
+    }
+    const step = getCurrentStep();
+    selectNightAction(step && step.effectAction ? step.effectAction : null);
+    renderStepModePanel();
+}
+
 function updateNightActionCounts() {
     Object.keys(nightActions).forEach(action => {
         const countEl = document.getElementById(`night-count-${action}`);
