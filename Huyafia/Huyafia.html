@@ -2347,7 +2347,6 @@ let stepModeActive = false;
 let stepModeQueue = [];
 let stepModeIndex = -1;
 let stepModeSelections = [];
-let stepBlockedPending = null;
 
 const ROLE_STEP_CONFIG = {
     doctor:        { effectAction: 'protect', question: 'Кого лечит доктор?', targetCount: 1 },
@@ -2499,9 +2498,6 @@ function updateShowStepMode(value) {
         stepModeQueue = [];
         stepModeIndex = -1;
         stepModeSelections = [];
-        stepBlockedPending = null;
-        const blockedModal = document.getElementById('step-blocked-modal');
-        if (blockedModal) blockedModal.classList.remove('active');
         currentNightAction = null;
         document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
         renderGamePlayers();
@@ -3507,7 +3503,6 @@ function toggleStepMode() {
 
     clearNightSelection();
     stepModeSelections = [];
-    stepBlockedPending = null;
     stepModeActive = true;
 
     if (stepModeQueue.length === 0) {
@@ -3520,12 +3515,6 @@ function toggleStepMode() {
 
     stepModeIndex = 0;
     const firstStep = getCurrentStep();
-    if (maybeShowBlockedStepModal(firstStep)) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        return;
-    }
     selectNightAction(firstStep && firstStep.effectAction ? firstStep.effectAction : null);
     renderStepModePanel();
 }
@@ -3541,7 +3530,6 @@ function finishStepModeNow() {
     stepModeActive = false;
     stepModeQueue = [];
     stepModeIndex = -1;
-    stepBlockedPending = null;
     currentNightAction = null;
     document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
     renderStepModePanel();
@@ -3557,14 +3545,6 @@ function advanceStepMode() {
         return;
     }
     const step = getCurrentStep();
-
-    if (maybeShowBlockedStepModal(step)) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        return;
-    }
-
     selectNightAction(step && step.effectAction ? step.effectAction : null);
     renderStepModePanel();
 }
@@ -3703,58 +3683,6 @@ function clearAllEffects() {
     logAction('🧹 Все эффекты ночи очищены', '');
     saveGameState();
     renderGame();
-}
-
-function formatStepActor(sel) {
-    if (!sel) return 'Неизвестно';
-    if (sel.stepKey === 'group-mafia') return `Мафией (${sel.actorName})`;
-    if (sel.stepKey === 'group-cartel') return `Картелем (${sel.actorName})`;
-    return `${sel.roleName} (${sel.actorName})`;
-}
-
-function getStepSelectionForTarget(effectAction, targetIdx) {
-    return stepModeSelections.find(sel =>
-        sel.effectAction === effectAction &&
-        Array.isArray(sel.targetIndices) &&
-        sel.targetIndices.includes(targetIdx)
-    ) || null;
-}
-
-function getBlockedActorIndices() {
-    const blocked = new Set();
-    stepModeSelections
-        .filter(sel => sel.effectAction === 'block')
-        .forEach(sel => sel.targetIndices.forEach(idx => blocked.add(idx)));
-    return blocked;
-}
-
-function maybeShowBlockedStepModal(step) {
-    if (!step || step.roleId.startsWith('group-')) return false;
-    const blockedIndices = getBlockedActorIndices();
-    if (!blockedIndices.has(step.actorIdx)) return false;
-
-    stepBlockedPending = step;
-    const textEl = document.getElementById('step-blocked-text');
-    if (textEl) {
-        textEl.textContent = `${step.actorName} (${step.roleName}) — ход этой роли заблокирован адвокатом.`;
-    }
-    const modal = document.getElementById('step-blocked-modal');
-    if (modal) modal.classList.add('active');
-    return true;
-}
-
-function confirmStepBlockedModal() {
-    const modal = document.getElementById('step-blocked-modal');
-    if (modal) modal.classList.remove('active');
-    stepBlockedPending = null;
-    advanceStepMode();
-}
-
-function closeStepBlockedOutside(event) {
-    const modal = document.getElementById('step-blocked-modal');
-    if (event.target === modal) {
-        confirmStepBlockedModal();
-    }
 }
 
 function getStepInfoEntries() {
