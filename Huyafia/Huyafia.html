@@ -2187,6 +2187,23 @@ h2 {
     </div>
 </div>
 
+
+<!-- Step blocked modal -->
+<div id="step-blocked-modal" class="modal-overlay" onclick="closeStepBlockedOutside(event)">
+    <div class="night-report-modal">
+        <div class="night-report-header">
+            <h3>🚫 Ход заблокирован</h3>
+        </div>
+        <div class="night-report-body">
+            <p id="step-blocked-text" style="margin-bottom:16px;"></p>
+            <p style="color:var(--text-dim);font-size:13px;">Нажмите OK, чтобы перейти к следующей роли.</p>
+        </div>
+        <div class="night-report-footer">
+            <button class="btn btn-red" onclick="confirmStepBlockedModal()">OK</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const DEFAULT_PLAYERS = [
     "Димон","Вова","Вадим","Катя","Влад","Рома","Маша","Инна",
@@ -3774,7 +3791,7 @@ function generateNightReport() {
             entries.push({
                 type: 'kill',
                 icon: '💀',
-                text: `Убит: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Убит: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('kill', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('kill', idx))}` : ''}`,
                 class: 'night-report-kill'
             });
         }
@@ -3787,7 +3804,7 @@ function generateNightReport() {
             entries.push({
                 type: 'protect',
                 icon: '🛡️',
-                text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('protect', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('protect', idx))}` : ''}`,
                 class: 'night-report-protected'
             });
         }
@@ -3824,7 +3841,7 @@ function generateNightReport() {
             entries.push({
                 type: 'poison',
                 icon: '🧪',
-                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('poison', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('poison', idx))}` : ''}`,
                 class: 'night-report-poison'
             });
         }
@@ -3837,7 +3854,7 @@ function generateNightReport() {
             entries.push({
                 type: 'alibi',
                 icon: '📋',
-                text: `Алиби: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Алиби: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('alibi', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('alibi', idx))}` : ''}`,
                 class: 'night-report-alibi'
             });
         }
@@ -3850,7 +3867,7 @@ function generateNightReport() {
             entries.push({
                 type: 'jail',
                 icon: '🔒',
-                text: `Тюрьма: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Тюрьма: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('jail', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('jail', idx))}` : ''}`,
                 class: 'night-report-jail'
             });
         }
@@ -3863,7 +3880,7 @@ function generateNightReport() {
             entries.push({
                 type: 'sect',
                 icon: '🕯️',
-                text: `В секте: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `В секте: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('sect', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('sect', idx))}` : ''}`,
                 class: 'night-report-sect'
             });
         }
@@ -3876,7 +3893,7 @@ function generateNightReport() {
             entries.push({
                 type: 'block',
                 icon: '🚫',
-                text: `Заблокирован: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Заблокирован: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('block', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('block', idx))}` : ''}`,
                 class: 'night-report-block'
             });
         }
@@ -3921,6 +3938,12 @@ function confirmNightReport() {
     const luckySavedFromKill = new Set();
     const luckySavedFromPoison = new Set();
 
+    const sourceFor = (action, idx) => {
+        const sel = getStepSelectionForTarget(action, idx);
+        return sel ? formatStepActor(sel) : null;
+    };
+
+
     // Check for lucky players targeted by kills
     nightActions.kill.forEach(idx => {
         const player = gamePlayers[idx];
@@ -3950,6 +3973,23 @@ function confirmNightReport() {
         }
     });
 
+    const bodyguardSacrifices = new Map();
+    stepModeSelections
+        .filter(sel => sel.roleId === 'bodyguard' && sel.effectAction === 'protect')
+        .forEach(sel => {
+            const bodyguard = gamePlayers[sel.actorIdx];
+            if (!bodyguard || bodyguard.eliminated) return;
+            sel.targetIndices.forEach(targetIdx => {
+                const target = gamePlayers[targetIdx];
+                if (!target || target.eliminated) return;
+                if (!bodyguardSacrifices.has(targetIdx)) {
+                    bodyguardSacrifices.set(targetIdx, sel.actorIdx);
+                }
+            });
+        });
+
+    const sacrificedBodyguards = new Set();
+
     // First, handle kills (eliminate players) - skip those who are protected or lucky
     // Collect dead judge/sectant/avenger for post-processing
     const deadJudgeOrSectant = [];
@@ -3960,14 +4000,32 @@ function confirmNightReport() {
         if (player && !player.eliminated) {
             if (savedIndices.has(idx)) {
                 // Player was protected, they survive
-                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
+                const killSource = sourceFor('kill', idx);
+                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}`, 'protected-log');
+
+                const sacrificedIdx = bodyguardSacrifices.get(idx);
+                if (sacrificedIdx !== undefined && !sacrificedBodyguards.has(sacrificedIdx)) {
+                    const bodyguard = gamePlayers[sacrificedIdx];
+                    if (bodyguard && !bodyguard.eliminated) {
+                        bodyguard.eliminated = true;
+                        sacrificedBodyguards.add(sacrificedIdx);
+                        logAction(`<span class="eliminated">🛡️💀 Телохранитель погиб, защищая:</span> <span class="player-name">${player.name}</span> — <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}`, 'eliminated');
+                        if (bodyguard.role && (bodyguard.role.id === 'judge' || bodyguard.role.id === 'sectant')) {
+                            deadJudgeOrSectant.push(bodyguard);
+                        }
+                        if (bodyguard.role && bodyguard.role.id === 'avenger') {
+                            deadAvenger = bodyguard;
+                        }
+                    }
+                }
             } else if (luckySavedFromKill.has(idx)) {
                 // Lucky player survives the kill
                 logAction(`<span class="night-report-protected">🍀 Пытались убить, но повезло:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
                 // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
-                logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
+                const killSource = sourceFor('kill', idx);
+                logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}`, 'eliminated');
 
                 // Check if dead player is judge, sectant, or avenger
                 if (player.role && (player.role.id === 'judge' || player.role.id === 'sectant')) {
@@ -3985,13 +4043,11 @@ function confirmNightReport() {
     nightActions.protect.forEach(idx => {
         const player = gamePlayers[idx];
         if (player && !player.eliminated) {
-            // Only log, don't apply the status
             if (!savedIndices.has(idx) && !luckySavedFromKill.has(idx)) {
-                // Protected but not killed - just log it
                 const def = STATUS_DEFS['protected'];
-                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+                const protectSource = sourceFor('protect', idx);
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${protectSource ? ` • ${protectSource}` : ''}`, def.logKey);
             }
-            // Don't set player.protected = true - no visual effect
         }
     });
 
@@ -4001,7 +4057,8 @@ function confirmNightReport() {
         if (player && !player.eliminated && !player.alibied) {
             player.alibied = true;
             const def = STATUS_DEFS['alibied'];
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            const alibiSource = sourceFor('alibi', idx);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${alibiSource ? ` • ${alibiSource}` : ''}`, def.logKey);
         }
     });
 
@@ -4010,7 +4067,8 @@ function confirmNightReport() {
         const player = gamePlayers[idx];
         if (player && !player.eliminated && !player.jailed) {
             player.jailed = true;
-            logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>`, 'jailed');
+            const jailSource = sourceFor('jail', idx);
+            logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>${jailSource ? ` • ${jailSource}` : ''}`, 'jailed');
         }
     });
 
@@ -4018,18 +4076,15 @@ function confirmNightReport() {
     nightActions.poison.forEach(idx => {
         const player = gamePlayers[idx];
         if (player && !player.eliminated && !player.poisoned) {
-            // Check if player is protected (protection blocks poison)
             if (protectedSet.has(idx)) {
-                // Player was protected from poison
                 logAction(`<span class="night-report-protected">🛡️ Пытались отравить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else if (luckySavedFromPoison.has(idx)) {
-                // Lucky player survives poison
                 logAction(`<span class="night-report-protected">🍀 Пытались отравить, но повезло:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'protected-log');
             } else {
-                // Poison applies normally
                 player.poisoned = true;
                 const def = STATUS_DEFS['poisoned'];
-                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+                const poisonSource = sourceFor('poison', idx);
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${poisonSource ? ` • ${poisonSource}` : ''}`, def.logKey);
             }
         }
     });
@@ -4040,7 +4095,8 @@ function confirmNightReport() {
         if (player && !player.eliminated && !player.sected) {
             player.sected = true;
             const def = STATUS_DEFS['sected'];
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            const sectSource = sourceFor('sect', idx);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${sectSource ? ` • ${sectSource}` : ''}`, def.logKey);
         }
     });
 
@@ -4050,7 +4106,8 @@ function confirmNightReport() {
         if (player && !player.eliminated && !player.blocked) {
             player.blocked = true;
             const def = STATUS_DEFS['blocked'];
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>`, def.logKey);
+            const blockSource = sourceFor('block', idx);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${blockSource ? ` • ${blockSource}` : ''}`, def.logKey);
         }
     });
 
