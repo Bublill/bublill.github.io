@@ -3791,6 +3791,11 @@ function generateNightReport() {
     const reportBody = document.getElementById('night-report-body');
     const entries = [];
 
+    const sourceFor = (action, idx) => {
+        const sel = getStepSelectionForTarget(action, idx);
+        return sel ? formatStepActor(sel) : null;
+    };
+
     // Find players who are both killed and protected (they survive)
     const killedIndices = new Set(nightActions.kill.filter(idx => {
         const player = gamePlayers[idx];
@@ -3829,16 +3834,53 @@ function generateNightReport() {
         }
     });
 
+    const bodyguardSacrifices = new Map();
+    stepModeSelections
+        .filter(sel => sel.roleId === 'bodyguard' && sel.effectAction === 'protect')
+        .forEach(sel => {
+            const bodyguard = gamePlayers[sel.actorIdx];
+            if (!bodyguard || bodyguard.eliminated) return;
+            sel.targetIndices.forEach(targetIdx => {
+                const target = gamePlayers[targetIdx];
+                if (!target || target.eliminated) return;
+                if (!bodyguardSacrifices.has(targetIdx)) bodyguardSacrifices.set(targetIdx, sel.actorIdx);
+            });
+        });
+
     // Players saved from death (killed AND protected)
     savedIndices.forEach(idx => {
         const player = gamePlayers[idx];
         if (player) {
+            const killSource = sourceFor('kill', idx);
+            const protectSource = sourceFor('protect', idx);
             entries.push({
                 type: 'saved',
                 icon: '⛑',
-                text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}`,
+                text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}${protectSource ? ` • защищал: ${protectSource}` : ''}`,
                 class: 'night-report-protected'
             });
+
+            const sacrificedIdx = bodyguardSacrifices.get(idx);
+            if (sacrificedIdx !== undefined) {
+                const bodyguard = gamePlayers[sacrificedIdx];
+                if (bodyguard && !bodyguard.eliminated) {
+                    if (protectedIndices.has(sacrificedIdx)) {
+                        entries.push({
+                            type: 'bodyguard-saved',
+                            icon: '🛡️',
+                            text: `Телохранитель прикрыл цель и выжил (был защищён): ${bodyguard.name}${bodyguard.role ? ` (${bodyguard.role.name})` : ''}`,
+                            class: 'night-report-protected'
+                        });
+                    } else {
+                        entries.push({
+                            type: 'bodyguard-sacrifice',
+                            icon: '🛡️💀',
+                            text: `Телохранитель погиб, защищая: ${player.name}${player.role ? ` (${player.role.name})` : ''} — ${bodyguard.name}${bodyguard.role ? ` (${bodyguard.role.name})` : ''}`,
+                            class: 'night-report-kill'
+                        });
+                    }
+                }
+            }
         }
     });
 
@@ -4073,20 +4115,27 @@ function confirmNightReport() {
             if (savedIndices.has(idx)) {
                 // Player was protected, they survive
                 const killSource = sourceFor('kill', idx);
-                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}`, 'protected-log');
+                const protectSource = sourceFor('protect', idx);
+                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}${protectSource ? ` • защищал: ${protectSource}` : ''}`, 'protected-log');
 
                 const sacrificedIdx = bodyguardSacrifices.get(idx);
                 if (sacrificedIdx !== undefined && !sacrificedBodyguards.has(sacrificedIdx)) {
                     const bodyguard = gamePlayers[sacrificedIdx];
                     if (bodyguard && !bodyguard.eliminated) {
-                        bodyguard.eliminated = true;
-                        sacrificedBodyguards.add(sacrificedIdx);
-                        logAction(`<span class="eliminated">🛡️💀 Телохранитель погиб, защищая:</span> <span class="player-name">${player.name}</span> — <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}`, 'eliminated');
-                        if (bodyguard.role && (bodyguard.role.id === 'judge' || bodyguard.role.id === 'sectant')) {
-                            deadJudgeOrSectant.push(bodyguard);
-                        }
-                        if (bodyguard.role && bodyguard.role.id === 'avenger') {
-                            deadAvenger = bodyguard;
+                        const bodyguardSavedByDoctor = protectedSet.has(sacrificedIdx);
+                        if (bodyguardSavedByDoctor) {
+                            const bgProtectSource = sourceFor('protect', sacrificedIdx);
+                            logAction(`<span class="night-report-protected">🛡️ Телохранитель прикрыл цель и выжил:</span> <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}${bgProtectSource ? ` • защищал: ${bgProtectSource}` : ''}`, 'protected-log');
+                        } else {
+                            bodyguard.eliminated = true;
+                            sacrificedBodyguards.add(sacrificedIdx);
+                            logAction(`<span class="eliminated">🛡️💀 Телохранитель погиб, защищая:</span> <span class="player-name">${player.name}</span> — <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}`, 'eliminated');
+                            if (bodyguard.role && (bodyguard.role.id === 'judge' || bodyguard.role.id === 'sectant')) {
+                                deadJudgeOrSectant.push(bodyguard);
+                            }
+                            if (bodyguard.role && bodyguard.role.id === 'avenger') {
+                                deadAvenger = bodyguard;
+                            }
                         }
                     }
                 }
