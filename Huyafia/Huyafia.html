@@ -2590,7 +2590,7 @@ function toggleStatusRows() {
 
 function applySettingsToggles() {
     // Initialize enabledRoles if first run
-    if (enabledRoles === null) {
+    if (enabledRoles === null || enabledRoles.size === 0) {
         enabledRoles = new Set(ROLES.map(r => r.id));
         saveEnabledRoles();
     }
