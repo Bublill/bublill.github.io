@@ -2304,7 +2304,7 @@ function saveEnabledRoles() {
 }
 
 function isRoleEnabled(roleId) {
-    return enabledRoles === null || enabledRoles.has(roleId);
+    return enabledRoles === null || enabledRoles.size === 0 || enabledRoles.has(roleId);
 }
 
 function resetStepModeState({ clearStorage = true, preserveSelections = false } = {}) {
@@ -3475,6 +3475,31 @@ function getStepModeQueue() {
     const steps = [];
     const hasAliveDetective = aliveWithRole.some(({ player }) => player.role.id === 'detective');
 
+    if (aliveUnassigned.length > 0) {
+        ROLES
+            .filter(role => role.turnOrder !== null)
+            .forEach(role => {
+                if (!isRoleEnabled(role.id)) return;
+                if (assignedRoleIds.has(role.id)) return;
+                if (stepModeDismissedPromptRoles.has(role.id)) return;
+                if (role.id === 'patrol' && hasAliveDetective) return;
+
+                steps.push({
+                    stepKey: `prompt-${role.id}`,
+                    actorIdx: null,
+                    roleId: role.id,
+                    roleName: role.name,
+                    actorName: 'Ведущий',
+                    effectAction: null,
+                    targetCount: 0,
+                    turnOrder: role.turnOrder,
+                    question: `Есть роль ${role.name}?`,
+                    stepType: 'prompt',
+                    allowMultiAssign: STEP_MULTI_ASSIGN_ROLE_IDS.has(role.id)
+                });
+            });
+    }
+
     STEP_GROUPS.forEach(group => {
         const members = aliveWithRole.filter(({ player }) => group.roleIds.includes(player.role.id));
         if (!members.length) return;
@@ -3625,26 +3650,15 @@ function renderStepModePanel() {
     backBtn.disabled = stepModeIndex <= 0;
 }
 
-function toggleStepMode() {
-    if (stepModeActive) {
-        resetStepModeState();
-        renderStepModePanel();
-        renderGamePlayers();
-        saveStepModeState();
-        return;
-    }
+function focusCurrentStepModeStep() {
+    if (!stepModeActive) return;
 
-    stepModeQueue = getStepModeQueue();
-
-    clearNightSelection();
-    stepModeSelections = [];
+    const blockedModal = document.getElementById('step-blocked-modal');
+    if (blockedModal) blockedModal.classList.remove('active');
     stepBlockedPending = null;
-    stepModeDismissedPromptRoles = new Set();
-    stepRolePromptState = null;
-    stepModeActive = true;
 
-    if (stepModeQueue.length === 0) {
-        stepModeIndex = 0;
+    const step = getCurrentStep();
+    if (!step) {
         currentNightAction = null;
         renderStepModePanel();
         renderGamePlayers();
@@ -3652,7 +3666,54 @@ function toggleStepMode() {
         return;
     }
 
-    stepModeIndex = 0;
+    if (step.stepType === 'prompt') {
+        currentNightAction = null;
+        renderStepModePanel();
+        renderGamePlayers();
+        openStepRolePrompt(step);
+        saveStepModeState();
+        return;
+    }
+
+    closeStepRolePromptModal();
+    if (maybeShowBlockedStepModal(step)) {
+        currentNightAction = null;
+        renderStepModePanel();
+        renderGamePlayers();
+        saveStepModeState();
+        return;
+    }
+
+    selectNightAction(step && step.effectAction ? step.effectAction : null);
+    renderStepModePanel();
+    renderGamePlayers();
+    saveStepModeState();
+}
+
+function toggleStepMode() {
+    if (stepModeActive) {
+        resetStepModeState();
+        renderStepModePanel();
+        renderGamePlayers();
+        return;
+    }
+
+    resetNightActionsState({ clearStepSelections: true });
+    stepModeDismissedPromptRoles = new Set();
+    stepRolePromptState = null;
+    stepBlockedPending = null;
+    stepModeActive = true;
+    stepModeQueue = getStepModeQueue();
+    stepModeIndex = stepModeQueue.length > 0 ? 0 : -1;
+
+    if (stepModeQueue.length === 0) {
+        stepModeIndex = 0;
+        renderStepModePanel();
+        renderGamePlayers();
+        saveStepModeState();
+        return;
+    }
+
     focusCurrentStepModeStep();
 }
 
@@ -3663,13 +3724,8 @@ function skipStepModeRole() {
 
 function goToPreviousStepModeRole() {
     if (!stepModeActive || stepModeIndex <= 0) return;
-    const blockedModal = document.getElementById('step-blocked-modal');
-    if (blockedModal) blockedModal.classList.remove('active');
-    stepBlockedPending = null;
     stepModeIndex--;
-    const step = getCurrentStep();
-    selectNightAction(step && step.effectAction ? step.effectAction : null);
-    renderStepModePanel();
+    focusCurrentStepModeStep();
 }
 
 function finishStepModeNow() {
@@ -3980,7 +4036,7 @@ function isGroupStepBlocked(step, blockedIndices) {
 
 function maybeShowBlockedStepModal(step) {
     const blockedIndices = getBlockedActorIndices();
-    if (!step) return false;
+    if (!step || step.stepType === 'prompt') return false;
 
     const isBlocked = step.roleId.startsWith('group-')
         ? isGroupStepBlocked(step, blockedIndices)
