@@ -2205,6 +2205,24 @@ h2 {
     </div>
 </div>
 
+<!-- Step missing role modal -->
+<div id="step-role-prompt-modal" class="modal-overlay" onclick="closeStepRolePromptOutside(event)">
+    <div class="night-report-modal">
+        <div class="night-report-header">
+            <h3 id="step-role-prompt-title">❓ Есть роль?</h3>
+        </div>
+        <div class="night-report-body">
+            <p id="step-role-prompt-text" style="margin-bottom:12px;"></p>
+            <div id="step-role-prompt-hint" style="color:var(--text-dim);font-size:13px;margin-bottom:12px;"></div>
+            <div id="step-role-prompt-players" class="player-grid" style="margin-bottom:0;"></div>
+        </div>
+        <div class="night-report-footer">
+            <button class="btn btn-dark" onclick="rejectStepRolePrompt()">Нет</button>
+            <button class="btn btn-green" onclick="confirmStepRolePrompt()">Назначить</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const DEFAULT_PLAYERS = [
     "Димон","Вова","Вадим","Катя","Влад","Рома","Маша","Инна",
@@ -2278,10 +2296,54 @@ function saveGameState() {
     localStorage.setItem('mafia_night_actions', JSON.stringify(nightActions));
     localStorage.setItem('mafia_game_started', gamePlayers.length > 0 ? 'true' : 'false');
     localStorage.setItem('mafia_night_count', nightCount.toString());
+    saveStepModeState();
 }
 
 function saveEnabledRoles() {
     localStorage.setItem('mafia_enabled_roles', JSON.stringify([...enabledRoles]));
+}
+
+function isRoleEnabled(roleId) {
+    return enabledRoles === null || enabledRoles.has(roleId);
+}
+
+function resetStepModeState({ clearStorage = true, preserveSelections = false } = {}) {
+    stepModeActive = false;
+    stepModeQueue = [];
+    stepModeIndex = -1;
+    if (!preserveSelections) {
+        stepModeSelections = [];
+    }
+    stepBlockedPending = null;
+    stepModeDismissedPromptRoles = new Set();
+    stepRolePromptState = null;
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+
+    const blockedModal = document.getElementById('step-blocked-modal');
+    if (blockedModal) blockedModal.classList.remove('active');
+    const promptModal = document.getElementById('step-role-prompt-modal');
+    if (promptModal) promptModal.classList.remove('active');
+
+    if (clearStorage) {
+        localStorage.removeItem(STEP_MODE_STORAGE_KEY);
+    }
+}
+
+function saveStepModeState() {
+    if (!stepModeActive) {
+        localStorage.removeItem(STEP_MODE_STORAGE_KEY);
+        return;
+    }
+
+    const currentStep = getCurrentStep();
+    localStorage.setItem(STEP_MODE_STORAGE_KEY, JSON.stringify({
+        active: stepModeActive,
+        stepModeIndex,
+        currentStepKey: currentStep ? currentStep.stepKey : null,
+        stepModeSelections,
+        stepModeDismissedPromptRoles: [...stepModeDismissedPromptRoles]
+    }));
 }
 
 function logAction(message, className = '') {
@@ -2349,6 +2411,10 @@ let stepModeQueue = [];
 let stepModeIndex = -1;
 let stepModeSelections = [];
 let stepBlockedPending = null;
+let stepModeDismissedPromptRoles = new Set();
+let stepRolePromptState = null;
+const STEP_MODE_STORAGE_KEY = 'mafia_step_mode_state';
+const STEP_MULTI_ASSIGN_ROLE_IDS = new Set(['mafia', 'cartel']);
 
 const ROLE_STEP_CONFIG = {
     doctor:        { effectAction: 'protect', question: 'Кого лечит доктор?', targetCount: 1 },
@@ -2496,15 +2562,7 @@ function updateShowStepMode(value) {
     const panel = document.querySelector('.step-mode-panel');
     if (panel) panel.style.display = value ? '' : 'none';
     if (!value && stepModeActive) {
-        stepModeActive = false;
-        stepModeQueue = [];
-        stepModeIndex = -1;
-        stepModeSelections = [];
-        stepBlockedPending = null;
-        const blockedModal = document.getElementById('step-blocked-modal');
-        if (blockedModal) blockedModal.classList.remove('active');
-        currentNightAction = null;
-        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        resetStepModeState();
         renderGamePlayers();
     }
     renderStepModePanel();
@@ -2641,6 +2699,7 @@ function jailBarsMiniSVG() {
 function startGame() {
     if (selectedPlayers.size < 2) { alert('Выбери хотя бы 2 игроков!'); return; }
     nightCount = 1;
+    resetStepModeState();
     // Persist selected players so they survive page refresh
     localStorage.setItem('mafia_selected_players', JSON.stringify([...selectedPlayers]));
     gamePlayers = Array.from(selectedPlayers).map(name => ({
@@ -2672,6 +2731,7 @@ function restoreGameState() {
     const savedNightActions = localStorage.getItem('mafia_night_actions');
     const gameStarted = localStorage.getItem('mafia_game_started');
     const savedNightCount = localStorage.getItem('mafia_night_count');
+    const savedStepModeState = localStorage.getItem(STEP_MODE_STORAGE_KEY);
 
     if (gameStarted === 'true' && savedGamePlayers) {
         gamePlayers = JSON.parse(savedGamePlayers);
@@ -2685,11 +2745,41 @@ function restoreGameState() {
         document.getElementById('screen-lobby').classList.remove('active');
         document.getElementById('screen-game').classList.add('active');
         document.getElementById('bottom-nav').classList.add('active');
+
+        if (savedStepModeState) {
+            try {
+                const parsed = JSON.parse(savedStepModeState);
+                if (parsed && parsed.active) {
+                    stepModeActive = true;
+                    stepModeSelections = Array.isArray(parsed.stepModeSelections) ? parsed.stepModeSelections : [];
+                    stepModeDismissedPromptRoles = new Set(parsed.stepModeDismissedPromptRoles || []);
+                    stepModeQueue = getStepModeQueue();
+                    if (stepModeQueue.length === 0) {
+                        stepModeIndex = 0;
+                    } else {
+                        const savedKey = parsed.currentStepKey;
+                        const matchedIndex = savedKey ? stepModeQueue.findIndex(step => step.stepKey === savedKey) : -1;
+                        stepModeIndex = matchedIndex > -1
+                            ? matchedIndex
+                            : Math.min(Math.max(parsed.stepModeIndex || 0, 0), stepModeQueue.length - 1);
+                    }
+                } else {
+                    resetStepModeState({ clearStorage: false });
+                }
+            } catch (error) {
+                resetStepModeState();
+            }
+        }
+
         renderGame();
         renderActionLog();
         renderNightActionsPanel();
         updateNightActionCounts();
         updateNightCounter();
+        if (stepModeActive) {
+            syncNightActionsFromStepMode();
+            focusCurrentStepModeStep();
+        }
     } else {
         // Restore selected players for lobby
         const savedSelectedPlayers = localStorage.getItem('mafia_selected_players');
@@ -3369,12 +3459,17 @@ function selectNightAction(action) {
     updateNightActionCounts();
     renderStepModePanel();
     renderGamePlayers();
+    saveStepModeState();
 }
 
 function getStepModeQueue() {
     const aliveWithRole = gamePlayers
         .map((player, idx) => ({ player, idx }))
         .filter(({ player }) => !player.eliminated && player.role && player.role.turnOrder !== null);
+    const aliveUnassigned = gamePlayers
+        .map((player, idx) => ({ player, idx }))
+        .filter(({ player }) => !player.eliminated && !player.role);
+    const assignedRoleIds = new Set(gamePlayers.filter(player => player.role).map(player => player.role.id));
 
     const groupedRoleIds = new Set(STEP_GROUPS.flatMap(g => g.roleIds));
     const steps = [];
@@ -3398,7 +3493,8 @@ function getStepModeQueue() {
             effectAction: group.effectAction,
             targetCount: group.targetCount,
             turnOrder: group.turnOrder,
-            question: group.question
+            question: group.question,
+            stepType: 'action'
         });
     });
 
@@ -3416,11 +3512,19 @@ function getStepModeQueue() {
                 effectAction: conf.effectAction || null,
                 targetCount: conf.targetCount || 1,
                 turnOrder: player.role.turnOrder,
-                question: conf.question || `Кого выбирает ${player.role.name.toLowerCase()}?`
+                question: conf.question || `Кого выбирает ${player.role.name.toLowerCase()}?`,
+                stepType: 'action'
             });
         });
 
-    return steps.sort((a, b) => a.turnOrder - b.turnOrder || a.actorName.localeCompare(b.actorName, 'ru'));
+    return steps.sort((a, b) => {
+        const typeOrderA = a.stepType === 'prompt' ? 0 : 1;
+        const typeOrderB = b.stepType === 'prompt' ? 0 : 1;
+        return a.turnOrder - b.turnOrder ||
+            typeOrderA - typeOrderB ||
+            a.roleName.localeCompare(b.roleName, 'ru') ||
+            a.actorName.localeCompare(b.actorName, 'ru');
+    });
 }
 
 function getCurrentStep() {
@@ -3493,7 +3597,9 @@ function renderStepModePanel() {
     }
 
     statusEl.textContent = `Активен • Шаг ${progress}`;
-    questionEl.textContent = `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
+    questionEl.textContent = step.stepType === 'prompt'
+        ? `${step.roleName}: ${step.question}`
+        : `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
     questionEl.style.display = 'block';
     controlsEl.style.display = 'flex';
     backBtn.disabled = stepModeIndex <= 0;
@@ -3501,12 +3607,7 @@ function renderStepModePanel() {
 
 function toggleStepMode() {
     if (stepModeActive) {
-        stepModeActive = false;
-        stepModeQueue = [];
-        stepModeIndex = -1;
-        stepModeSelections = [];
-        currentNightAction = null;
-        document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+        resetStepModeState();
         renderStepModePanel();
         renderGamePlayers();
         return;
@@ -3517,6 +3618,8 @@ function toggleStepMode() {
     clearNightSelection();
     stepModeSelections = [];
     stepBlockedPending = null;
+    stepModeDismissedPromptRoles = new Set();
+    stepRolePromptState = null;
     stepModeActive = true;
 
     if (stepModeQueue.length === 0) {
@@ -3524,19 +3627,12 @@ function toggleStepMode() {
         currentNightAction = null;
         renderStepModePanel();
         renderGamePlayers();
+        saveStepModeState();
         return;
     }
 
     stepModeIndex = 0;
-    const firstStep = getCurrentStep();
-    if (maybeShowBlockedStepModal(firstStep)) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        return;
-    }
-    selectNightAction(firstStep && firstStep.effectAction ? firstStep.effectAction : null);
-    renderStepModePanel();
+    focusCurrentStepModeStep();
 }
 
 function skipStepModeRole() {
@@ -3558,12 +3654,7 @@ function goToPreviousStepModeRole() {
 function finishStepModeNow() {
     if (!stepModeActive) return;
     syncNightActionsFromStepMode();
-    stepModeActive = false;
-    stepModeQueue = [];
-    stepModeIndex = -1;
-    stepBlockedPending = null;
-    currentNightAction = null;
-    document.querySelectorAll('.night-action-btn').forEach(btn => btn.classList.remove('active'));
+    resetStepModeState({ preserveSelections: true });
     renderStepModePanel();
     renderGamePlayers();
     generateNightReport();
@@ -3576,17 +3667,7 @@ function advanceStepMode() {
         finishStepModeNow();
         return;
     }
-    const step = getCurrentStep();
-
-    if (maybeShowBlockedStepModal(step)) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        return;
-    }
-
-    selectNightAction(step && step.effectAction ? step.effectAction : null);
-    renderStepModePanel();
+    focusCurrentStepModeStep();
 }
 
 function updateNightActionCounts() {
@@ -3632,13 +3713,137 @@ function renderNightActionsPanel() {
     });
 }
 
+function getAliveUnassignedPlayers() {
+    return gamePlayers
+        .map((player, idx) => ({ player, idx }))
+        .filter(({ player }) => !player.eliminated && !player.role);
+}
+
+function openStepRolePrompt(step) {
+    const modal = document.getElementById('step-role-prompt-modal');
+    const titleEl = document.getElementById('step-role-prompt-title');
+    const textEl = document.getElementById('step-role-prompt-text');
+    const hintEl = document.getElementById('step-role-prompt-hint');
+    const playersEl = document.getElementById('step-role-prompt-players');
+    if (!modal || !titleEl || !textEl || !hintEl || !playersEl) return;
+
+    const availablePlayers = getAliveUnassignedPlayers();
+    if (availablePlayers.length === 0) {
+        stepModeDismissedPromptRoles.add(step.roleId);
+        stepModeQueue = getStepModeQueue();
+        if (stepModeQueue.length === 0) {
+            stepModeIndex = 0;
+        } else if (stepModeIndex >= stepModeQueue.length) {
+            stepModeIndex = stepModeQueue.length - 1;
+        }
+        saveGameState();
+        focusCurrentStepModeStep();
+        return;
+    }
+
+    if (!stepRolePromptState || stepRolePromptState.stepKey !== step.stepKey) {
+        stepRolePromptState = {
+            stepKey: step.stepKey,
+            roleId: step.roleId,
+            selectedIndices: []
+        };
+    }
+
+    titleEl.textContent = `❓ Есть ${step.roleName}?`;
+    textEl.textContent = `Если роль есть, выбери ${step.allowMultiAssign ? 'игроков' : 'игрока'} для роли «${step.roleName}».`;
+    hintEl.textContent = step.allowMultiAssign
+        ? 'Можно выбрать нескольких игроков. Если роли точно нет — нажми «Нет».'
+        : 'Выбери одного игрока. Если роли точно нет — нажми «Нет».';
+
+    playersEl.innerHTML = '';
+    availablePlayers.forEach(({ player, idx }) => {
+        const item = document.createElement('div');
+        const checked = stepRolePromptState.selectedIndices.includes(idx);
+        item.className = `player-check${checked ? ' checked' : ''}`;
+        item.innerHTML = `<div class="check-box"></div><span class="player-name-label">${player.name}</span>`;
+        item.onclick = () => toggleStepRolePromptPlayer(idx, !!step.allowMultiAssign);
+        playersEl.appendChild(item);
+    });
+
+    modal.classList.add('active');
+}
+
+function closeStepRolePromptModal() {
+    const modal = document.getElementById('step-role-prompt-modal');
+    if (modal) modal.classList.remove('active');
+    stepRolePromptState = null;
+}
+
+function toggleStepRolePromptPlayer(playerIdx, allowMultiAssign) {
+    if (!stepRolePromptState) return;
+    const selected = stepRolePromptState.selectedIndices;
+    const pos = selected.indexOf(playerIdx);
+    if (pos > -1) {
+        selected.splice(pos, 1);
+    } else if (allowMultiAssign) {
+        selected.push(playerIdx);
+    } else {
+        stepRolePromptState.selectedIndices = [playerIdx];
+    }
+
+    const step = getCurrentStep();
+    if (step && step.stepType === 'prompt') {
+        openStepRolePrompt(step);
+    }
+}
+
+function rebuildStepModeQueueAtCurrentIndex() {
+    const nextIndex = Math.max(stepModeIndex, 0);
+    stepModeQueue = getStepModeQueue();
+    if (stepModeQueue.length === 0) {
+        stepModeIndex = 0;
+    } else {
+        stepModeIndex = Math.min(nextIndex, stepModeQueue.length - 1);
+    }
+}
+
+function confirmStepRolePrompt() {
+    const step = getCurrentStep();
+    if (!step || step.stepType !== 'prompt' || !stepRolePromptState) return;
+    if (stepRolePromptState.selectedIndices.length === 0) {
+        alert('Сначала выбери игрока для этой роли.');
+        return;
+    }
+
+    const role = ROLES.find(item => item.id === step.roleId);
+    if (!role) return;
+
+    stepRolePromptState.selectedIndices.forEach(idx => assignRoleToPlayerByIndex(idx, role));
+    closeStepRolePromptModal();
+    rebuildStepModeQueueAtCurrentIndex();
+    saveGameState();
+    focusCurrentStepModeStep();
+}
+
+function rejectStepRolePrompt() {
+    const step = getCurrentStep();
+    if (!step || step.stepType !== 'prompt') return;
+    stepModeDismissedPromptRoles.add(step.roleId);
+    closeStepRolePromptModal();
+    rebuildStepModeQueueAtCurrentIndex();
+    saveGameState();
+    focusCurrentStepModeStep();
+}
+
+function closeStepRolePromptOutside(event) {
+    const modal = document.getElementById('step-role-prompt-modal');
+    if (event.target === modal) {
+        rejectStepRolePrompt();
+    }
+}
+
 function toggleNightPlayerSelection(playerIdx) {
     const player = gamePlayers[playerIdx];
     if (!player || player.eliminated) return;
 
     if (stepModeActive) {
         const step = getCurrentStep();
-        if (!step) return;
+        if (!step || step.stepType === 'prompt') return;
 
         let selection = getCurrentStepSelection();
         if (!selection) {
@@ -4709,25 +4914,42 @@ function renderRoleButtons() {
     switchRoleTab(activeRoleTab, false);
 }
 
+function assignRoleToPlayerByIndex(idx, role) {
+    const player = gamePlayers[idx];
+    if (!player) return;
+
+    const oldRole = player.role ? player.role.name : null;
+    const newRole = role ? role.name : null;
+    if (oldRole !== newRole) {
+        if (oldRole === null && newRole !== null) {
+            logAction(`<span class="role-assigned">🎭 Роль назначена:</span> <span class="player-name">${player.name}</span>: <span class="role-assigned">${newRole}</span>`, 'role-assigned');
+        } else if (oldRole !== null && newRole === null) {
+            logAction(`<span class="role-removed">❌ Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
+        } else {
+            logAction(`<span class="role-changed">🔄 Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+        }
+    }
+    player.role = role;
+}
+
 function pickRole(role) {
     if (currentPickerPlayer !== null) {
-        const player = gamePlayers[currentPickerPlayer];
-        const oldRole = player.role ? player.role.name : null;
-        const newRole = role ? role.name : null;
-        if (oldRole !== newRole) {
-            if (oldRole === null && newRole !== null) {
-                logAction(`<span class="role-assigned">🎭 Роль назначена:</span> <span class="player-name">${player.name}</span>: <span class="role-assigned">${newRole}</span>`, 'role-assigned');
-            } else if (oldRole !== null && newRole === null) {
-                logAction(`<span class="role-removed">❌ Роль снята:</span> <span class="player-name">${player.name}</span>: <span class="role-removed">${oldRole}</span>`, 'role-removed');
-            } else {
-                logAction(`<span class="role-changed">🔄 Роль изменена:</span> <span class="player-name">${player.name}</span>: <span class="role-changed">${oldRole}</span> → <span class="role-changed">${newRole}</span>`, 'role-changed');
+        assignRoleToPlayerByIndex(currentPickerPlayer, role);
+        if (stepModeActive) {
+            stepModeQueue = getStepModeQueue();
+            if (stepModeQueue.length === 0) {
+                stepModeIndex = 0;
+            } else if (stepModeIndex >= stepModeQueue.length) {
+                stepModeIndex = stepModeQueue.length - 1;
             }
         }
-        player.role = role;
     }
     saveGameState();
     closeModal();
     renderGame();
+    if (stepModeActive) {
+        focusCurrentStepModeStep();
+    }
 }
 
 function closeModal() { document.getElementById('role-modal').classList.remove('active'); currentPickerPlayer = null; }
@@ -4747,6 +4969,7 @@ function showScreen(name) {
 
 function endGame() {
     if (!confirm('Завершить игру?')) return;
+    resetStepModeState();
     document.getElementById('bottom-nav').classList.remove('active');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-lobby').classList.add('active');
