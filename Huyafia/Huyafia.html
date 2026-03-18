@@ -3475,31 +3475,6 @@ function getStepModeQueue() {
     const steps = [];
     const hasAliveDetective = aliveWithRole.some(({ player }) => player.role.id === 'detective');
 
-    if (aliveUnassigned.length > 0) {
-        ROLES
-            .filter(role => role.turnOrder !== null)
-            .forEach(role => {
-                if (!isRoleEnabled(role.id)) return;
-                if (assignedRoleIds.has(role.id)) return;
-                if (stepModeDismissedPromptRoles.has(role.id)) return;
-                if (role.id === 'patrol' && hasAliveDetective) return;
-
-                steps.push({
-                    stepKey: `prompt-${role.id}`,
-                    actorIdx: null,
-                    roleId: role.id,
-                    roleName: role.name,
-                    actorName: 'Ведущий',
-                    effectAction: null,
-                    targetCount: 0,
-                    turnOrder: role.turnOrder,
-                    question: `Есть роль ${role.name}?`,
-                    stepType: 'prompt',
-                    allowMultiAssign: STEP_MULTI_ASSIGN_ROLE_IDS.has(role.id)
-                });
-            });
-    }
-
     STEP_GROUPS.forEach(group => {
         const members = aliveWithRole.filter(({ player }) => group.roleIds.includes(player.role.id));
         if (!members.length) return;
@@ -3650,66 +3625,29 @@ function renderStepModePanel() {
     backBtn.disabled = stepModeIndex <= 0;
 }
 
-function focusCurrentStepModeStep() {
-    if (!stepModeActive) return;
-
-    const blockedModal = document.getElementById('step-blocked-modal');
-    if (blockedModal) blockedModal.classList.remove('active');
-    stepBlockedPending = null;
-
-    const step = getCurrentStep();
-    if (!step) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        saveStepModeState();
-        return;
-    }
-
-    if (step.stepType === 'prompt') {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        openStepRolePrompt(step);
-        saveStepModeState();
-        return;
-    }
-
-    closeStepRolePromptModal();
-    if (maybeShowBlockedStepModal(step)) {
-        currentNightAction = null;
-        renderStepModePanel();
-        renderGamePlayers();
-        saveStepModeState();
-        return;
-    }
-
-    selectNightAction(step && step.effectAction ? step.effectAction : null);
-    renderStepModePanel();
-    renderGamePlayers();
-    saveStepModeState();
-}
-
 function toggleStepMode() {
     if (stepModeActive) {
         resetStepModeState();
         renderStepModePanel();
         renderGamePlayers();
+        saveStepModeState();
         return;
     }
 
-    stepModeDismissedPromptRoles = new Set();
-    stepRolePromptState = null;
+    stepModeQueue = getStepModeQueue();
+
+    clearNightSelection();
     stepModeSelections = [];
     stepBlockedPending = null;
+    stepModeDismissedPromptRoles = new Set();
+    stepRolePromptState = null;
     stepModeActive = true;
-    stepModeQueue = getStepModeQueue();
-    resetNightActionsState();
-    renderStepModePanel();
-    renderGamePlayers();
 
     if (stepModeQueue.length === 0) {
         stepModeIndex = 0;
+        currentNightAction = null;
+        renderStepModePanel();
+        renderGamePlayers();
         saveStepModeState();
         return;
     }
@@ -3725,8 +3663,13 @@ function skipStepModeRole() {
 
 function goToPreviousStepModeRole() {
     if (!stepModeActive || stepModeIndex <= 0) return;
+    const blockedModal = document.getElementById('step-blocked-modal');
+    if (blockedModal) blockedModal.classList.remove('active');
+    stepBlockedPending = null;
     stepModeIndex--;
-    focusCurrentStepModeStep();
+    const step = getCurrentStep();
+    selectNightAction(step && step.effectAction ? step.effectAction : null);
+    renderStepModePanel();
 }
 
 function finishStepModeNow() {
@@ -4037,7 +3980,7 @@ function isGroupStepBlocked(step, blockedIndices) {
 
 function maybeShowBlockedStepModal(step) {
     const blockedIndices = getBlockedActorIndices();
-    if (!step || step.stepType === 'prompt') return false;
+    if (!step) return false;
 
     const isBlocked = step.roleId.startsWith('group-')
         ? isGroupStepBlocked(step, blockedIndices)
