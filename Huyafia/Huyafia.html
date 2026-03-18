@@ -3634,14 +3634,14 @@ function renderStepModePanel() {
     toggleBtn.classList.remove('btn-dark');
     toggleBtn.classList.add('btn-red');
     if (!step) {
-        statusEl.textContent = 'Активен • нет ходов';
+        statusEl.textContent = 'Активен | нет ходов';
         questionEl.textContent = 'Нет ролей с ночным ходом. Сначала назначь роли игрокам.';
         questionEl.style.display = 'block';
         controlsEl.style.display = 'none';
         return;
     }
 
-    statusEl.textContent = `Активен • Шаг ${progress}`;
+    statusEl.textContent = `Активен | Шаг ${progress}`;
     questionEl.textContent = step.stepType === 'prompt'
         ? `${step.roleName}: ${step.question}`
         : `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
@@ -4169,7 +4169,7 @@ function generateNightReport() {
             entries.push({
                 type: 'saved',
                 icon: '⛑',
-                text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}${protectSource ? ` • защищал: ${protectSource}` : ''}`,
+                text: `Пытались убить, но защитили: ${player.name}${player.role ? ` (${player.role.name})` : ''}${killSource ? ` | ${killSource}` : ''}${protectSource ? ` | защищал: ${protectSource}` : ''}`,
                 class: 'night-report-protected'
             });
 
@@ -4218,7 +4218,7 @@ function generateNightReport() {
             entries.push({
                 type: 'kill',
                 icon: '💀',
-                text: `Убит: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('kill', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('kill', idx))}` : ''}`,
+                text: `Убит: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('kill', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('kill', idx))}` : ''}`,
                 class: 'night-report-kill'
             });
         }
@@ -4231,7 +4231,7 @@ function generateNightReport() {
             entries.push({
                 type: 'protect',
                 icon: '🛡️',
-                text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('protect', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('protect', idx))}` : ''}`,
+                text: `Защищён: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('protect', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('protect', idx))}` : ''}`,
                 class: 'night-report-protected'
             });
         }
@@ -4268,7 +4268,7 @@ function generateNightReport() {
             entries.push({
                 type: 'poison',
                 icon: '🧪',
-                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('poison', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('poison', idx))}` : ''}`,
+                text: `Отравлен: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('poison', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('poison', idx))}` : ''}`,
                 class: 'night-report-poison'
             });
         }
@@ -4281,7 +4281,7 @@ function generateNightReport() {
             entries.push({
                 type: 'alibi',
                 icon: '📋',
-                text: `Алиби: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('alibi', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('alibi', idx))}` : ''}`,
+                text: `Алиби: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('alibi', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('alibi', idx))}` : ''}`,
                 class: 'night-report-alibi'
             });
         }
@@ -4294,7 +4294,7 @@ function generateNightReport() {
             entries.push({
                 type: 'jail',
                 icon: '🔒',
-                text: `Тюрьма: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('jail', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('jail', idx))}` : ''}`,
+                text: `Тюрьма: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('jail', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('jail', idx))}` : ''}`,
                 class: 'night-report-jail'
             });
         }
@@ -4307,7 +4307,7 @@ function generateNightReport() {
             entries.push({
                 type: 'sect',
                 icon: '🕯️',
-                text: `В секте: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('sect', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('sect', idx))}` : ''}`,
+                text: `В секте: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('sect', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('sect', idx))}` : ''}`,
                 class: 'night-report-sect'
             });
         }
@@ -4320,7 +4320,7 @@ function generateNightReport() {
             entries.push({
                 type: 'block',
                 icon: '🚫',
-                text: `Заблокирован: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('block', idx) ? ` • ${formatStepActor(getStepSelectionForTarget('block', idx))}` : ''}`,
+                text: `Заблокирован: ${player.name}${player.role ? ` (${player.role.name})` : ''}${getStepSelectionForTarget('block', idx) ? ` | ${formatStepActor(getStepSelectionForTarget('block', idx))}` : ''}`,
                 class: 'night-report-block'
             });
         }
@@ -4429,7 +4429,7 @@ function confirmNightReport() {
                 // Player was protected, they survive
                 const killSource = sourceFor('kill', idx);
                 const protectSource = sourceFor('protect', idx);
-                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}${protectSource ? ` • защищал: ${protectSource}` : ''}`, 'protected-log');
+                logAction(`<span class="night-report-protected">⛑ Пытались убить, но защитили:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` | ${killSource}` : ''}${protectSource ? ` | защищал: ${protectSource}` : ''}`, 'protected-log');
 
                 const sacrificedIdx = bodyguardSacrifices.get(idx);
                 if (sacrificedIdx !== undefined && !sacrificedBodyguards.has(sacrificedIdx)) {
@@ -4438,7 +4438,7 @@ function confirmNightReport() {
                         const bodyguardSavedByDoctor = protectedSet.has(sacrificedIdx);
                         if (bodyguardSavedByDoctor) {
                             const bgProtectSource = sourceFor('protect', sacrificedIdx);
-                            logAction(`<span class="night-report-protected">🛡️ Телохранитель прикрыл цель и выжил:</span> <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}${bgProtectSource ? ` • защищал: ${bgProtectSource}` : ''}`, 'protected-log');
+                            logAction(`<span class="night-report-protected">🛡️ Телохранитель прикрыл цель и выжил:</span> <span class="player-name">${bodyguard.name}</span>${bodyguard.role ? ` (${bodyguard.role.name})` : ''}${bgProtectSource ? ` | защищал: ${bgProtectSource}` : ''}`, 'protected-log');
                         } else {
                             bodyguard.eliminated = true;
                             sacrificedBodyguards.add(sacrificedIdx);
@@ -4459,7 +4459,7 @@ function confirmNightReport() {
                 // Player dies - mark as eliminated but don't clear statuses yet
                 player.eliminated = true;
                 const killSource = sourceFor('kill', idx);
-                logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` • ${killSource}` : ''}`, 'eliminated');
+                logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}${killSource ? ` | ${killSource}` : ''}`, 'eliminated');
 
                 // Check if dead player is judge, sectant, or avenger
                 if (player.role && (player.role.id === 'judge' || player.role.id === 'sectant')) {
@@ -4480,7 +4480,7 @@ function confirmNightReport() {
             if (!savedIndices.has(idx) && !luckySavedFromKill.has(idx)) {
                 const def = STATUS_DEFS['protected'];
                 const protectSource = sourceFor('protect', idx);
-                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${protectSource ? ` • ${protectSource}` : ''}`, def.logKey);
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${protectSource ? ` | ${protectSource}` : ''}`, def.logKey);
             }
         }
     });
@@ -4492,7 +4492,7 @@ function confirmNightReport() {
             player.alibied = true;
             const def = STATUS_DEFS['alibied'];
             const alibiSource = sourceFor('alibi', idx);
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${alibiSource ? ` • ${alibiSource}` : ''}`, def.logKey);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${alibiSource ? ` | ${alibiSource}` : ''}`, def.logKey);
         }
     });
 
@@ -4502,7 +4502,7 @@ function confirmNightReport() {
         if (player && !player.eliminated && !player.jailed) {
             player.jailed = true;
             const jailSource = sourceFor('jail', idx);
-            logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>${jailSource ? ` • ${jailSource}` : ''}`, 'jailed');
+            logAction(`<span class="jailed">🔒 Посажен в тюрьму:</span> <span class="player-name">${player.name}</span>${jailSource ? ` | ${jailSource}` : ''}`, 'jailed');
         }
     });
 
@@ -4518,7 +4518,7 @@ function confirmNightReport() {
                 player.poisoned = true;
                 const def = STATUS_DEFS['poisoned'];
                 const poisonSource = sourceFor('poison', idx);
-                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${poisonSource ? ` • ${poisonSource}` : ''}`, def.logKey);
+                logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${poisonSource ? ` | ${poisonSource}` : ''}`, def.logKey);
             }
         }
     });
@@ -4530,7 +4530,7 @@ function confirmNightReport() {
             player.sected = true;
             const def = STATUS_DEFS['sected'];
             const sectSource = sourceFor('sect', idx);
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${sectSource ? ` • ${sectSource}` : ''}`, def.logKey);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${sectSource ? ` | ${sectSource}` : ''}`, def.logKey);
         }
     });
 
@@ -4541,7 +4541,7 @@ function confirmNightReport() {
             player.blocked = true;
             const def = STATUS_DEFS['blocked'];
             const blockSource = sourceFor('block', idx);
-            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${blockSource ? ` • ${blockSource}` : ''}`, def.logKey);
+            logAction(`<span class="${def.logKey}">${def.logOn}:</span> <span class="player-name">${player.name}</span>${blockSource ? ` | ${blockSource}` : ''}`, def.logKey);
         }
     });
 
