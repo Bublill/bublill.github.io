@@ -3550,6 +3550,26 @@ function syncNightActionsFromStepMode() {
     });
 }
 
+function resetNightActionsState({ clearStepSelections = false } = {}) {
+    nightActions = {
+        kill: [],
+        protect: [],
+        alibi: [],
+        jail: [],
+        poison: [],
+        sect: [],
+        block: []
+    };
+    currentNightAction = null;
+    document.querySelectorAll('.night-action-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (clearStepSelections) {
+        stepModeSelections = [];
+    }
+    updateNightActionCounts();
+}
+
 function isPlayerSelectedInCurrentStep(playerIdx) {
     if (!stepModeActive) return false;
     const selection = getCurrentStepSelection();
@@ -3610,6 +3630,7 @@ function toggleStepMode() {
         resetStepModeState();
         renderStepModePanel();
         renderGamePlayers();
+        saveStepModeState();
         return;
     }
 
@@ -3895,23 +3916,7 @@ function toggleNightPlayerSelection(playerIdx) {
 }
 
 function clearNightSelection() {
-    nightActions = {
-        kill: [],
-        protect: [],
-        alibi: [],
-        jail: [],
-        poison: [],
-        sect: [],
-        block: []
-    };
-    currentNightAction = null;
-    document.querySelectorAll('.night-action-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    if (!stepModeActive) {
-        stepModeSelections = [];
-    }
-    updateNightActionCounts();
+    resetNightActionsState({ clearStepSelections: !stepModeActive });
     renderStepModePanel();
     saveGameState();
     renderGamePlayers();
