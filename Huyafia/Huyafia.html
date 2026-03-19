@@ -2193,7 +2193,7 @@ h2 {
 <div id="step-blocked-modal" class="modal-overlay" onclick="closeStepBlockedOutside(event)">
     <div class="night-report-modal">
         <div class="night-report-header">
-            <h3>🚫 Ход заблокирован</h3>
+            <h3 id="step-blocked-title">🚫 Ход заблокирован</h3>
         </div>
         <div class="night-report-body">
             <p id="step-blocked-text" style="margin-bottom:16px;"></p>
@@ -4014,13 +4014,13 @@ function getBlockedActorIndices() {
     return blocked;
 }
 
-function isGroupStepBlocked(step, blockedIndices) {
-    if (!step || !step.roleId.startsWith('group-')) return false;
+function getAliveGroupMembers(step) {
+    if (!step || !step.roleId.startsWith('group-')) return [];
 
     const group = STEP_GROUPS.find(item => item.stepKey === step.stepKey);
-    if (!group) return false;
+    if (!group) return [];
 
-    const criminalMembers = gamePlayers
+    return gamePlayers
         .map((player, idx) => ({ player, idx }))
         .filter(({ player }) =>
             !player.eliminated &&
@@ -4028,15 +4028,50 @@ function isGroupStepBlocked(step, blockedIndices) {
             player.role.team === 'criminal' &&
             group.roleIds.includes(player.role.id)
         );
+}
 
+function isGroupStepBlocked(step, blockedIndices) {
+    const criminalMembers = getAliveGroupMembers(step);
     if (!criminalMembers.length) return true;
 
     return criminalMembers.every(({ idx }) => blockedIndices.has(idx));
 }
 
+function isGroupStepJailed(step) {
+    const criminalMembers = getAliveGroupMembers(step);
+    if (!criminalMembers.length) return true;
+
+    return criminalMembers.every(({ player }) => player.jailed);
+}
+
+function showStepSkipModal(title, text, step) {
+    stepBlockedPending = step;
+    const titleEl = document.getElementById('step-blocked-title');
+    const textEl = document.getElementById('step-blocked-text');
+    if (titleEl) titleEl.textContent = title;
+    if (textEl) textEl.textContent = text;
+    const modal = document.getElementById('step-blocked-modal');
+    if (modal) modal.classList.add('active');
+    return true;
+}
+
 function maybeShowBlockedStepModal(step) {
     const blockedIndices = getBlockedActorIndices();
     if (!step || step.stepType === 'prompt') return false;
+
+    const isJailed = step.roleId.startsWith('group-')
+        ? isGroupStepJailed(step)
+        : !!gamePlayers[step.actorIdx]?.jailed;
+
+    if (isJailed) {
+        return showStepSkipModal(
+            '🔒 Роль в тюрьме',
+            step.roleId.startsWith('group-')
+                ? `${step.roleName} — все участники этой роли сейчас в тюрьме, ход пропускается.`
+                : `${step.actorName} (${step.roleName}) сейчас в тюрьме, ход пропускается.`,
+            step
+        );
+    }
 
     const isBlocked = step.roleId.startsWith('group-')
         ? isGroupStepBlocked(step, blockedIndices)
@@ -4044,16 +4079,13 @@ function maybeShowBlockedStepModal(step) {
 
     if (!isBlocked) return false;
 
-    stepBlockedPending = step;
-    const textEl = document.getElementById('step-blocked-text');
-    if (textEl) {
-        textEl.textContent = step.roleId.startsWith('group-')
+    return showStepSkipModal(
+        '🚫 Ход заблокирован',
+        step.roleId.startsWith('group-')
             ? `${step.roleName} — ход этой роли заблокирован адвокатом.`
-            : `${step.actorName} (${step.roleName}) — ход этой роли заблокирован адвокатом.`;
-    }
-    const modal = document.getElementById('step-blocked-modal');
-    if (modal) modal.classList.add('active');
-    return true;
+            : `${step.actorName} (${step.roleName}) — ход этой роли заблокирован адвокатом.`,
+        step
+    );
 }
 
 function confirmStepBlockedModal() {
