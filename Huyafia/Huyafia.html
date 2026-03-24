@@ -2241,7 +2241,7 @@
         .action-log,
         .settings-panel {
             border-radius: 20px;
-            padding: 12px;
+            padding: 10px;
             overflow: hidden;
             position: relative;
         }
@@ -2478,7 +2478,7 @@
 
         .player-grid,
         .game-player-grid {
-            gap: 10px;
+            gap: 6px;
         }
 
         .player-check,
@@ -2714,11 +2714,12 @@
 
         .game-player-grid {
             margin-bottom: 0;
+            gap: 6px;
         }
 
         .game-player-card {
-            padding: 12px;
-            gap: 10px;
+            padding: 8px;
+            gap: 6px;
             transition: transform 0.24s ease, box-shadow 0.24s ease, opacity 0.24s ease;
         }
 
@@ -2732,54 +2733,54 @@
         }
 
         .gp-role-img-wrap {
-            width: 46px;
-            min-width: 46px;
-            max-width: 46px;
-            height: 68px;
-            border-radius: 12px;
+            width: 36px;
+            min-width: 36px;
+            max-width: 36px;
+            height: 52px;
+            border-radius: 8px;
         }
 
         .gp-content {
-            gap: 8px;
+            gap: 5px;
         }
 
         .gp-name {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 800;
         }
 
         .gp-actions {
-            gap: 6px;
-            max-width: none;
+            gap: 4px;
+            max-width: 48px;
         }
 
         .gp-action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             border-width: 1px;
             background: rgba(255, 255, 255, 0.04);
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .gp-role {
-            min-height: 42px;
-            border-radius: 14px;
-            font-size: 12px;
+            min-height: 32px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: 700;
             background: rgba(255, 255, 255, 0.04);
         }
 
         .gp-status-row {
-            gap: 6px;
+            gap: 4px;
             justify-content: flex-start;
         }
 
         .gp-status-btn {
-            min-height: 28px;
+            min-height: 22px;
             border-radius: 999px;
-            padding: 0 8px;
-            font-size: 11px;
+            padding: 0 6px;
+            font-size: 10px;
         }
 
         .gp-status-btn.gp-jail-mini {
@@ -2793,13 +2794,13 @@
         }
 
         .status-markers {
-            top: 10px;
-            right: 10px;
-            gap: 4px;
+            top: 6px;
+            right: 6px;
+            gap: 3px;
         }
 
         .status-badge {
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .notepad-area {
@@ -3102,6 +3103,353 @@
                 transition: none !important;
                 scroll-behavior: auto !important;
             }
+        }
+    </style>
+
+    <!-- ═══ Animations & Micro-interactions ═══ -->
+    <style>
+        /* ── Keyframes ──────────────────────────────────────────── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes slideUpModal {
+            from { transform: translateX(-50%) translateY(100%); }
+            to   { transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes popIn {
+            0%   { opacity: 0; transform: scale(0.7); }
+            60%  { transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes springPress {
+            0%   { transform: scale(1); }
+            30%  { transform: scale(0.92); }
+            50%  { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(214,64,69,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(214,64,69,0.35); }
+        }
+        @keyframes pulseGlowBlue {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(77,163,255,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(77,163,255,0.35); }
+        }
+        @keyframes pulseGlowYellow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(231,197,106,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(231,197,106,0.35); }
+        }
+        @keyframes pulseGlowGreen {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(65,184,131,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(65,184,131,0.35); }
+        }
+        @keyframes pulseGlowPurple {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(181,123,234,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(181,123,234,0.35); }
+        }
+        @keyframes pulseGlowGray {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(138,152,169,0.0); }
+            50%      { box-shadow: 0 0 14px 3px rgba(138,152,169,0.35); }
+        }
+        @keyframes checkPop {
+            0%   { transform: scale(0) rotate(-45deg); }
+            50%  { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastSlideOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to   { opacity: 0; transform: translateY(-10px) scale(0.95); }
+        }
+        @keyframes rippleExpand {
+            to { transform: scale(4); opacity: 0; }
+        }
+        @keyframes chipPop {
+            0%   { opacity: 0; transform: scale(0.6) translateY(8px); }
+            70%  { transform: scale(1.06) translateY(-2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes nightBtnActivePulse {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounceToggle {
+            0%   { transform: translateX(0); }
+            30%  { transform: translateX(22px); }
+            50%  { transform: translateX(16px); }
+            70%  { transform: translateX(19px); }
+            100% { transform: translateX(18px); }
+        }
+        @keyframes bounceToggleOff {
+            0%   { transform: translateX(18px); }
+            30%  { transform: translateX(-4px); }
+            50%  { transform: translateX(2px); }
+            70%  { transform: translateX(-1px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* ── Screen transitions ─────────────────────────────────── */
+        .screen {
+            animation: none;
+        }
+        .screen.active {
+            animation: fadeInUp 0.32s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* ── Card staggered enter ───────────────────────────────── */
+        .game-player-card,
+        .player-check {
+            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+            animation-delay: calc(var(--card-index, 0) * 45ms);
+        }
+
+        /* ── Turn order chip pop-in ─────────────────────────────── */
+        .turn-chip {
+            animation: chipPop 0.35s cubic-bezier(.34,1.56,.64,1) both;
+            animation-delay: calc(var(--chip-index, 0) * 60ms);
+        }
+        .turn-dead-marker {
+            animation: fadeIn 0.25s ease both;
+            animation-delay: calc(var(--chip-index, 0) * 60ms);
+        }
+
+        /* ── Modal slide-up from bottom ─────────────────────────── */
+        .settings-modal-overlay.active .settings-modal-panel {
+            animation: none;
+            transform: translateX(-50%) translateY(0);
+        }
+        .modal-overlay.active .modal,
+        .modal-overlay.active .night-report-modal {
+            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* ── Ripple effect on buttons ───────────────────────────── */
+        .btn, .night-action-btn, .nav-btn, .stab-btn, .role-btn,
+        .role-tab-btn, .player-check, .game-player-card,
+        .settings-role-item, .settings-rows-toggle-btn,
+        .night-effects-toggle, .gp-status-btn, .gp-action-btn,
+        .gp-role, .modal-close-btn, .notes-settings-btn,
+        .settings-modal-close, .clear-role-btn {
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.22);
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+            margin-left: -20px;
+            pointer-events: none;
+            animation: rippleExpand 0.5s cubic-bezier(.22,1,.36,1) forwards;
+        }
+
+        /* ── Button spring press ────────────────────────────────── */
+        .btn:active,
+        .night-action-btn:active,
+        .nav-btn:active,
+        .stab-btn:active,
+        .role-btn:active,
+        .role-tab-btn:active,
+        .player-check:active,
+        .settings-role-item:active,
+        .clear-role-btn:active,
+        .modal-close-btn:active,
+        .notes-settings-btn:active,
+        .settings-modal-close:active {
+            animation: springPress 0.35s cubic-bezier(.34,1.56,.64,1);
+        }
+
+        /* ── Toggle switch bounce ───────────────────────────────── */
+        .toggle-switch input:checked + .toggle-slider::before {
+            animation: bounceToggle 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        .toggle-switch input:not(:checked) + .toggle-slider::before {
+            animation: bounceToggleOff 0.35s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+
+        /* ── Checkbox check animation ───────────────────────────── */
+        .player-check.checked .check-box::after,
+        .settings-role-item.enabled-citizen .settings-role-check::after,
+        .settings-role-item.enabled-criminal .settings-role-check::after,
+        .settings-role-item.enabled-outcast .settings-role-check::after {
+            animation: checkPop 0.3s cubic-bezier(.34,1.56,.64,1) both;
+        }
+
+        /* ── Input focus glow ───────────────────────────────────── */
+        .add-player-row input,
+        .notepad-area {
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+        }
+        .add-player-row input:focus,
+        .notepad-area:focus {
+            transform: scale(1.005);
+        }
+
+        /* ── Night action button active pulse ───────────────────── */
+        .night-action-btn.active.kill-btn    { animation: pulseGlow 2s ease-in-out infinite; }
+        .night-action-btn.active.protect-btn { animation: pulseGlowBlue 2s ease-in-out infinite; }
+        .night-action-btn.active.alibi-btn   { animation: pulseGlowPurple 2s ease-in-out infinite; }
+        .night-action-btn.active.jail-btn    { animation: pulseGlowYellow 2s ease-in-out infinite; }
+        .night-action-btn.active.poison-btn  { animation: pulseGlowGreen 2s ease-in-out infinite; }
+        .night-action-btn.active.sect-btn    { animation: pulseGlowYellow 2s ease-in-out infinite; }
+        .night-action-btn.active.block-btn   { animation: pulseGlowGray 2s ease-in-out infinite; }
+        .night-action-btn.active {
+            animation-name: nightBtnActivePulse, pulseGlow;
+            animation-duration: 1.5s, 2s;
+            animation-timing-function: ease-in-out, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+        }
+        .night-action-btn.active.protect-btn { animation-name: nightBtnActivePulse, pulseGlowBlue; }
+        .night-action-btn.active.alibi-btn   { animation-name: nightBtnActivePulse, pulseGlowPurple; }
+        .night-action-btn.active.jail-btn    { animation-name: nightBtnActivePulse, pulseGlowYellow; }
+        .night-action-btn.active.poison-btn  { animation-name: nightBtnActivePulse, pulseGlowGreen; }
+        .night-action-btn.active.sect-btn    { animation-name: nightBtnActivePulse, pulseGlowYellow; }
+        .night-action-btn.active.block-btn   { animation-name: nightBtnActivePulse, pulseGlowGray; }
+
+        /* ── Night-selected card glow ───────────────────────────── */
+        .game-player-card.night-selected {
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        /* ── Button hover lift (desktop only) ───────────────────── */
+        @media (hover: hover) {
+            .btn:hover,
+            .night-action-btn:hover,
+            .nav-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            }
+            .player-check:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            }
+            .game-player-card:hover:not(.eliminated) {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+            }
+            .turn-chip:hover {
+                transform: translateY(-2px) scale(1.04);
+            }
+        }
+
+        /* ── Toast notifications ────────────────────────────────── */
+        #toast-container {
+            position: fixed;
+            bottom: calc(90px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            width: min(calc(100% - 32px), 420px);
+        }
+        .toast {
+            background: rgba(28,28,28,0.94);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 12px 18px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Manrope', sans-serif;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            pointer-events: auto;
+            animation: toastSlideIn 0.3s cubic-bezier(.22,1,.36,1) both;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        .toast.toast-out {
+            animation: toastSlideOut 0.25s ease both;
+        }
+        .toast-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* ── Staggered role button grid ─────────────────────────── */
+        .role-btn {
+            animation: popIn 0.15s cubic-bezier(.22,1,.36,1) both;
+            animation-delay: calc(var(--role-index, 0) * 14ms);
+        }
+
+        /* ── Action log entry fade-in ───────────────────────────── */
+        .action-log-entry {
+            animation: fadeInUp 0.2s ease both;
+        }
+
+        /* ── Night report entry stagger ─────────────────────────── */
+        .night-report-entry {
+            animation: fadeInUp 0.25s ease both;
+            animation-delay: calc(var(--entry-index, 0) * 50ms);
+        }
+
+        /* ── Nav button active spring ───────────────────────────── */
+        .nav-btn.active {
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        /* ── Smooth stat-item transitions ───────────────────────── */
+        .stat-item {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* ── Settings toggle row hover (desktop) ────────────────── */
+        @media (hover: hover) {
+            .setting-toggle-row:hover {
+                background: rgba(255,255,255,0.02);
+                border-radius: 10px;
+                padding-left: 8px;
+                padding-right: 8px;
+                transition: background 0.2s ease, border-radius 0.2s ease;
+            }
+        }
+
+        /* ── Eliminated card flash ──────────────────────────────── */
+        .game-player-card.just-eliminated {
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* ── Hero card subtle entrance ──────────────────────────── */
+        .hero-card {
+            animation: fadeInUp 0.45s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* ── Section card entrance ──────────────────────────────── */
+        .surface-card {
+            animation: fadeInUp 0.35s cubic-bezier(.22,1,.36,1) both;
+            animation-delay: 0.08s;
+        }
+
+        /* ── Topbar card entrance ───────────────────────────────── */
+        .topbar-card {
+            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* ── Smooth transitions for dynamic elements ────────────── */
+        .game-player-card {
+            transition: transform 0.25s cubic-bezier(.22,1,.36,1),
+                        box-shadow 0.25s ease,
+                        opacity 0.25s ease,
+                        border-color 0.25s ease;
         }
     </style>
 </head>
@@ -6679,6 +7027,218 @@
             document.getElementById('notepad').value = '';
             renderLobby();
         }
+
+        // ═══ Animations & Micro-interactions ═══════════════════════════════
+
+        // ── Toast notifications ──────────────────────────────────
+        (function initToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            document.body.appendChild(container);
+        })();
+
+        function showToast(message, icon = '✓', duration = 2200) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            const timeout = setTimeout(() => {
+                toast.classList.add('toast-out');
+                toast.addEventListener('animationend', () => toast.remove(), { once: true });
+            }, duration);
+            toast.addEventListener('click', () => {
+                clearTimeout(timeout);
+                toast.classList.add('toast-out');
+                toast.addEventListener('animationend', () => toast.remove(), { once: true });
+            }, { once: true });
+        }
+
+        // ── Haptic feedback ──────────────────────────────────────
+        function haptic(pattern = 'light') {
+            if (!navigator.vibrate) return;
+            switch (pattern) {
+                case 'light':  navigator.vibrate(12); break;
+                case 'medium': navigator.vibrate(25); break;
+                case 'heavy':  navigator.vibrate([30, 20, 30]); break;
+                case 'success':navigator.vibrate([15, 50, 15]); break;
+                case 'error':  navigator.vibrate([40, 30, 40, 30, 40]); break;
+            }
+        }
+
+        // ── Ripple effect ────────────────────────────────────────
+        document.addEventListener('pointerdown', function(e) {
+            const target = e.target.closest(
+                '.btn, .night-action-btn, .nav-btn, .stab-btn, .role-btn, .role-tab-btn, ' +
+                '.player-check, .settings-role-item, .clear-role-btn, .modal-close-btn, ' +
+                '.notes-settings-btn, .settings-modal-close, .status-rows-toggle-btn, ' +
+                '.night-effects-toggle, .gp-status-btn, .gp-action-btn'
+            );
+            if (!target) return;
+
+            const rect = target.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            const size = Math.max(rect.width, rect.height) * 2;
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left) + 'px';
+            ripple.style.top = (e.clientY - rect.top) + 'px';
+            target.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+        });
+
+        // ── Stagger index helpers ────────────────────────────────
+        function applyStaggerIndices(container, selector, prop) {
+            if (!container) return;
+            const items = container.querySelectorAll(selector);
+            items.forEach((el, i) => el.style.setProperty(prop, i));
+        }
+
+        // Patch renderLobby to add stagger
+        const _origRenderLobby = renderLobby;
+        renderLobby = function() {
+            _origRenderLobby();
+            applyStaggerIndices(document.getElementById('lobby-players'), '.player-check', '--card-index');
+        };
+
+        // Patch renderGamePlayers to add stagger
+        const _origRenderGamePlayers = renderGamePlayers;
+        renderGamePlayers = function() {
+            _origRenderGamePlayers();
+            applyStaggerIndices(document.getElementById('game-players'), '.game-player-card', '--card-index');
+        };
+
+        // Patch renderTurnOrder to add stagger
+        const _origRenderTurnOrder = renderTurnOrder;
+        renderTurnOrder = function() {
+            _origRenderTurnOrder();
+            applyStaggerIndices(document.getElementById('turn-order'), '.turn-chip, .turn-dead-marker', '--chip-index');
+        };
+
+        // Patch renderRoleButtons to add stagger
+        const _origRenderRoleButtons = renderRoleButtons;
+        renderRoleButtons = function() {
+            _origRenderRoleButtons();
+            document.querySelectorAll('.role-grid').forEach(grid => {
+                applyStaggerIndices(grid, '.role-btn', '--role-index');
+            });
+        };
+
+        // Patch generateNightReport to add stagger
+        const _origGenerateNightReport = generateNightReport;
+        generateNightReport = function() {
+            _origGenerateNightReport();
+            const body = document.getElementById('night-report-body');
+            applyStaggerIndices(body, '.night-report-entry', '--entry-index');
+        };
+
+        // Patch showScreen for smooth transitions
+        const _origShowScreen = showScreen;
+        showScreen = function(name) {
+            _origShowScreen(name);
+            haptic('light');
+        };
+
+        // Patch startGame with toast + haptic
+        const _origStartGame = startGame;
+        startGame = function() {
+            if (selectedPlayers.size < 2) {
+                haptic('error');
+                showToast('Выбери хотя бы 2 игроков', '⚠️');
+                return;
+            }
+            _origStartGame();
+            haptic('success');
+            showToast('Игра начата!', '🎮');
+        };
+
+        // Patch eliminatePlayer with haptic + toast
+        const _origEliminatePlayer = eliminatePlayer;
+        eliminatePlayer = function(idx) {
+            const player = gamePlayers[idx];
+            if (!player.eliminated) {
+                haptic('heavy');
+                showToast(`${player.name} выбыл`, '💀');
+            }
+            _origEliminatePlayer(idx);
+        };
+
+        // Patch restorePlayer with haptic + toast
+        const _origRestorePlayer = restorePlayer;
+        restorePlayer = function(idx) {
+            const player = gamePlayers[idx];
+            haptic('success');
+            showToast(`${player.name} воскрешён`, '👼');
+            _origRestorePlayer(idx);
+        };
+
+        // Patch selectNightAction with haptic
+        const _origSelectNightAction = selectNightAction;
+        selectNightAction = function(action) {
+            haptic('light');
+            _origSelectNightAction(action);
+        };
+
+        // Patch confirmNightReport with haptic + toast
+        const _origConfirmNightReport = confirmNightReport;
+        confirmNightReport = function() {
+            haptic('medium');
+            showToast(`Ночь ${nightCount} завершена`, '🌙');
+            _origConfirmNightReport();
+        };
+
+        // Patch pickRole with haptic + toast
+        const _origPickRole = pickRole;
+        pickRole = function(role) {
+            if (role) {
+                haptic('medium');
+                showToast(`Роль: ${role.name}`, '🎭');
+            } else {
+                haptic('light');
+                showToast('Роль снята', '❌');
+            }
+            _origPickRole(role);
+        };
+
+        // Patch addNewPlayer with toast
+        const _origAddNewPlayer = addNewPlayer;
+        addNewPlayer = function() {
+            const input = document.getElementById('new-player-input');
+            const name = input.value.trim();
+            if (!name) return;
+            _origAddNewPlayer();
+            haptic('light');
+            showToast(`${name} добавлен`, '➕');
+        };
+
+        // Patch toggleJail with haptic
+        const _origToggleJail = toggleJail;
+        toggleJail = function(idx) {
+            const player = gamePlayers[idx];
+            haptic('medium');
+            _origToggleJail(idx);
+            showToast(player.jailed ? `${player.name} в тюрьме` : `${player.name} свободен`, player.jailed ? '🔒' : '🔓');
+        };
+
+        // Patch toggleStatus with haptic
+        const _origToggleStatus = toggleStatus;
+        toggleStatus = function(idx, statusKey) {
+            const player = gamePlayers[idx];
+            haptic('light');
+            _origToggleStatus(idx, statusKey);
+            const def = STATUS_DEFS[statusKey];
+            showToast(player[statusKey] ? `${def.label}: ${player.name}` : `${def.label} снят: ${player.name}`, def.icon);
+        };
+
+        // Patch endGame with haptic
+        const _origEndGame = endGame;
+        endGame = function() {
+            haptic('heavy');
+            _origEndGame();
+        };
+
+        // Patch addNewPlayer Enter key to also trigger haptic
+        document.getElementById('new-player-input')?.addEventListener('focus', () => haptic('light'));
 
         // ── Init ────────────────────────────────────────────────────────
         applySettingsToggles();
