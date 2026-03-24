@@ -2705,11 +2705,11 @@
         .night-actions-controls {
             margin-top: 12px;
             gap: 8px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .night-actions-controls .btn {
-            flex: 1 1 180px;
+            flex: 1 1 0;
         }
 
         .game-player-grid {
@@ -3001,7 +3001,9 @@
             }
 
             .night-actions-controls .btn {
-                flex-basis: 100%;
+                flex: 1;
+                font-size: 10px;
+                padding: 8px;
             }
 
             .turn-chip {
@@ -3110,113 +3112,284 @@
     <style>
         /* ── Keyframes ──────────────────────────────────────────── */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         @keyframes slideUpModal {
-            from { transform: translateX(-50%) translateY(100%); }
-            to   { transform: translateX(-50%) translateY(0); }
+            from {
+                transform: translateX(-50%) translateY(100%);
+            }
+
+            to {
+                transform: translateX(-50%) translateY(0);
+            }
         }
+
         @keyframes popIn {
-            0%   { opacity: 0; transform: scale(0.7); }
-            60%  { transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+
+            60% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
+
         @keyframes springPress {
-            0%   { transform: scale(1); }
-            30%  { transform: scale(0.92); }
-            50%  { transform: scale(1.03); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(0.92);
+            }
+
+            50% {
+                transform: scale(1.03);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
+
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(214,64,69,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(214,64,69,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(214, 64, 69, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(214, 64, 69, 0.35);
+            }
         }
+
         @keyframes pulseGlowBlue {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(77,163,255,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(77,163,255,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(77, 163, 255, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(77, 163, 255, 0.35);
+            }
         }
+
         @keyframes pulseGlowYellow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(231,197,106,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(231,197,106,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 197, 106, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(231, 197, 106, 0.35);
+            }
         }
+
         @keyframes pulseGlowGreen {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(65,184,131,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(65,184,131,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(65, 184, 131, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(65, 184, 131, 0.35);
+            }
         }
+
         @keyframes pulseGlowPurple {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(181,123,234,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(181,123,234,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(181, 123, 234, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(181, 123, 234, 0.35);
+            }
         }
+
         @keyframes pulseGlowGray {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(138,152,169,0.0); }
-            50%      { box-shadow: 0 0 14px 3px rgba(138,152,169,0.35); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(138, 152, 169, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 14px 3px rgba(138, 152, 169, 0.35);
+            }
         }
+
         @keyframes checkPop {
-            0%   { transform: scale(0) rotate(-45deg); }
-            50%  { transform: scale(1.2) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
+            0% {
+                transform: scale(0) rotate(-45deg);
+            }
+
+            50% {
+                transform: scale(1.2) rotate(5deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
         }
+
         @keyframes toastSlideIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
+
         @keyframes toastSlideOut {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to   { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
         }
+
         @keyframes rippleExpand {
-            to { transform: scale(4); opacity: 0; }
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
+
         @keyframes chipPop {
-            0%   { opacity: 0; transform: scale(0.6) translateY(8px); }
-            70%  { transform: scale(1.06) translateY(-2px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% {
+                opacity: 0;
+                transform: scale(0.6) translateY(8px);
+            }
+
+            70% {
+                transform: scale(1.06) translateY(-2px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
+
         @keyframes nightBtnActivePulse {
-            0%   { transform: scale(1); }
-            50%  { transform: scale(1.04); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.04);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
+
         @keyframes bounceToggle {
-            0%   { transform: translateX(0); }
-            30%  { transform: translateX(22px); }
-            50%  { transform: translateX(16px); }
-            70%  { transform: translateX(19px); }
-            100% { transform: translateX(18px); }
+            0% {
+                transform: translateX(0);
+            }
+
+            30% {
+                transform: translateX(22px);
+            }
+
+            50% {
+                transform: translateX(16px);
+            }
+
+            70% {
+                transform: translateX(19px);
+            }
+
+            100% {
+                transform: translateX(18px);
+            }
         }
+
         @keyframes bounceToggleOff {
-            0%   { transform: translateX(18px); }
-            30%  { transform: translateX(-4px); }
-            50%  { transform: translateX(2px); }
-            70%  { transform: translateX(-1px); }
-            100% { transform: translateX(0); }
+            0% {
+                transform: translateX(18px);
+            }
+
+            30% {
+                transform: translateX(-4px);
+            }
+
+            50% {
+                transform: translateX(2px);
+            }
+
+            70% {
+                transform: translateX(-1px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
 
         /* ── Screen transitions ─────────────────────────────────── */
         .screen {
             animation: none;
         }
+
         .screen.active {
-            animation: fadeInUp 0.32s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.32s cubic-bezier(.22, 1, .36, 1) both;
         }
 
         /* ── Card staggered enter ───────────────────────────────── */
         .game-player-card,
         .player-check {
-            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.3s cubic-bezier(.22, 1, .36, 1) both;
             animation-delay: calc(var(--card-index, 0) * 45ms);
         }
 
         /* ── Turn order chip pop-in ─────────────────────────────── */
         .turn-chip {
-            animation: chipPop 0.35s cubic-bezier(.34,1.56,.64,1) both;
+            animation: chipPop 0.35s cubic-bezier(.34, 1.56, .64, 1) both;
             animation-delay: calc(var(--chip-index, 0) * 60ms);
         }
+
         .turn-dead-marker {
             animation: fadeIn 0.25s ease both;
             animation-delay: calc(var(--chip-index, 0) * 60ms);
@@ -3227,32 +3400,46 @@
             animation: none;
             transform: translateX(-50%) translateY(0);
         }
+
         .modal-overlay.active .modal,
         .modal-overlay.active .night-report-modal {
-            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.3s cubic-bezier(.22, 1, .36, 1) both;
         }
 
         /* ── Ripple effect on buttons ───────────────────────────── */
-        .btn, .night-action-btn, .nav-btn, .stab-btn, .role-btn,
-        .role-tab-btn, .player-check, .game-player-card,
-        .settings-role-item, .settings-rows-toggle-btn,
-        .night-effects-toggle, .gp-status-btn, .gp-action-btn,
-        .gp-role, .modal-close-btn, .notes-settings-btn,
-        .settings-modal-close, .clear-role-btn {
+        .btn,
+        .night-action-btn,
+        .nav-btn,
+        .stab-btn,
+        .role-btn,
+        .role-tab-btn,
+        .player-check,
+        .game-player-card,
+        .settings-role-item,
+        .settings-rows-toggle-btn,
+        .night-effects-toggle,
+        .gp-status-btn,
+        .gp-action-btn,
+        .gp-role,
+        .modal-close-btn,
+        .notes-settings-btn,
+        .settings-modal-close,
+        .clear-role-btn {
             position: relative;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
         }
+
         .ripple-effect {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255,255,255,0.22);
+            background: rgba(255, 255, 255, 0.22);
             width: 40px;
             height: 40px;
             margin-top: -20px;
             margin-left: -20px;
             pointer-events: none;
-            animation: rippleExpand 0.5s cubic-bezier(.22,1,.36,1) forwards;
+            animation: rippleExpand 0.5s cubic-bezier(.22, 1, .36, 1) forwards;
         }
 
         /* ── Button spring press ────────────────────────────────── */
@@ -3268,15 +3455,16 @@
         .modal-close-btn:active,
         .notes-settings-btn:active,
         .settings-modal-close:active {
-            animation: springPress 0.35s cubic-bezier(.34,1.56,.64,1);
+            animation: springPress 0.35s cubic-bezier(.34, 1.56, .64, 1);
         }
 
         /* ── Toggle switch bounce ───────────────────────────────── */
-        .toggle-switch input:checked + .toggle-slider::before {
-            animation: bounceToggle 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+        .toggle-switch input:checked+.toggle-slider::before {
+            animation: bounceToggle 0.4s cubic-bezier(.34, 1.56, .64, 1) forwards;
         }
-        .toggle-switch input:not(:checked) + .toggle-slider::before {
-            animation: bounceToggleOff 0.35s cubic-bezier(.34,1.56,.64,1) forwards;
+
+        .toggle-switch input:not(:checked)+.toggle-slider::before {
+            animation: bounceToggleOff 0.35s cubic-bezier(.34, 1.56, .64, 1) forwards;
         }
 
         /* ── Checkbox check animation ───────────────────────────── */
@@ -3284,7 +3472,7 @@
         .settings-role-item.enabled-citizen .settings-role-check::after,
         .settings-role-item.enabled-criminal .settings-role-check::after,
         .settings-role-item.enabled-outcast .settings-role-check::after {
-            animation: checkPop 0.3s cubic-bezier(.34,1.56,.64,1) both;
+            animation: checkPop 0.3s cubic-bezier(.34, 1.56, .64, 1) both;
         }
 
         /* ── Input focus glow ───────────────────────────────────── */
@@ -3292,31 +3480,71 @@
         .notepad-area {
             transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
         }
+
         .add-player-row input:focus,
         .notepad-area:focus {
             transform: scale(1.005);
         }
 
         /* ── Night action button active pulse ───────────────────── */
-        .night-action-btn.active.kill-btn    { animation: pulseGlow 2s ease-in-out infinite; }
-        .night-action-btn.active.protect-btn { animation: pulseGlowBlue 2s ease-in-out infinite; }
-        .night-action-btn.active.alibi-btn   { animation: pulseGlowPurple 2s ease-in-out infinite; }
-        .night-action-btn.active.jail-btn    { animation: pulseGlowYellow 2s ease-in-out infinite; }
-        .night-action-btn.active.poison-btn  { animation: pulseGlowGreen 2s ease-in-out infinite; }
-        .night-action-btn.active.sect-btn    { animation: pulseGlowYellow 2s ease-in-out infinite; }
-        .night-action-btn.active.block-btn   { animation: pulseGlowGray 2s ease-in-out infinite; }
+        .night-action-btn.active.kill-btn {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.protect-btn {
+            animation: pulseGlowBlue 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.alibi-btn {
+            animation: pulseGlowPurple 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.jail-btn {
+            animation: pulseGlowYellow 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.poison-btn {
+            animation: pulseGlowGreen 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.sect-btn {
+            animation: pulseGlowYellow 2s ease-in-out infinite;
+        }
+
+        .night-action-btn.active.block-btn {
+            animation: pulseGlowGray 2s ease-in-out infinite;
+        }
+
         .night-action-btn.active {
             animation-name: nightBtnActivePulse, pulseGlow;
             animation-duration: 1.5s, 2s;
             animation-timing-function: ease-in-out, ease-in-out;
             animation-iteration-count: infinite, infinite;
         }
-        .night-action-btn.active.protect-btn { animation-name: nightBtnActivePulse, pulseGlowBlue; }
-        .night-action-btn.active.alibi-btn   { animation-name: nightBtnActivePulse, pulseGlowPurple; }
-        .night-action-btn.active.jail-btn    { animation-name: nightBtnActivePulse, pulseGlowYellow; }
-        .night-action-btn.active.poison-btn  { animation-name: nightBtnActivePulse, pulseGlowGreen; }
-        .night-action-btn.active.sect-btn    { animation-name: nightBtnActivePulse, pulseGlowYellow; }
-        .night-action-btn.active.block-btn   { animation-name: nightBtnActivePulse, pulseGlowGray; }
+
+        .night-action-btn.active.protect-btn {
+            animation-name: nightBtnActivePulse, pulseGlowBlue;
+        }
+
+        .night-action-btn.active.alibi-btn {
+            animation-name: nightBtnActivePulse, pulseGlowPurple;
+        }
+
+        .night-action-btn.active.jail-btn {
+            animation-name: nightBtnActivePulse, pulseGlowYellow;
+        }
+
+        .night-action-btn.active.poison-btn {
+            animation-name: nightBtnActivePulse, pulseGlowGreen;
+        }
+
+        .night-action-btn.active.sect-btn {
+            animation-name: nightBtnActivePulse, pulseGlowYellow;
+        }
+
+        .night-action-btn.active.block-btn {
+            animation-name: nightBtnActivePulse, pulseGlowGray;
+        }
 
         /* ── Night-selected card glow ───────────────────────────── */
         .game-player-card.night-selected {
@@ -3325,20 +3553,24 @@
 
         /* ── Button hover lift (desktop only) ───────────────────── */
         @media (hover: hover) {
+
             .btn:hover,
             .night-action-btn:hover,
             .nav-btn:hover {
                 transform: translateY(-1px);
-                box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             }
+
             .player-check:hover {
                 transform: translateY(-1px);
-                box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
             }
+
             .game-player-card:hover:not(.eliminated) {
                 transform: translateY(-2px);
-                box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
             }
+
             .turn-chip:hover {
                 transform: translateY(-2px) scale(1.04);
             }
@@ -3358,28 +3590,31 @@
             pointer-events: none;
             width: min(calc(100% - 32px), 420px);
         }
+
         .toast {
-            background: rgba(28,28,28,0.94);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(28, 28, 28, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
             padding: 12px 18px;
             color: var(--text-main);
             font-size: 13px;
             font-weight: 600;
             font-family: 'Manrope', sans-serif;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(12px);
             pointer-events: auto;
-            animation: toastSlideIn 0.3s cubic-bezier(.22,1,.36,1) both;
+            animation: toastSlideIn 0.3s cubic-bezier(.22, 1, .36, 1) both;
             display: flex;
             align-items: center;
             gap: 10px;
             max-width: 100%;
             word-break: break-word;
         }
+
         .toast.toast-out {
             animation: toastSlideOut 0.25s ease both;
         }
+
         .toast-icon {
             font-size: 18px;
             flex-shrink: 0;
@@ -3387,7 +3622,7 @@
 
         /* ── Staggered role button grid ─────────────────────────── */
         .role-btn {
-            animation: popIn 0.15s cubic-bezier(.22,1,.36,1) both;
+            animation: popIn 0.15s cubic-bezier(.22, 1, .36, 1) both;
             animation-delay: calc(var(--role-index, 0) * 14ms);
         }
 
@@ -3415,12 +3650,21 @@
         /* ── Settings toggle row hover (desktop) ────────────────── */
         @media (hover: hover) {
             .setting-toggle-row:hover {
-                background: rgba(255,255,255,0.02);
+                background: rgba(255, 255, 255, 0.02);
                 border-radius: 10px;
                 padding-left: 8px;
                 padding-right: 8px;
                 transition: background 0.2s ease, border-radius 0.2s ease;
             }
+        }
+
+        /* ── Global animation kill switch ──────────────────────────── */
+        .no-animations *,
+        .no-animations *::before,
+        .no-animations *::after {
+            animation-duration: 0s !important;
+            animation-delay: 0s !important;
+            transition-duration: 0s !important;
         }
 
         /* ── Eliminated card flash ──────────────────────────────── */
@@ -3430,26 +3674,66 @@
 
         /* ── Hero card subtle entrance ──────────────────────────── */
         .hero-card {
-            animation: fadeInUp 0.45s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.45s cubic-bezier(.22, 1, .36, 1) both;
         }
 
         /* ── Section card entrance ──────────────────────────────── */
         .surface-card {
-            animation: fadeInUp 0.35s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.35s cubic-bezier(.22, 1, .36, 1) both;
             animation-delay: 0.08s;
         }
 
         /* ── Topbar card entrance ───────────────────────────────── */
         .topbar-card {
-            animation: fadeInUp 0.3s cubic-bezier(.22,1,.36,1) both;
+            animation: fadeInUp 0.3s cubic-bezier(.22, 1, .36, 1) both;
         }
 
         /* ── Smooth transitions for dynamic elements ────────────── */
         .game-player-card {
-            transition: transform 0.25s cubic-bezier(.22,1,.36,1),
-                        box-shadow 0.25s ease,
-                        opacity 0.25s ease,
-                        border-color 0.25s ease;
+            transition: transform 0.25s cubic-bezier(.22, 1, .36, 1),
+                box-shadow 0.25s ease,
+                opacity 0.25s ease,
+                border-color 0.25s ease;
+        }
+
+        /* ── Step mode sticky banner ────────────────────────────── */
+        .step-mode-banner {
+            position: sticky;
+            top: 80px;
+            z-index: 19;
+            padding: 0 0 4px 0;
+            animation: fadeIn 0.2s ease both;
+        }
+
+        .step-mode-banner-inner {
+            background: rgba(30, 30, 30, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .step-mode-banner-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .step-mode-banner-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            line-height: 1.35;
+        }
+
+        .step-mode-banner.prompt-step .step-mode-banner-inner {
+            background: rgba(36, 32, 24, 0.92);
+            border-color: rgba(231, 197, 106, 0.2);
         }
     </style>
 </head>
@@ -3513,6 +3797,12 @@
                             <span class="material-symbols-rounded">tune</span>
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <div id="step-mode-banner" class="step-mode-banner" style="display:none;">
+                <div class="step-mode-banner-inner">
+                    <span id="step-mode-banner-text" class="step-mode-banner-text"></span>
                 </div>
             </div>
 
@@ -3695,6 +3985,9 @@
                 </button>
                 <button class="stab-btn" data-tab="buttons" onclick="switchSettingsTab('buttons')">
                     <span class="stab-icon material-symbols-rounded">apps</span>Кнопки
+                </button>
+                <button class="stab-btn" data-tab="ui" onclick="switchSettingsTab('ui')">
+                    <span class="stab-icon material-symbols-rounded">tune</span>Интерфейс
                 </button>
             </div>
 
@@ -3927,6 +4220,127 @@
                         <input type="checkbox" id="toggle-block" onchange="updateBtnSetting('block', this.checked)">
                         <span class="toggle-slider"></span>
                     </label>
+                </div>
+            </div>
+
+            <!-- Tab: UI -->
+            <div id="stab-ui" class="stab-content">
+                <div class="stab-section-title">Анимации</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Анимации</strong>
+                        <span>Включить/выключить все анимации и переходы</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-animations"
+                            onchange="updateUiSetting('enableAnimations', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Ripple-эффекты</strong>
+                        <span>Волна при нажатии на кнопки</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-ripple"
+                            onchange="updateUiSetting('showRipple', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Вибрация</strong>
+                        <span>Тактильная обратная связь при действиях</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-haptic"
+                            onchange="updateUiSetting('enableHaptic', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Уведомления</strong>
+                        <span>Показывать toast-сообщения</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-toasts"
+                            onchange="updateUiSetting('showToasts', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="stab-section-title">Отображение</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Неназначенные роли</strong>
+                        <span>Показывать слоты без игрока в очереди ходов</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-unassigned-to"
+                            onchange="updateUiSetting('hideUnassignedTurnOrder', !this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Бейджи статусов</strong>
+                        <span>Иконки эффектов на карточках игроков</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-status-badges"
+                            onchange="updateUiSetting('showStatusBadges', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="stab-section-title">Безопасность</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Подтверждать убийство</strong>
+                        <span>Запрос перед убийством игрока</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-confirm-elim"
+                            onchange="updateUiSetting('confirmEliminate', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Подтверждать конец игры</strong>
+                        <span>Запрос перед завершением игры</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-confirm-end"
+                            onchange="updateUiSetting('confirmEndGame', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Автопереход шага</strong>
+                        <span>Автоматический переход в пошаговом режиме</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-auto-step"
+                            onchange="updateUiSetting('autoAdvanceStep', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="margin-top:12px;display:flex;justify-content:center;">
+                    <button class="btn btn-dark" onclick="resetUiSettings()">Сбросить настройки интерфейса</button>
                 </div>
             </div>
         </div>
@@ -4182,6 +4596,17 @@
         // Show/hide step mode panel
         let showStepMode = JSON.parse(localStorage.getItem('mafia_show_step_mode')) ?? true;
 
+        // ── UI settings ──────────────────────────────────────────
+        let enableAnimations = JSON.parse(localStorage.getItem('mafia_enable_animations')) ?? true;
+        let showRipple = JSON.parse(localStorage.getItem('mafia_show_ripple')) ?? true;
+        let enableHaptic = JSON.parse(localStorage.getItem('mafia_enable_haptic')) ?? true;
+        let showToasts = JSON.parse(localStorage.getItem('mafia_show_toasts')) ?? true;
+        let hideUnassignedTurnOrder = JSON.parse(localStorage.getItem('mafia_hide_unassigned_to')) ?? false;
+        let showStatusBadges = JSON.parse(localStorage.getItem('mafia_show_status_badges')) ?? true;
+        let confirmEliminate = JSON.parse(localStorage.getItem('mafia_confirm_eliminate')) ?? false;
+        let confirmEndGame = JSON.parse(localStorage.getItem('mafia_confirm_end_game')) ?? true;
+        let autoAdvanceStep = JSON.parse(localStorage.getItem('mafia_auto_advance_step')) ?? true;
+
         // Mobile disclosure for secondary night effects
         let showNightSecondaryActions = false;
 
@@ -4236,6 +4661,8 @@
             if (blockedModal) blockedModal.classList.remove('active');
             const promptModal = document.getElementById('step-role-prompt-modal');
             if (promptModal) promptModal.classList.remove('active');
+            const banner = document.getElementById('step-mode-banner');
+            if (banner) banner.style.display = 'none';
 
             if (clearStorage) {
                 localStorage.removeItem(STEP_MODE_STORAGE_KEY);
@@ -4500,6 +4927,63 @@
             renderGamePlayers();
         }
 
+        // ── UI settings ──────────────────────────────────────────
+        const UI_SETTINGS_MAP = {
+            enableAnimations: 'mafia_enable_animations',
+            showRipple: 'mafia_show_ripple',
+            enableHaptic: 'mafia_enable_haptic',
+            showToasts: 'mafia_show_toasts',
+            hideUnassignedTurnOrder: 'mafia_hide_unassigned_to',
+            showStatusBadges: 'mafia_show_status_badges',
+            confirmEliminate: 'mafia_confirm_eliminate',
+            confirmEndGame: 'mafia_confirm_end_game',
+            autoAdvanceStep: 'mafia_auto_advance_step'
+        };
+
+        const UI_SETTINGS_DEFAULTS = {
+            enableAnimations: true,
+            showRipple: true,
+            enableHaptic: true,
+            showToasts: true,
+            hideUnassignedTurnOrder: false,
+            showStatusBadges: true,
+            confirmEliminate: false,
+            confirmEndGame: true,
+            autoAdvanceStep: true
+        };
+
+        function updateUiSetting(key, value) {
+            if (!(key in UI_SETTINGS_MAP)) return;
+            switch (key) {
+                case 'enableAnimations':
+                    enableAnimations = value;
+                    document.body.classList.toggle('no-animations', !value);
+                    break;
+                case 'showRipple': showRipple = value; break;
+                case 'enableHaptic': enableHaptic = value; break;
+                case 'showToasts': showToasts = value; break;
+                case 'hideUnassignedTurnOrder':
+                    hideUnassignedTurnOrder = value;
+                    renderTurnOrder();
+                    break;
+                case 'showStatusBadges':
+                    showStatusBadges = value;
+                    if (gamePlayers.length > 0) renderGamePlayers();
+                    break;
+                case 'confirmEliminate': confirmEliminate = value; break;
+                case 'confirmEndGame': confirmEndGame = value; break;
+                case 'autoAdvanceStep': autoAdvanceStep = value; break;
+            }
+            localStorage.setItem(UI_SETTINGS_MAP[key], JSON.stringify(value));
+        }
+
+        function resetUiSettings() {
+            Object.entries(UI_SETTINGS_DEFAULTS).forEach(([key, defaultValue]) => {
+                updateUiSetting(key, defaultValue);
+            });
+            applySettingsToggles();
+        }
+
         function applySettingsToggles() {
             // Initialize enabledRoles if first run
             if (enabledRoles === null || enabledRoles.size === 0) {
@@ -4529,6 +5013,23 @@
             const statusToggleBtn = document.getElementById('status-rows-toggle-btn');
             if (statusToggleBtn) statusToggleBtn.classList.toggle('active', showStatusRows);
             syncNightSecondaryActionsUI();
+            // Sync UI settings toggles
+            const uiToggles = {
+                'toggle-ui-animations': enableAnimations,
+                'toggle-ui-ripple': showRipple,
+                'toggle-ui-haptic': enableHaptic,
+                'toggle-ui-toasts': showToasts,
+                'toggle-ui-unassigned-to': !hideUnassignedTurnOrder,
+                'toggle-ui-status-badges': showStatusBadges,
+                'toggle-ui-confirm-elim': confirmEliminate,
+                'toggle-ui-confirm-end': confirmEndGame,
+                'toggle-ui-auto-step': autoAdvanceStep
+            };
+            Object.entries(uiToggles).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) el.checked = value;
+            });
+            document.body.classList.toggle('no-animations', !enableAnimations);
         }
 
         // ── Player list (lobby) ─────────────────────────────────────────
@@ -4799,7 +5300,7 @@
                             bar.appendChild(chip);
                         }
                     });
-                } else if (playersWithoutRoles) {
+                } else if (playersWithoutRoles && !hideUnassignedTurnOrder) {
                     // Empty slot for unassigned role
                     const marker = document.createElement('div');
                     marker.className = 'turn-dead-marker';
@@ -4854,6 +5355,7 @@
         }
 
         function buildStatusMarkers(player) {
+            if (!showStatusBadges) return '';
             let html = '';
             Object.entries(BTN_SETTING_MAP).forEach(([settingKey, statusKey]) => {
                 if (player[statusKey]) {
@@ -4978,6 +5480,7 @@
         function eliminatePlayer(idx) {
             const player = gamePlayers[idx];
             if (!player.eliminated) {
+                if (confirmEliminate && !confirm(`Убить ${player.name}?`)) return;
                 logAction(`<span class="eliminated">💀 Убит:</span> <span class="player-name">${player.name}</span>${player.role ? ` (${player.role.name})` : ''}`, 'eliminated');
             }
 
@@ -5530,7 +6033,11 @@
             };
 
             panelEl.style.display = showStepMode ? '' : 'none';
-            if (!showStepMode) return;
+            if (!showStepMode) {
+                const banner = document.getElementById('step-mode-banner');
+                if (banner) banner.style.display = 'none';
+                return;
+            }
 
             if (!stepModeActive) {
                 setStepToggleContent('explore', 'Пошаговый режим');
@@ -5540,6 +6047,8 @@
                 questionEl.style.display = 'none';
                 controlsEl.style.display = 'none';
                 backBtn.disabled = true;
+                const banner = document.getElementById('step-mode-banner');
+                if (banner) banner.style.display = 'none';
                 return;
             }
 
@@ -5557,6 +6066,8 @@
                 questionEl.textContent = 'Нет ролей с ночным ходом. Сначала назначь роли игрокам.';
                 questionEl.style.display = 'block';
                 controlsEl.style.display = 'none';
+                const banner = document.getElementById('step-mode-banner');
+                if (banner) banner.style.display = 'none';
                 return;
             }
 
@@ -5567,6 +6078,17 @@
             questionEl.style.display = 'block';
             controlsEl.style.display = 'flex';
             backBtn.disabled = stepModeIndex <= 0;
+
+            // Update sticky banner
+            const banner = document.getElementById('step-mode-banner');
+            const bannerText = document.getElementById('step-mode-banner-text');
+            if (banner && bannerText) {
+                bannerText.textContent = step.stepType === 'prompt'
+                    ? `${step.roleName}: ${step.question}`
+                    : `${step.actorName} (${step.roleName}): ${step.question} (${selectedCount}/${neededCount})`;
+                banner.classList.toggle('prompt-step', step.stepType === 'prompt');
+                banner.style.display = '';
+            }
         }
 
         function focusCurrentStepModeStep() {
@@ -5895,7 +6417,7 @@
                 renderStepModePanel();
                 renderGamePlayers();
 
-                if (selection.targetIndices.length >= step.targetCount) {
+                if (selection.targetIndices.length >= step.targetCount && autoAdvanceStep) {
                     advanceStepMode();
                 }
                 return;
@@ -7007,7 +7529,7 @@
         }
 
         function endGame() {
-            if (!confirm('Завершить игру?')) return;
+            if (confirmEndGame && !confirm('Завершить игру?')) return;
             resetStepModeState();
             document.getElementById('bottom-nav').classList.remove('active');
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -7038,6 +7560,7 @@
         })();
 
         function showToast(message, icon = '✓', duration = 2200) {
+            if (typeof showToasts !== 'undefined' && !showToasts) return;
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -7056,18 +7579,20 @@
 
         // ── Haptic feedback ──────────────────────────────────────
         function haptic(pattern = 'light') {
+            if (typeof enableHaptic !== 'undefined' && !enableHaptic) return;
             if (!navigator.vibrate) return;
             switch (pattern) {
-                case 'light':  navigator.vibrate(12); break;
+                case 'light': navigator.vibrate(12); break;
                 case 'medium': navigator.vibrate(25); break;
-                case 'heavy':  navigator.vibrate([30, 20, 30]); break;
-                case 'success':navigator.vibrate([15, 50, 15]); break;
-                case 'error':  navigator.vibrate([40, 30, 40, 30, 40]); break;
+                case 'heavy': navigator.vibrate([30, 20, 30]); break;
+                case 'success': navigator.vibrate([15, 50, 15]); break;
+                case 'error': navigator.vibrate([40, 30, 40, 30, 40]); break;
             }
         }
 
         // ── Ripple effect ────────────────────────────────────────
-        document.addEventListener('pointerdown', function(e) {
+        document.addEventListener('pointerdown', function (e) {
+            if (typeof showRipple !== 'undefined' && !showRipple) return;
             const target = e.target.closest(
                 '.btn, .night-action-btn, .nav-btn, .stab-btn, .role-btn, .role-tab-btn, ' +
                 '.player-check, .settings-role-item, .clear-role-btn, .modal-close-btn, ' +
@@ -7096,28 +7621,28 @@
 
         // Patch renderLobby to add stagger
         const _origRenderLobby = renderLobby;
-        renderLobby = function() {
+        renderLobby = function () {
             _origRenderLobby();
             applyStaggerIndices(document.getElementById('lobby-players'), '.player-check', '--card-index');
         };
 
         // Patch renderGamePlayers to add stagger
         const _origRenderGamePlayers = renderGamePlayers;
-        renderGamePlayers = function() {
+        renderGamePlayers = function () {
             _origRenderGamePlayers();
             applyStaggerIndices(document.getElementById('game-players'), '.game-player-card', '--card-index');
         };
 
         // Patch renderTurnOrder to add stagger
         const _origRenderTurnOrder = renderTurnOrder;
-        renderTurnOrder = function() {
+        renderTurnOrder = function () {
             _origRenderTurnOrder();
             applyStaggerIndices(document.getElementById('turn-order'), '.turn-chip, .turn-dead-marker', '--chip-index');
         };
 
         // Patch renderRoleButtons to add stagger
         const _origRenderRoleButtons = renderRoleButtons;
-        renderRoleButtons = function() {
+        renderRoleButtons = function () {
             _origRenderRoleButtons();
             document.querySelectorAll('.role-grid').forEach(grid => {
                 applyStaggerIndices(grid, '.role-btn', '--role-index');
@@ -7126,7 +7651,7 @@
 
         // Patch generateNightReport to add stagger
         const _origGenerateNightReport = generateNightReport;
-        generateNightReport = function() {
+        generateNightReport = function () {
             _origGenerateNightReport();
             const body = document.getElementById('night-report-body');
             applyStaggerIndices(body, '.night-report-entry', '--entry-index');
@@ -7134,14 +7659,14 @@
 
         // Patch showScreen for smooth transitions
         const _origShowScreen = showScreen;
-        showScreen = function(name) {
+        showScreen = function (name) {
             _origShowScreen(name);
             haptic('light');
         };
 
         // Patch startGame with toast + haptic
         const _origStartGame = startGame;
-        startGame = function() {
+        startGame = function () {
             if (selectedPlayers.size < 2) {
                 haptic('error');
                 showToast('Выбери хотя бы 2 игроков', '⚠️');
@@ -7154,7 +7679,7 @@
 
         // Patch eliminatePlayer with haptic + toast
         const _origEliminatePlayer = eliminatePlayer;
-        eliminatePlayer = function(idx) {
+        eliminatePlayer = function (idx) {
             const player = gamePlayers[idx];
             if (!player.eliminated) {
                 haptic('heavy');
@@ -7165,7 +7690,7 @@
 
         // Patch restorePlayer with haptic + toast
         const _origRestorePlayer = restorePlayer;
-        restorePlayer = function(idx) {
+        restorePlayer = function (idx) {
             const player = gamePlayers[idx];
             haptic('success');
             showToast(`${player.name} воскрешён`, '👼');
@@ -7174,14 +7699,14 @@
 
         // Patch selectNightAction with haptic
         const _origSelectNightAction = selectNightAction;
-        selectNightAction = function(action) {
+        selectNightAction = function (action) {
             haptic('light');
             _origSelectNightAction(action);
         };
 
         // Patch confirmNightReport with haptic + toast
         const _origConfirmNightReport = confirmNightReport;
-        confirmNightReport = function() {
+        confirmNightReport = function () {
             haptic('medium');
             showToast(`Ночь ${nightCount} завершена`, '🌙');
             _origConfirmNightReport();
@@ -7189,7 +7714,7 @@
 
         // Patch pickRole with haptic + toast
         const _origPickRole = pickRole;
-        pickRole = function(role) {
+        pickRole = function (role) {
             if (role) {
                 haptic('medium');
                 showToast(`Роль: ${role.name}`, '🎭');
@@ -7202,7 +7727,7 @@
 
         // Patch addNewPlayer with toast
         const _origAddNewPlayer = addNewPlayer;
-        addNewPlayer = function() {
+        addNewPlayer = function () {
             const input = document.getElementById('new-player-input');
             const name = input.value.trim();
             if (!name) return;
@@ -7213,7 +7738,7 @@
 
         // Patch toggleJail with haptic
         const _origToggleJail = toggleJail;
-        toggleJail = function(idx) {
+        toggleJail = function (idx) {
             const player = gamePlayers[idx];
             haptic('medium');
             _origToggleJail(idx);
@@ -7222,7 +7747,7 @@
 
         // Patch toggleStatus with haptic
         const _origToggleStatus = toggleStatus;
-        toggleStatus = function(idx, statusKey) {
+        toggleStatus = function (idx, statusKey) {
             const player = gamePlayers[idx];
             haptic('light');
             _origToggleStatus(idx, statusKey);
@@ -7232,7 +7757,7 @@
 
         // Patch endGame with haptic
         const _origEndGame = endGame;
-        endGame = function() {
+        endGame = function () {
             haptic('heavy');
             _origEndGame();
         };
