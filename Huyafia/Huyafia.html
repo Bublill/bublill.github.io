@@ -446,7 +446,7 @@
         .game-player-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px;
+            gap: 2px;
             margin-bottom: 12px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
@@ -458,7 +458,7 @@
             position: relative;
             display: flex;
             flex-direction: row;
-            gap: 6px;
+            gap: 2px;
             transition: all 0.5s ease-in-out;
             border: 1px solid var(--border);
             isolation: isolate;
@@ -655,6 +655,7 @@
             overflow: visible;
             z-index: 1;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+            margin-right: 0;
         }
 
         .gp-role-img {
@@ -672,7 +673,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
             min-width: 0;
             position: relative;
             z-index: 1;
@@ -683,7 +684,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 3px;
+            gap: 2px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
@@ -699,22 +700,22 @@
 
         .gp-actions {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             flex-shrink: 0;
             flex-wrap: wrap;
             justify-content: flex-end;
-            max-width: 80px;
+            max-width: 60px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         /* Base action button style */
         .gp-action-btn {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             border: 2px solid;
             background: transparent;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             flex-shrink: 0;
             display: flex;
@@ -741,7 +742,7 @@
         .gp-elim-btn {
             border-color: gray;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .gp-elim-btn:active {
@@ -752,7 +753,7 @@
             display: none;
             border-color: var(--green);
             color: var(--green);
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .game-player-card.eliminated .gp-restore-btn {
@@ -768,9 +769,9 @@
         }
 
         .gp-role {
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
-            padding: 4px 6px;
+            padding: 3px 5px;
             background: var(--bg-input);
             border-radius: 4px;
             text-align: center;
@@ -790,19 +791,19 @@
         /* Status buttons row — below role button */
         .gp-status-row {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             flex-wrap: wrap;
             justify-content: flex-end;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .gp-status-btn {
-            height: 20px;
-            padding: 0 5px;
-            border-radius: 10px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 9px;
             border: 1px solid;
             background: transparent;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -2240,7 +2241,7 @@
         .action-log,
         .settings-panel {
             border-radius: 20px;
-            padding: 16px;
+            padding: 12px;
             overflow: hidden;
             position: relative;
         }
@@ -3009,9 +3010,17 @@
 
         @media (max-width: 250px) {
 
+            .surface-card {
+                padding: 10px;
+            }
+
+            .game-player-grid {
+                gap: 2px;
+            }
+
             .game-player-card {
                 padding: 6px;
-                gap: 4px;
+                gap: 2px;
             }
 
             .gp-role-img-wrap {
@@ -3019,6 +3028,15 @@
                 min-width: 24px;
                 max-width: 24px;
                 height: 36px;
+                margin-right: 0;
+            }
+
+            .gp-content {
+                gap: 2px;
+            }
+
+            .gp-top {
+                gap: 2px;
             }
 
             .gp-name {
@@ -3030,11 +3048,21 @@
                 padding: 2px 4px;
             }
 
-            .gp-action-btn,
-            .gp-status-btn {
-                width: 20px;
-                height: 20px;
+            .gp-actions {
+                gap: 2px;
+                max-width: 50px;
+            }
+
+            .gp-action-btn {
+                width: 18px;
+                height: 18px;
                 font-size: 9px;
+            }
+
+            .gp-status-btn {
+                height: 16px;
+                padding: 0 3px;
+                font-size: 8px;
             }
         }
 
