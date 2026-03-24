@@ -2774,22 +2774,22 @@
             justify-content: flex-start;
         }
 
-.gp-status-btn {
-    min-height: 28px;
-    border-radius: 999px;
-    padding: 0 8px;
-    font-size: 11px;
-}
+        .gp-status-btn {
+            min-height: 28px;
+            border-radius: 999px;
+            padding: 0 8px;
+            font-size: 11px;
+        }
 
-.gp-status-btn.gp-jail-mini {
-    border-color: var(--yellow);
-    color: var(--yellow);
-}
+        .gp-status-btn.gp-jail-mini {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
 
-.gp-status-btn.gp-jail-mini.active {
-    background: var(--yellow);
-    color: #111;
-}
+        .gp-status-btn.gp-jail-mini.active {
+            background: var(--yellow);
+            color: #111;
+        }
 
         .status-markers {
             top: 10px;
@@ -2919,7 +2919,7 @@
         }
 
         .role-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
         }
 
@@ -2968,16 +2968,30 @@
             .player-grid,
             .game-player-grid,
             .settings-roles-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .role-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .role-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+
             .topbar-main {
-                flex-direction: column;
-                align-items: stretch;
+                gap: 6px;
+            }
+
+            .topbar-copy h1 {
+                font-size: 16px;
+            }
+
+            .game-clock {
+                min-width: 70px;
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+
+            .notes-settings-btn {
+                width: 32px;
+                height: 32px;
             }
 
             .topbar-actions {
@@ -3070,7 +3084,9 @@
             </section>
 
             <div class="lobby-cta-wrap">
-                <button class="btn btn-red btn-full lobby-start-btn" onclick="startGame()"><span class="btn-icon-label"><span class="material-symbols-rounded">play_circle</span><span>Начать игру</span></span></button>
+                <button class="btn btn-red btn-full lobby-start-btn" onclick="startGame()"><span
+                        class="btn-icon-label"><span class="material-symbols-rounded">play_circle</span><span>Начать
+                            игру</span></span></button>
             </div>
         </div>
     </div>
@@ -3080,9 +3096,8 @@
             <div class="topbar-card">
                 <div class="topbar-main">
                     <div class="topbar-copy">
-                        <div class="topbar-kicker"><span class="night-counter-badge">Ночь <span
-                                    id="night-counter">1</span></span></div>
-                        <h1 style="margin-bottom:0;"><span class="btn-icon-label"><span class="material-symbols-rounded">bedtime</span><span>Игра</span></span></h1>
+                        <h1 style="margin-bottom:0;"><span class="btn-icon-label"><span
+                                    class="material-symbols-rounded">bedtime</span><span>Игра</span></span></h1>
                     </div>
                     <div class="topbar-actions">
                         <div class="game-clock" id="game-clock">00:00:00</div>
@@ -3105,14 +3120,22 @@
 
             <div class="step-mode-panel">
                 <div class="step-mode-header">
-                    <button class="btn btn-dark" id="step-mode-toggle-btn" onclick="toggleStepMode()"><span class="btn-icon-label"><span class="material-symbols-rounded">explore</span><span>Пошаговый режим</span></span></button>
+                    <button class="btn btn-dark" id="step-mode-toggle-btn" onclick="toggleStepMode()"><span
+                            class="btn-icon-label"><span class="material-symbols-rounded">explore</span><span>Пошаговый
+                                режим</span></span></button>
                     <span class="step-mode-status" id="step-mode-status">Выключен</span>
                 </div>
                 <div class="step-mode-question" id="step-mode-question" style="display:none;"></div>
                 <div class="step-mode-controls" id="step-mode-controls" style="display:none;">
-                    <button class="btn btn-dark" id="step-mode-back-btn" onclick="goToPreviousStepModeRole()"><span class="btn-icon-label"><span class="material-symbols-rounded">arrow_back</span><span>Назад</span></span></button>
-                    <button class="btn btn-dark" onclick="skipStepModeRole()"><span class="btn-icon-label"><span class="material-symbols-rounded">skip_next</span><span>Пропустить роль</span></span></button>
-                    <button class="btn btn-red" onclick="finishStepModeNow()"><span class="btn-icon-label"><span class="material-symbols-rounded">done_all</span><span>Завершить ночь</span></span></button>
+                    <button class="btn btn-dark" id="step-mode-back-btn" onclick="goToPreviousStepModeRole()"><span
+                            class="btn-icon-label"><span
+                                class="material-symbols-rounded">arrow_back</span><span>Назад</span></span></button>
+                    <button class="btn btn-dark" onclick="skipStepModeRole()"><span class="btn-icon-label"><span
+                                class="material-symbols-rounded">skip_next</span><span>Пропустить
+                                роль</span></span></button>
+                    <button class="btn btn-red" onclick="finishStepModeNow()"><span class="btn-icon-label"><span
+                                class="material-symbols-rounded">done_all</span><span>Завершить
+                                ночь</span></span></button>
                 </div>
             </div>
 
@@ -3173,9 +3196,15 @@
                     </div>
                 </div>
                 <div class="night-actions-controls">
-                    <button class="btn btn-dark" onclick="clearNightSelection()"><span class="btn-icon-label"><span class="material-symbols-rounded">backspace</span><span>Очистить действия</span></span></button>
-                    <button class="btn btn-dark" onclick="clearAllEffects()"><span class="btn-icon-label"><span class="material-symbols-rounded">layers_clear</span><span>Очистить эффекты</span></span></button>
-                    <button class="btn btn-red" onclick="generateNightReport()"><span class="btn-icon-label"><span class="material-symbols-rounded">description</span><span>Отчёт о ночи</span></span></button>
+                    <button class="btn btn-dark" onclick="clearNightSelection()"><span class="btn-icon-label"><span
+                                class="material-symbols-rounded">backspace</span><span>Очистить
+                                действия</span></span></button>
+                    <button class="btn btn-dark" onclick="clearAllEffects()"><span class="btn-icon-label"><span
+                                class="material-symbols-rounded">layers_clear</span><span>Очистить
+                                эффекты</span></span></button>
+                    <button class="btn btn-red" onclick="generateNightReport()"><span class="btn-icon-label"><span
+                                class="material-symbols-rounded">description</span><span>Отчёт о
+                                ночи</span></span></button>
                 </div>
             </div>
 
@@ -3195,7 +3224,8 @@
                 <div class="topbar-main">
                     <div class="topbar-copy">
                         <div class="topbar-kicker">Хроника партии</div>
-                        <h1><span class="btn-icon-label"><span class="material-symbols-rounded">menu_book</span><span>Журнал</span></span></h1>
+                        <h1><span class="btn-icon-label"><span
+                                    class="material-symbols-rounded">menu_book</span><span>Журнал</span></span></h1>
                     </div>
                     <div class="topbar-actions">
                         <button class="notes-settings-btn" id="settings-toggle-btn" onclick="openSettingsModal()"
@@ -3217,14 +3247,17 @@
             <section class="surface-card notes-log-card">
                 <div class="action-log">
                     <div class="action-log-header">
-                        <span class="action-log-title"><span class="material-symbols-rounded">receipt_long</span><span>Лог действий</span></span>
+                        <span class="action-log-title"><span
+                                class="material-symbols-rounded">receipt_long</span><span>Лог действий</span></span>
                         <button class="action-log-clear" onclick="clearActionLog()">Очистить</button>
                     </div>
                     <div id="action-log-list" class="action-log-list"></div>
                 </div>
             </section>
 
-            <button class="btn btn-dark btn-full notes-rules-btn" onclick="openRulesModal()" style="margin-top:10px;"><span class="btn-icon-label"><span class="material-symbols-rounded">gavel</span><span>Правила игры</span></span></button>
+            <button class="btn btn-dark btn-full notes-rules-btn" onclick="openRulesModal()"
+                style="margin-top:10px;"><span class="btn-icon-label"><span
+                        class="material-symbols-rounded">gavel</span><span>Правила игры</span></span></button>
         </div>
     </div>
 
@@ -3245,8 +3278,10 @@
         <div class="settings-modal-panel">
             <div class="settings-drag-handle"></div>
             <div class="settings-modal-header">
-                <h3><span class="btn-icon-label"><span class="material-symbols-rounded">settings</span><span>Настройки</span></span></h3>
-                <button class="settings-modal-close" onclick="closeSettingsModal()"><span class="material-symbols-rounded">close</span></button>
+                <h3><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">settings</span><span>Настройки</span></span></h3>
+                <button class="settings-modal-close" onclick="closeSettingsModal()"><span
+                        class="material-symbols-rounded">close</span></button>
             </div>
             <div class="settings-tabs">
                 <button class="stab-btn active" data-tab="roles" onclick="switchSettingsTab('roles')">
@@ -3269,13 +3304,16 @@
                     <button class="btn btn-dark" onclick="disableAllRoles()">Отключить все</button>
                 </div>
 
-                <div class="stab-section-title"><span class="btn-icon-label"><span class="material-symbols-rounded">shield_person</span><span>Горожане</span></span></div>
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">local_police</span><span>Горожане</span></span></div>
                 <div class="settings-roles-grid" id="settings-roles-citizen"></div>
 
-                <div class="stab-section-title"><span class="btn-icon-label"><span class="material-symbols-rounded">local_police</span><span>Преступники</span></span></div>
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">shield_person</span><span>Преступники</span></span></div>
                 <div class="settings-roles-grid" id="settings-roles-criminal"></div>
 
-                <div class="stab-section-title"><span class="btn-icon-label"><span class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></div>
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></div>
                 <div class="settings-roles-grid" id="settings-roles-outcast"></div>
             </div>
 
@@ -3316,7 +3354,8 @@
                     </label>
                 </div>
 
-                <div class="stab-section-title"><span class="btn-icon-label"><span class="material-symbols-rounded">tune</span><span>Кнопки ночных действий</span></span></div>
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">tune</span><span>Кнопки ночных действий</span></span></div>
                 <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Выбери, какие действия отображать в
                     панели.</p>
 
@@ -3402,7 +3441,9 @@
 
             <!-- Tab: Buttons -->
             <div id="stab-buttons" class="stab-content">
-                <div class="stab-section-title"><span class="btn-icon-label"><span class="material-symbols-rounded">style</span><span>Кнопки статусов на картах</span></span></div>
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">style</span><span>Кнопки статусов на картах</span></span>
+                </div>
                 <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Включи кнопки, которые хочешь видеть
                     на карточках игроков.</p>
 
@@ -3495,10 +3536,14 @@
             </div>
             <div class="role-tabs">
                 <button class="role-tab-btn team-citizen-tab active" data-team="citizen"
-                    onclick="switchRoleTab('citizen')"><span class="role-tab-label"><span class="material-symbols-rounded">shield_person</span><span>Горожане</span></span></button>
+                    onclick="switchRoleTab('citizen')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">local_police</span><span>Горожане</span></span></button>
                 <button class="role-tab-btn team-criminal-tab" data-team="criminal"
-                    onclick="switchRoleTab('criminal')"><span class="role-tab-label"><span class="material-symbols-rounded">local_police</span><span>Преступники</span></span></button>
-                <button class="role-tab-btn team-outcast-tab" data-team="outcast" onclick="switchRoleTab('outcast')"><span class="role-tab-label"><span class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></button>
+                    onclick="switchRoleTab('criminal')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">shield_person</span><span>Преступники</span></span></button>
+                <button class="role-tab-btn team-outcast-tab" data-team="outcast"
+                    onclick="switchRoleTab('outcast')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></button>
             </div>
             <div class="modal-body">
                 <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
@@ -3518,8 +3563,10 @@
             </div>
             <div id="night-report-body" class="night-report-body"></div>
             <div class="night-report-footer">
-                <button class="btn btn-dark" onclick="closeNightReport()"><span class="btn-icon-label"><span class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
-                <button class="btn btn-green" onclick="confirmNightReport()"><span class="btn-icon-label"><span class="material-symbols-rounded">done</span><span>Подтвердить</span></span></button>
+                <button class="btn btn-dark" onclick="closeNightReport()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
+                <button class="btn btn-green" onclick="confirmNightReport()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">done</span><span>Подтвердить</span></span></button>
             </div>
         </div>
     </div>
@@ -3528,13 +3575,16 @@
     <div id="rules-modal" class="modal-overlay" onclick="closeRulesModalOutside(event)">
         <div class="night-report-modal" style="max-width:600px;max-height:85vh;">
             <div class="night-report-header">
-                <h3><span class="btn-icon-label"><span class="material-symbols-rounded">gavel</span><span>Правила игры</span></span></h3>
+                <h3><span class="btn-icon-label"><span class="material-symbols-rounded">gavel</span><span>Правила
+                            игры</span></span></h3>
             </div>
             <div class="night-report-body" style="max-height:60vh;overflow-y:auto;">
                 <button class="btn btn-red btn-full"
                     onclick="window.open('https://gaga.ru/gaga/files/pdf/rules/ru/2944-423096.pdf', '_blank')"
                     style="margin-bottom:16px;">
-                    <span class="btn-icon-label"><span class="material-symbols-rounded">picture_as_pdf</span><span>Открыть полные правила (PDF)</span></span>
+                    <span class="btn-icon-label"><span
+                            class="material-symbols-rounded">picture_as_pdf</span><span>Открыть полные правила
+                            (PDF)</span></span>
                 </button>
 
                 <h4 style="color:var(--blue);margin:12px 0 8px;">🔵 Горожане</h4>
@@ -3596,7 +3646,8 @@
                 </div>
             </div>
             <div class="night-report-footer">
-                <button class="btn btn-dark" onclick="closeRulesModal()"><span class="btn-icon-label"><span class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
+                <button class="btn btn-dark" onclick="closeRulesModal()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
             </div>
         </div>
     </div>
@@ -3612,8 +3663,11 @@
                 <p style="color:var(--text-dim);font-size:13px;">Хотите освободить всех заключённых?</p>
             </div>
             <div class="night-report-footer">
-                <button class="btn btn-dark" onclick="closeDeathAction()"><span class="btn-icon-label"><span class="material-symbols-rounded">close</span><span>Отмена</span></span></button>
-                <button class="btn btn-red" id="death-action-confirm"><span class="btn-icon-label"><span class="material-symbols-rounded">lock_open</span><span>Освободить всех</span></span></button>
+                <button class="btn btn-dark" onclick="closeDeathAction()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Отмена</span></span></button>
+                <button class="btn btn-red" id="death-action-confirm"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">lock_open</span><span>Освободить
+                            всех</span></span></button>
             </div>
         </div>
     </div>
@@ -4379,22 +4433,22 @@
             block: 'blocked',
         };
 
-function buildStatusButtons(idx, player) {
-    if (!showStatusRows) return '';
-    const classMap = { poisoned: 'poison-btn', sected: 'sect-btn', protected: 'protect-btn', alibied: 'alibi-btn', blocked: 'block-btn' };
-    const btns = [];
-    if (btnSettings.jail) {
-        btns.push(`<button class="gp-status-btn gp-jail-mini${player.jailed ? ' active' : ''}" onclick="toggleJail(${idx})" title="Тюрьма">🔒</button>`);
-    }
-    Object.entries(BTN_SETTING_MAP).forEach(([settingKey, statusKey]) => {
-        if (!btnSettings[settingKey]) return;
-        const def = STATUS_DEFS[statusKey];
-        const activeClass = player[statusKey] ? ' active' : '';
-        btns.push(`<button class="gp-status-btn ${classMap[statusKey]}${activeClass}" onclick="toggleStatus(${idx},'${statusKey}')" title="${def.label}">${def.icon}</button>`);
-    });
-    if (!btns.length) return '';
-    return `<div class="gp-status-row">${btns.join('')}</div>`;
-}
+        function buildStatusButtons(idx, player) {
+            if (!showStatusRows) return '';
+            const classMap = { poisoned: 'poison-btn', sected: 'sect-btn', protected: 'protect-btn', alibied: 'alibi-btn', blocked: 'block-btn' };
+            const btns = [];
+            if (btnSettings.jail) {
+                btns.push(`<button class="gp-status-btn gp-jail-mini${player.jailed ? ' active' : ''}" onclick="toggleJail(${idx})" title="Тюрьма">🔒</button>`);
+            }
+            Object.entries(BTN_SETTING_MAP).forEach(([settingKey, statusKey]) => {
+                if (!btnSettings[settingKey]) return;
+                const def = STATUS_DEFS[statusKey];
+                const activeClass = player[statusKey] ? ' active' : '';
+                btns.push(`<button class="gp-status-btn ${classMap[statusKey]}${activeClass}" onclick="toggleStatus(${idx},'${statusKey}')" title="${def.label}">${def.icon}</button>`);
+            });
+            if (!btns.length) return '';
+            return `<div class="gp-status-row">${btns.join('')}</div>`;
+        }
 
         function buildStatusMarkers(player) {
             let html = '';
