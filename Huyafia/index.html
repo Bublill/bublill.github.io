@@ -1,0 +1,855 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D64045">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="Assets/Rolecards/mafia.webp">
+    <link rel="icon" href="icon.png" type="image/png">
+    <title>Мафия: Большой Город</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Russo+One&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,0,0"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="theme-noir">
+
+    <div id="screen-lobby" class="screen active">
+        <div class="screen-shell lobby-shell">
+            <section class="hero-card">
+                <div class="hero-card__glow"></div>
+                <div class="hero-card__eyebrow">(Хуяфия)</div>
+                <h1>🎩 Мафия: Большой Город</h1>
+                <p class="hero-card__subtitle"></p>
+            </section>
+
+            <section class="surface-card lobby-manage-card">
+                <div class="section-heading">
+                    <h2>Добавить игрока</h2>
+                </div>
+                <div class="add-player-row">
+                    <input type="text" id="new-player-input" placeholder="Имя нового игрока..." maxlength="20">
+                    <button class="btn btn-red icon-only-btn" onclick="addNewPlayer()" aria-label="Добавить игрока">
+                        <span class="material-symbols-rounded">add</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="surface-card lobby-list-card">
+                <div class="section-heading">
+                    <h2>Выбери игроков</h2>
+                </div>
+                <input type="text" id="lobby-search" placeholder="🔍 Поиск игрока..." class="lobby-search-input">
+                <div class="select-actions">
+                    <button class="btn btn-dark" onclick="selectAll()">Выбрать всех</button>
+                    <button class="btn btn-dark" onclick="deselectAll()">Снять все</button>
+                </div>
+                <div id="lobby-players" class="player-grid"></div>
+            </section>
+
+            <div class="lobby-cta-wrap">
+                <button class="btn btn-red btn-full lobby-start-btn" onclick="startGame()"><span
+                        class="btn-icon-label"><span class="material-symbols-rounded">play_circle</span><span>Начать
+                            игру</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-game" class="screen">
+        <div class="screen-shell game-shell">
+            <div class="topbar-card">
+                <div class="topbar-main">
+                    <div class="topbar-copy">
+                        <h1 style="margin-bottom:0;"><span class="btn-icon-label"><span
+                                    class="material-symbols-rounded">bedtime</span><span>Игра</span></span></h1>
+                    </div>
+                    <div class="topbar-actions">
+                        <div class="game-clock" id="game-clock">00:00:00</div>
+                        <div class="game-duration" id="game-duration"></div>
+                        <button class="notes-settings-btn" onclick="undoLastAction()" title="Отменить"
+                            aria-label="Отменить">
+                            <span class="material-symbols-rounded">undo</span>
+                        </button>
+                        <button class="notes-settings-btn" onclick="openSettingsModal()" title="Настройки"
+                            aria-label="Настройки">
+                            <span class="material-symbols-rounded">tune</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <section class="surface-card">
+                <div class="section-heading">
+                    <h2>Очередь ходов</h2>
+                </div>
+                <div id="turn-order" class="turn-order-bar"></div>
+                <div id="stats-bar" class="stats-bar"></div>
+            </section>
+
+            <div id="step-mode-banner" class="step-mode-banner" style="display:none;">
+                <div class="step-mode-banner-inner">
+                    <span class="step-mode-banner-icon">💬</span>
+                    <span id="step-mode-banner-text" class="step-mode-banner-text"></span>
+                </div>
+            </div>
+
+            <div class="unified-night-panel">
+                <div class="unified-night-header">
+                    <h3>Ночь <span id="night-counter">1</span></h3>
+                    <div class="unified-night-controls">
+                        <button class="status-rows-toggle-btn" id="status-rows-toggle-btn" onclick="toggleStatusRows()"
+                            title="Показать/скрыть статусы на картах">
+                            <span class="material-symbols-rounded">sell</span>
+                            Статусы
+                        </button>
+                        <button class="btn btn-dark" id="step-mode-toggle-btn" onclick="toggleStepMode()">
+                            <span class="btn-icon-label"><span
+                                    class="material-symbols-rounded">explore</span><span>Пошаговый</span></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="unified-night-body">
+                    <span class="step-mode-status" id="step-mode-status">Выключен</span>
+                    <div class="step-mode-question" id="step-mode-question" style="display:none;"></div>
+                </div>
+                <div class="step-mode-controls" id="step-mode-controls" style="display:none;">
+                    <button class="btn btn-dark" id="step-mode-back-btn" onclick="goToPreviousStepModeRole()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">arrow_back</span><span>Назад</span></span>
+                    </button>
+                    <button class="btn btn-dark" onclick="skipStepModeRole()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">skip_next</span><span>Пропустить</span></span>
+                    </button>
+                    <button class="btn btn-red" onclick="finishStepModeNow()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">done_all</span><span>Завершить</span></span>
+                    </button>
+                </div>
+                <div class="unified-night-footer">
+                    <button class="btn btn-dark" onclick="clearNightSelection()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">backspace</span><span>Очистить действия</span></span>
+                    </button>
+                    <button class="btn btn-dark" onclick="clearAllEffects()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">layers_clear</span><span>Очистить эффекты</span></span>
+                    </button>
+                    <button class="btn btn-red" onclick="generateNightReport()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">description</span><span>Отчёт о ночи</span></span>
+                    </button>
+                </div>
+            </div>
+
+            <section class="surface-card">
+                <div class="section-heading">
+                    <h2>Игроки</h2>
+                </div>
+                <div id="game-players" class="game-player-grid"></div>
+            </section>
+        </div>
+    </div>
+
+    <div id="screen-notes" class="screen">
+        <div class="screen-shell notes-shell">
+            <div class="topbar-card notes-topbar">
+                <div class="topbar-main">
+                    <div class="topbar-copy">
+                        <h1><span class="btn-icon-label"><span
+                                    class="material-symbols-rounded">menu_book</span><span>Журнал</span></span></h1>
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="notes-settings-btn" id="settings-toggle-btn" onclick="openSettingsModal()"
+                            title="Настройки" aria-label="Настройки">
+                            <span class="material-symbols-rounded">tune</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discussion Timer -->
+            <section class="surface-card">
+                <div class="section-heading">
+                    <h2>Таймер обсуждения</h2>
+                </div>
+                <div class="discussion-timer-wrap">
+                    <div class="timer-display" id="discussion-timer">1:30</div>
+                    <div class="timer-presets">
+                        <button class="timer-preset-btn" onclick="setTimerPreset(30)">0:30</button>
+                        <button class="timer-preset-btn" onclick="setTimerPreset(60)">1:00</button>
+                        <button class="timer-preset-btn" onclick="setTimerPreset(90)">1:30</button>
+                        <button class="timer-preset-btn" onclick="setTimerPreset(120)">2:00</button>
+                        <button class="timer-preset-btn" onclick="setTimerPreset(180)">3:00</button>
+                    </div>
+                    <button class="btn btn-dark" id="timer-toggle-btn" onclick="startDiscussionTimer()">
+                        <span class="btn-icon-label"><span
+                                class="material-symbols-rounded">timer</span><span>Таймер</span></span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="surface-card notes-pad-card">
+                <div class="section-heading">
+                    <h2>Заметки</h2>
+                </div>
+                <textarea id="notepad" class="notepad-area" placeholder="Записывай заметки здесь..."></textarea>
+            </section>
+
+            <section class="surface-card notes-log-card">
+                <div class="action-log">
+                    <div class="action-log-header">
+                        <span class="action-log-title"><span
+                                class="material-symbols-rounded">receipt_long</span><span>Лог действий</span></span>
+                        <button class="action-log-clear" onclick="copyActionLog()" title="Скопировать лог">📋</button>
+                        <button class="action-log-clear" onclick="clearActionLog()">Очистить</button>
+                    </div>
+                    <div id="action-log-list" class="action-log-list"></div>
+                </div>
+            </section>
+
+            <button class="btn btn-dark btn-full notes-rules-btn" onclick="openRulesModal()"
+                style="margin-top:10px;"><span class="btn-icon-label"><span
+                        class="material-symbols-rounded">gavel</span><span>Правила игры</span></span></button>
+        </div>
+    </div>
+
+    <div id="bottom-nav" class="bottom-nav">
+        <button class="nav-btn active" onclick="showScreen('game')">
+            <span class="nav-icon material-symbols-rounded">sports_esports</span>Игра
+        </button>
+        <button class="nav-btn" onclick="showScreen('notes')">
+            <span class="nav-icon material-symbols-rounded">menu_book</span>Журнал
+        </button>
+        <button class="nav-btn" onclick="endGame()">
+            <span class="nav-icon material-symbols-rounded">logout</span>Выход
+        </button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal-overlay" onclick="closeSettingsModalOutside(event)">
+        <div class="settings-modal-panel">
+            <div class="settings-drag-handle"></div>
+            <div class="settings-modal-header">
+                <h3><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">settings</span><span>Настройки</span></span></h3>
+                <button class="settings-modal-close" onclick="closeSettingsModal()"><span
+                        class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="settings-tabs">
+                <button class="stab-btn active" data-tab="roles" onclick="switchSettingsTab('roles')">
+                    <span class="stab-icon material-symbols-rounded">theater_comedy</span>Роли
+                </button>
+                <button class="stab-btn" data-tab="buttons" onclick="switchSettingsTab('buttons')">
+                    <span class="stab-icon material-symbols-rounded">apps</span>Кнопки
+                </button>
+                <button class="stab-btn" data-tab="layout" onclick="switchSettingsTab('layout')">
+                    <span class="stab-icon material-symbols-rounded">dashboard</span>Компоновка
+                </button>
+                <button class="stab-btn" data-tab="ui" onclick="switchSettingsTab('ui')">
+                    <span class="stab-icon material-symbols-rounded">tune</span>Интерфейс
+                </button>
+            </div>
+
+            <!-- Tab: Roles -->
+            <div id="stab-roles" class="stab-content active">
+                <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Выбери роли, которые будут доступны
+                    при назначении. Отключённые роли не появятся в окне выбора.</p>
+                <div class="settings-all-btns">
+                    <button class="btn btn-dark" onclick="enableAllRoles()">Включить все</button>
+                    <button class="btn btn-dark" onclick="disableAllRoles()">Отключить все</button>
+                </div>
+
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">local_police</span><span>Горожане</span></span></div>
+                <div class="settings-roles-grid" id="settings-roles-citizen"></div>
+
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">shield_person</span><span>Преступники</span></span></div>
+                <div class="settings-roles-grid" id="settings-roles-criminal"></div>
+
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></div>
+                <div class="settings-roles-grid" id="settings-roles-outcast"></div>
+            </div>
+
+            <!-- Tab: Buttons -->
+            <div id="stab-buttons" class="stab-content">
+                <div class="stab-section-title"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">style</span><span>Кнопки статусов на картах</span></span>
+                </div>
+                <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Включи кнопки, которые хочешь видеть
+                    на карточках игроков.</p>
+
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-jail">
+                        <span class="setting-toggle-icon">🔒</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--yellow)">Тюрьма</span>
+                            <span class="setting-toggle-desc">Маленькая кнопка посадки на карточке</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-jail" onchange="updateBtnSetting('jail', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-poison">
+                        <span class="setting-toggle-icon">🧪</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--poison-color)">Отравлен</span>
+                            <span class="setting-toggle-desc">Зелёный оттенок карточки</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch poison">
+                        <input type="checkbox" id="toggle-poison" onchange="updateBtnSetting('poison', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-sect">
+                        <span class="setting-toggle-icon">🕯️</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--sect-color)">В секте</span>
+                            <span class="setting-toggle-desc">Янтарный оттенок карточки</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch sect">
+                        <input type="checkbox" id="toggle-sect" onchange="updateBtnSetting('sect', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-protect">
+                        <span class="setting-toggle-icon">🛡️</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--protect-color)">Защищён</span>
+                            <span class="setting-toggle-desc">Синий оттенок карточки</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch protect">
+                        <input type="checkbox" id="toggle-protect" onchange="updateBtnSetting('protect', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-alibi">
+                        <span class="setting-toggle-icon">📋</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--alibi-color)">Алиби</span>
+                            <span class="setting-toggle-desc">Фиолетовый оттенок карточки</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch alibi">
+                        <input type="checkbox" id="toggle-alibi" onchange="updateBtnSetting('alibi', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-toggle-row">
+                    <label class="setting-toggle-label" for="toggle-block">
+                        <span class="setting-toggle-icon">🚫</span>
+                        <span>
+                            <span class="setting-toggle-name" style="color:var(--block-color)">Заблокирован</span>
+                            <span class="setting-toggle-desc">Серый оттенок карточки</span>
+                        </span>
+                    </label>
+                    <label class="toggle-switch block">
+                        <input type="checkbox" id="toggle-block" onchange="updateBtnSetting('block', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Tab: Layout -->
+            <div id="stab-layout" class="stab-content">
+                <div class="stab-section-title">Плотность интерфейса</div>
+                <p style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Настрой отступы и размеры элементов
+                    интерфейса.</p>
+
+                <div class="layout-options" style="display:flex;gap:6px;margin-bottom:16px;">
+                    <button class="btn btn-dark layout-btn" data-density="compact"
+                        onclick="updateLayoutSetting('density','compact')" style="flex:1;">
+                        <span style="font-size:10px;">Компакт</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn active" data-density="normal"
+                        onclick="updateLayoutSetting('density','normal')" style="flex:1;">
+                        <span style="font-size:10px;">Обычный</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn" data-density="relaxed"
+                        onclick="updateLayoutSetting('density','relaxed')" style="flex:1;">
+                        <span style="font-size:10px;">Свободный</span>
+                    </button>
+                </div>
+
+                <div class="stab-section-title">Размер карточек игроков</div>
+                <div class="layout-options" style="display:flex;gap:6px;margin-bottom:16px;">
+                    <button class="btn btn-dark layout-btn" data-card-size="small"
+                        onclick="updateLayoutSetting('cardSize','small')" style="flex:1;">
+                        <span style="font-size:10px;">Маленькие</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn active" data-card-size="normal"
+                        onclick="updateLayoutSetting('cardSize','normal')" style="flex:1;">
+                        <span style="font-size:10px;">Средние</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn" data-card-size="large"
+                        onclick="updateLayoutSetting('cardSize','large')" style="flex:1;">
+                        <span style="font-size:10px;">Большие</span>
+                    </button>
+                </div>
+
+                <div class="stab-section-title">Отображение роли</div>
+                <div class="layout-options" style="display:flex;gap:6px;margin-bottom:16px;">
+                    <button class="btn btn-dark layout-btn" data-role-display="text"
+                        onclick="updateLayoutSetting('roleDisplay','text')" style="flex:1;">
+                        <span style="font-size:10px;">📝 Текст</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn active" data-role-display="both"
+                        onclick="updateLayoutSetting('roleDisplay','both')" style="flex:1;">
+                        <span style="font-size:10px;">🖼️ Текст и иконка</span>
+                    </button>
+                </div>
+
+                <div class="stab-section-title">Колонки сетки</div>
+                <div class="layout-options" style="display:flex;gap:6px;margin-bottom:16px;">
+                    <button class="btn btn-dark layout-btn active" data-grid-cols="2"
+                        onclick="updateLayoutSetting('gridColumns','2')" style="flex:1;">
+                        <span style="font-size:10px;">2 колонки</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn" data-grid-cols="3"
+                        onclick="updateLayoutSetting('gridColumns','3')" style="flex:1;">
+                        <span style="font-size:10px;">3 колонки</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn" data-grid-cols="auto"
+                        onclick="updateLayoutSetting('gridColumns','auto')" style="flex:1;">
+                        <span style="font-size:10px;">Авто</span>
+                    </button>
+                </div>
+
+                <div class="stab-section-title">Размер изображений ролей</div>
+                <div class="layout-options" style="display:flex;gap:6px;margin-bottom:16px;">
+                    <button class="btn btn-dark layout-btn" data-role-img="small"
+                        onclick="updateLayoutSetting('roleImgSize','small')" style="flex:1;">
+                        <span style="font-size:10px;">Маленькие</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn active" data-role-img="normal"
+                        onclick="updateLayoutSetting('roleImgSize','normal')" style="flex:1;">
+                        <span style="font-size:10px;">Средние</span>
+                    </button>
+                    <button class="btn btn-dark layout-btn" data-role-img="large"
+                        onclick="updateLayoutSetting('roleImgSize','large')" style="flex:1;">
+                        <span style="font-size:10px;">Большие</span>
+                    </button>
+                </div>
+
+                <div style="margin-top:12px;display:flex;justify-content:center;">
+                    <button class="btn btn-dark" onclick="resetLayoutSettings()">Сбросить настройки компоновки</button>
+                </div>
+            </div>
+
+            <!-- Tab: UI -->
+            <div id="stab-ui" class="stab-content">
+                <div class="stab-section-title">Панель и часы</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Показывать панель ночных действий</strong>
+                        <span>Скрыть всю панель ночных действий на экране игры</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-show-night-panel"
+                            onchange="updateShowNightPanel(this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Показывать часы</strong>
+                        <span>Скрыть часы и таймер игры</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-show-clock" onchange="updateShowClock(this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="stab-section-title">Анимации</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Анимации</strong>
+                        <span>Включить/выключить все анимации и переходы</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-animations"
+                            onchange="updateUiSetting('enableAnimations', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Ripple-эффекты</strong>
+                        <span>Волна при нажатии на кнопки</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-ripple"
+                            onchange="updateUiSetting('showRipple', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Вибрация</strong>
+                        <span>Тактильная обратная связь при действиях</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-haptic"
+                            onchange="updateUiSetting('enableHaptic', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Режим производительности</strong>
+                        <span>Отключает анимации, тени, размытие для слабых устройств</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-perf-mode"
+                            onchange="updateUiSetting('perfMode', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Уведомления</strong>
+                        <span>Показывать toast-сообщения</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-toasts"
+                            onchange="updateUiSetting('showToasts', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="stab-section-title">Отображение</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Неназначенные роли</strong>
+                        <span>Показывать слоты без игрока в очереди ходов</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-unassigned-to"
+                            onchange="updateUiSetting('hideUnassignedTurnOrder', !this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Бейджи статусов</strong>
+                        <span>Иконки эффектов на карточках игроков</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-status-badges"
+                            onchange="updateUiSetting('showStatusBadges', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="stab-section-title">Безопасность</div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Подтверждать убийство</strong>
+                        <span>Запрос перед убийством игрока</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-confirm-elim"
+                            onchange="updateUiSetting('confirmEliminate', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Подтверждать конец игры</strong>
+                        <span>Запрос перед завершением игры</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-confirm-end"
+                            onchange="updateUiSetting('confirmEndGame', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="night-panel-toggle-row">
+                    <div class="night-panel-toggle-info">
+                        <strong>Автопереход шага</strong>
+                        <span>Автоматический переход в пошаговом режиме</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-ui-auto-step"
+                            onchange="updateUiSetting('autoAdvanceStep', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+
+                <div style="margin-top:12px;display:flex;justify-content:center;">
+                    <button class="btn btn-dark" onclick="resetUiSettings()">Сбросить настройки интерфейса</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="role-modal" class="modal-overlay" onclick="closeModalOutside(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Выбери роль</h3>
+            </div>
+            <div class="role-tabs">
+                <button class="role-tab-btn team-citizen-tab active" data-team="citizen"
+                    onclick="switchRoleTab('citizen')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">local_police</span><span>Горожане</span></span></button>
+                <button class="role-tab-btn team-criminal-tab" data-team="criminal"
+                    onclick="switchRoleTab('criminal')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">shield_person</span><span>Преступники</span></span></button>
+                <button class="role-tab-btn team-outcast-tab" data-team="outcast"
+                    onclick="switchRoleTab('outcast')"><span class="role-tab-label"><span
+                            class="material-symbols-rounded">flare</span><span>Отщепенцы</span></span></button>
+            </div>
+            <div class="modal-body">
+                <button class="clear-role-btn" onclick="pickRole(null)">❌ Убрать роль</button>
+                <div id="roles-citizen" class="role-grid"></div>
+                <div id="roles-criminal" class="role-grid"></div>
+                <div id="roles-outcast" class="role-grid"></div>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Night report modal -->
+    <div id="night-report-modal" class="modal-overlay" onclick="closeNightReportOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3>Отчёт о ночи</h3>
+            </div>
+            <div id="night-report-body" class="night-report-body"></div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" onclick="closeNightReport()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
+                <button class="btn btn-green" onclick="confirmNightReport()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">done</span><span>Подтвердить</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules modal -->
+    <div id="rules-modal" class="modal-overlay" onclick="closeRulesModalOutside(event)">
+        <div class="night-report-modal" style="max-width:600px;max-height:85vh;">
+            <div class="night-report-header">
+                <h3><span class="btn-icon-label"><span class="material-symbols-rounded">gavel</span><span>Правила
+                            игры</span></span></h3>
+            </div>
+            <div class="night-report-body" style="max-height:60vh;overflow-y:auto;">
+                <button class="btn btn-red btn-full"
+                    onclick="window.open('https://gaga.ru/gaga/files/pdf/rules/ru/2944-423096.pdf', '_blank')"
+                    style="margin-bottom:16px;">
+                    <span class="btn-icon-label"><span
+                            class="material-symbols-rounded">picture_as_pdf</span><span>Открыть полные правила
+                            (PDF)</span></span>
+                </button>
+
+                <h4 style="color:var(--blue);margin:12px 0 8px;">🔵 Горожане</h4>
+                <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Мирный житель</strong> — обычный
+                        горожанин, без способностей.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Агент</strong> — внедряется в
+                        Мафию/Картель ночью, притворяясь одним из них.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Судья</strong> — сажает игрока в
+                        тюрьму: тот теряет способности и голос.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Детектив</strong> — проверяет
+                        фракцию игрока (горожанин / преступник / отщепенец).</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Журналист</strong> — проверяет,
+                        принадлежат ли два игрока одной фракции.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Доктор</strong> — лечит одного
+                        игрока, спасая от смерти (нельзя лечить одного дважды подряд).</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Телохранитель</strong> — умирает
+                        вместо выбранного игрока, если в того стреляют.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Патрульный</strong> — копия
+                        Детектива, вступает в игру после гибели Детектива.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Экстрасенс</strong> — проверяет,
+                        являются ли игрок и оба его соседа горожанами.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Поклонница</strong> — даёт алиби
+                        выбранному игроку, отменяя его казнь на голосовании.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Сыщик</strong> — может либо
+                        проверить, мирный ли житель цель, либо убить её.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Везунчик</strong> — неуязвим для
+                        ночных убийств и тюрьмы; умирает только от казни.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--blue)">Мститель</strong> — после смерти
+                        убивает одного игрока по своему выбору.</div>
+                </div>
+
+                <h4 style="color:var(--red);margin:12px 0 8px;">🔴 Преступники</h4>
+                <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Мафия/Картель</strong> — каждую
+                        ночь вместе выбирают и убивают одного игрока.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Босс/Главарь</strong> — решающий
+                        голос при спорном выборе цели Мафии/Картеля.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Адвокат</strong> — блокирует
+                        способность выбранного игрока на ночь.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Любовница</strong> — на выбранного
+                        игрока ведущий даёт ложный ответ при проверке.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Ищейка</strong> — проверяет,
+                        является ли цель мирным жителем или нет.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--red)">Оборотень</strong> — при проверке
+                        всегда выглядит как горожанин.</div>
+                </div>
+
+                <h4 style="color:var(--yellow);margin:12px 0 8px;">🟡 Отщепенцы</h4>
+                <div style="font-size:12px;line-height:1.5;color:var(--text-main);">
+                    <div style="margin-bottom:6px;"><strong style="color:var(--yellow)">Маньяк</strong> — каждую ночь
+                        убивает; побеждает, оставшись один на один с последним выжившим.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--yellow)">Отравитель</strong> — отравляет
+                        игрока, который умирает после следующего дневного голосования. Цель — уничтожить всех.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--yellow)">Революционер</strong> — убивает
+                        по ночам, но только не мирных жителей; побеждает, оставшись с последним мирным.</div>
+                    <div style="margin-bottom:6px;"><strong style="color:var(--yellow)">Сектант</strong> — вербует
+                        игроков в секту; побеждает, когда все живые становятся сектантами.</div>
+                </div>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" onclick="closeRulesModal()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Закрыть</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Judge/Sectant death modal -->
+    <div id="death-action-modal" class="modal-overlay" onclick="closeDeathActionOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3 id="death-action-title">Смерть судьи</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="death-action-text" style="margin-bottom:16px;"></p>
+                <p style="color:var(--text-dim);font-size:13px;">Хотите освободить всех заключённых?</p>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" onclick="closeDeathAction()"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">close</span><span>Отмена</span></span></button>
+                <button class="btn btn-red" id="death-action-confirm"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">lock_open</span><span>Освободить
+                            всех</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avenger death modal -->
+    <div id="avenger-modal" class="modal-overlay" onclick="closeAvengerOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3>🎯 Мститель убит</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="avenger-text" style="margin-bottom:16px;"></p>
+                <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Выберите игрока, которого убьёт
+                    мститель, или отмените действие:</p>
+                <div id="avenger-targets"
+                    style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;"></div>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" onclick="closeAvenger()">✕ Отмена</button>
+                <button class="btn btn-green" id="avenger-confirm" style="display:none;">✓ Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Step blocked modal -->
+    <div id="step-blocked-modal" class="modal-overlay" onclick="closeStepBlockedOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3 id="step-blocked-title">🚫 Ход заблокирован</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="step-blocked-text" style="margin-bottom:16px;"></p>
+                <p style="color:var(--text-dim);font-size:13px;">Нажмите OK, чтобы перейти к следующей роли.</p>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-red" onclick="confirmStepBlockedModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step missing role modal -->
+    <div id="step-role-prompt-modal" class="modal-overlay" onclick="closeStepRolePromptOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3 id="step-role-prompt-title">❓ Есть роль?</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="step-role-prompt-text" style="margin-bottom:12px;"></p>
+                <div id="step-role-prompt-hint" style="color:var(--text-dim);font-size:13px;margin-bottom:12px;"></div>
+                <div id="step-role-prompt-players" class="player-grid" style="margin-bottom:0;"></div>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" onclick="rejectStepRolePrompt()">Нет</button>
+                <button class="btn btn-green" onclick="confirmStepRolePrompt()">Назначить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Universal confirm modal -->
+    <div id="confirm-modal" class="modal-overlay" onclick="closeConfirmModalOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3 id="confirm-modal-title">Подтверждение</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="confirm-modal-message"></p>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" id="confirm-modal-cancel-btn">Отмена</button>
+                <button class="btn btn-red" id="confirm-modal-ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win condition modal -->
+    <div id="win-modal" class="modal-overlay" onclick="closeWinModalOutside(event)">
+        <div class="night-report-modal">
+            <div class="night-report-header">
+                <h3 id="win-modal-title">🏆 Победа!</h3>
+            </div>
+            <div class="night-report-body">
+                <p id="win-modal-message" style="font-size:14px;margin-bottom:8px;"></p>
+                <p style="color:var(--text-dim);font-size:13px;">Что хотите сделать?</p>
+            </div>
+            <div class="night-report-footer">
+                <button class="btn btn-dark" id="win-modal-dismiss-btn"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">block</span><span>Скрыть</span></span></button>
+                <button class="btn btn-green" id="win-modal-end-btn"><span class="btn-icon-label"><span
+                            class="material-symbols-rounded">flag</span><span>Завершить игру</span></span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
